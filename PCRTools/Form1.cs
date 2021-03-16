@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Core.Emulators;
+
 namespace PCRTools
 {
     public partial class Form1 : Form
@@ -19,6 +21,8 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Emulator emulator = new MumuEmulator();
+            var area = emulator.Area;
         }
     }
 }
