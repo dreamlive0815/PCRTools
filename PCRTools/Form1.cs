@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Core.Common;
 using Core.Emulators;
 
 namespace PCRTools
@@ -21,8 +22,9 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Emulator emulator = new MumuEmulator();
-            var area = emulator.Area;
+            // Emulator emulator = new NOXEmulator();
+            // Emulator emulator = new MuMuEmulator();
+            Utils.PrintProcessNamesToFile("1.txt");
         }
     }
 }
