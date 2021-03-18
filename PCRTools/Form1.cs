@@ -31,7 +31,7 @@ namespace PCRTools
         {
             emulator = new NOXEmulator();
             //emulator = new MuMuEmulator();
-            //Utils.PrintProcessesInfoToFile("1.txt");
+            emulator.GetScreenCapture().Save("nox.png");
         }
 
     }

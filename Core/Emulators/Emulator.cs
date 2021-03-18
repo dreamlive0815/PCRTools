@@ -50,7 +50,7 @@ namespace Core.Emulators
             return null;
         }
 
-        public Bitmap CaptureScreen(Rectangle rect)
+        protected Bitmap CaptureScreen(Rectangle rect)
         {
             return Utils.CaptureScreen(rect);
         }

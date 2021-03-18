@@ -31,8 +31,7 @@ namespace Core.Emulators
 
         public override Process GetMainProcess()
         {
-            var processes = Process.GetProcessesByName("Nox");
-            return processes.Length > 0 ? processes[0] : null;
+            return GetProcessByName("Nox");
         }
 
     }
