@@ -78,5 +78,10 @@ namespace Core.Common
         {
             return new Rectangle(Left, Top, Width, Height);
         }
+
+        public override string ToString()
+        {
+            return $"{{Left:{Left},Top:{Top},Width:{Width},Height:{Height}}}";
+        }
     }
 }

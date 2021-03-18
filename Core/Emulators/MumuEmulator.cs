@@ -19,17 +19,17 @@ namespace Core.Emulators
             get
             {
                 if (!Alive)
-                    throw new Exception("Mumu模拟器进程不存在");
+                    throw new Exception(AheadWithName("进程不存在"));
                 var proc = GetMainProcess();
                 var hWnd = Win32API.FindWindowEx(proc.MainWindowHandle, IntPtr.Zero, null, null);
                 var title = Win32API.GetWindowTitle(hWnd);
                 if (!title.Contains("NemuPlayer"))
                 {
-                    throw new Exception("获取Mumu模拟器尺寸失败");
+                    throw new Exception(AheadWithName("获取主窗口失败"));
                 }
                 var rect = Win32API.GetWindowRect(hWnd);
                 if (!rect.Valid || rect.Width < 10 || rect.Height < 10)
-                    throw new Exception("Mumu模拟器尺寸不合法");
+                    throw new Exception(AheadWithName("主窗口尺寸不合法"));
                 return rect.ToRectangle();
             }
         }
@@ -38,6 +38,6 @@ namespace Core.Emulators
         {
             return GetProcessByName("NemuPlayer");
         }
-
+        
     }
 }

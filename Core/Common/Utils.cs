@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Management;
 using System.Text;
 
 namespace Core.Common
@@ -23,14 +25,49 @@ namespace Core.Common
             return bitmap;
         }
 
-        public static void PrintProcessNamesToFile(string filePath)
+
+        public static string GetMainModuleFilePath(int processId)
+        {
+            string wmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + processId;
+            using (var searcher = new ManagementObjectSearcher(wmiQueryString))
+            {
+                using (var results = searcher.Get())
+                {
+                    ManagementObject mo = results.Cast<ManagementObject>().FirstOrDefault();
+                    if (mo != null)
+                    {
+                        return (string)mo["ExecutablePath"];
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static void PrintProcessesInfoToFile(string filePath)
         {
             var sb = new StringBuilder();
             foreach (var process in Process.GetProcesses())
             {
-                sb.AppendLine(process.ProcessName);
+                sb.AppendLine($"{process.ProcessName} {GetMainModuleFilePath(process.Id)}");
             }
             File.WriteAllText(filePath, sb.ToString());
+        }
+
+        public static void PrintAllChildWindows(IntPtr parentHandle)
+        {
+            var childHandle = IntPtr.Zero;
+            var sb = new StringBuilder();
+            while (true)
+            {
+                var hWnd = Win32API.FindWindowEx(parentHandle, childHandle, null, null);
+                if (hWnd == IntPtr.Zero)
+                    break;
+                var title = Win32API.GetWindowTitle(hWnd);
+                var rect = Win32API.GetWindowRect(hWnd);
+                childHandle = hWnd;
+                sb.AppendLine($"{hWnd} {title} {rect}");
+            }
+            Console.Write(sb.ToString());
         }
     }
 }

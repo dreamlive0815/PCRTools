@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 using Core.Common;
-using System.Diagnostics;
+using Core.Extensions;
 
 namespace Core.Emulators
 {
@@ -24,13 +26,23 @@ namespace Core.Emulators
 
         public abstract Process GetMainProcess();
 
+        protected string AheadWithName(string str)
+        {
+            return $"[{Name}]{str}";
+        }
+
         protected Process GetProcessByName(string name)
+        {
+            return ProcessExtension.GetProcessByName(name);
+        }
+
+        protected Process FindProcessByName(string name)
         {
             var processes = Process.GetProcesses();
             foreach (var process in processes)
             {
                 var procName = process.ProcessName;
-                if (procName.Contains(name))
+                if (Regex.IsMatch(procName, name))
                 {
                     return process;
                 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,17 @@ using System.Windows.Forms;
 
 using Core.Common;
 using Core.Emulators;
+using Core.Extensions;
+
 
 namespace PCRTools
 {
     public partial class Form1 : Form
     {
+
+        Emulator emulator;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -22,9 +29,10 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Emulator emulator = new NOXEmulator();
-            // Emulator emulator = new MuMuEmulator();
-            Utils.PrintProcessNamesToFile("1.txt");
+            emulator = new NOXEmulator();
+            //emulator = new MuMuEmulator();
+            //Utils.PrintProcessesInfoToFile("1.txt");
         }
+
     }
 }
