@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 using Core.Common;
+using Core.Extensions;
 
 namespace Core.Emulators
 {
@@ -14,24 +11,27 @@ namespace Core.Emulators
     {
         public override string Name { get { return "NOXEmulator"; } }
 
-        public override Rectangle Area
-        {
-            get
-            {
-                if (!Alive)
-                    throw new Exception(AheadWithName("进程不存在"));
-                var proc = GetMainProcess();
-                var hwnd = Win32API.FindWindowEx(proc.MainWindowHandle, IntPtr.Zero, null, "ScreenBoardClassWindow");
-                var rect = Win32API.GetWindowRect(hwnd);
-                if (!rect.Valid || rect.Width < 10 || rect.Height < 10)
-                    throw new Exception(AheadWithName("主窗口尺寸不合法"));
-                return rect.ToRectangle();
-            }
-        }
 
         public override Process GetMainProcess()
         {
             return GetProcessByName("Nox");
+        }
+
+        public override IntPtr GetMainWindowHandle()
+        {
+            AssertAlive();
+            var proc = GetMainProcess();
+            var hWnd = Win32API.FindWindowEx(proc.MainWindowHandle, IntPtr.Zero, null, "ScreenBoardClassWindow");
+            return hWnd;
+        }
+
+        public override string GetAdbExePath()
+        {
+            AssertAlive();
+            var dirPath = GetMainProcess().GetMainModuleDirectoryPath();
+            var refPath = $"{dirPath}/nox_adb.exe";
+            var path = Path.GetFullPath(refPath);
+            return path;
         }
 
     }

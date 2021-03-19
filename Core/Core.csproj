@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ShellUtils.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\Win32API.cs" />
     <Compile Include="Emulators\Emulator.cs" />

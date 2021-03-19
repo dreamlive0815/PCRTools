@@ -30,8 +30,11 @@ namespace PCRTools
         private void Form1_Load(object sender, EventArgs e)
         {
             emulator = new NOXEmulator();
-            //emulator = new MuMuEmulator();
-            emulator.GetScreenCapture().Save("nox.png");
+            emulator = new MuMuEmulator();
+            //emulator.GetScreenCapture().Save("nox.png");
+            //var adbPath = emulator.GetAdbExePath();
+            //Utils.SelectFileInExplorer(adbPath);
+            ShellUtils.DoShell(null, null);
         }
 
     }

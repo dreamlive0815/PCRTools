@@ -43,6 +43,16 @@ namespace Core.Common
             return null;
         }
 
+        public static void SelectFileInExplorer(string fullPath)
+        {
+            Process.Start("Explorer.exe", $"/select,{fullPath}");
+        }
+
+        public static void OpenDirectoryInExplorer(string fullPath)
+        {
+            Process.Start("Explorer.exe", $"{fullPath}");
+        }
+
         public static void PrintProcessesInfoToFile(string filePath)
         {
             var sb = new StringBuilder();
