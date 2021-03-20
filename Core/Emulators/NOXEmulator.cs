@@ -11,6 +11,7 @@ namespace Core.Emulators
     {
         public override string Name { get { return "NOXEmulator"; } }
 
+        public override int AdbPort { get; } = 62001;
 
         public override Process GetMainProcess()
         {
@@ -33,6 +34,5 @@ namespace Core.Emulators
             var path = Path.GetFullPath(refPath);
             return path;
         }
-
     }
 }

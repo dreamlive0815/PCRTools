@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\ShellUtils.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\Win32API.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Emulators\MumuEmulator.cs" />
     <Compile Include="Emulators\NOXEmulator.cs" />
     <Compile Include="Extensions\ProcessExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleHTTPClient.cs" />
   </ItemGroup>

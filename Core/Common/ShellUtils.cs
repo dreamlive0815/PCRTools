@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Common
 {
@@ -37,24 +33,7 @@ namespace Core.Common
             if (ignoreOutput)
                 return null;
 
-            if (args.ReadLineCallBack != null)
-            {
-                var outStream = proc.StandardOutput;
-                string line;
-                while (true)
-                {
-                    line = outStream.ReadLine();
-                    if (line == null)
-                        break;
-                    args.ReadLineCallBack(line);
-                }
-            }
-            else
-            {
-
-            }
-
-            return new ShellResult();
+            return new ShellResult(proc);
         }
     }
 
@@ -65,14 +44,60 @@ namespace Core.Common
         public string Arguments { get; set; }
 
         public bool IgnoreOutput { get; set; } = false;
-
-        public Action<string> ReadLineCallBack { get; set; }
     }
 
-    public class ShellResult
+    public class ShellResult : IDisposable
     {
-        public string Output { get; set; }
 
-        //public Task
+        public ShellResult(Process process)
+        {
+            Process = process;
+        }
+
+        public Process Process { get; private set; }
+
+        public string GetError()
+        {
+            var stream = Process.StandardError;
+            var err = stream.ReadToEnd();
+            return err;
+        }
+
+        private void AssertNoError()
+        {
+            var err = GetError();
+            if (!string.IsNullOrWhiteSpace(err))
+                throw new Exception(err);
+        }
+
+        public string GetOutput()
+        {
+            AssertNoError();
+            var stream = Process.StandardOutput;
+            var output = stream.ReadToEnd();
+            return output;
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // 要检测冗余调用
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Process?.Dispose();
+                    Process = null;
+                }
+                disposedValue = true;
+            }
+        }
+
+        void IDisposable.Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

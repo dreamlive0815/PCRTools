@@ -11,6 +11,8 @@ namespace Core.Emulators
     {
         public override string Name { get; } = "MuMuEmulator";
 
+        public override int AdbPort { get; } = 7555;
+
         public override Process GetMainProcess()
         {
             return GetProcessByName("NemuPlayer");
