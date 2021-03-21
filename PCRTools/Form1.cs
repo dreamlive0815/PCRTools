@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Core.Common;
 using Core.Emulators;
 using Core.Extensions;
+using Core.PCR;
 
 
 namespace PCRTools
@@ -20,7 +21,6 @@ namespace PCRTools
     {
 
         Emulator emulator;
-
 
         public Form1()
         {
@@ -34,10 +34,17 @@ namespace PCRTools
             //emulator.GetScreenCapture().Save("nox.png");
             //Utils.SelectFileInExplorer(emulator.GetAdbExePath());
             emulator.ConnectToAdbServer();
-            emulator.GetResolution();
-            
+            //emulator.GetResolution();
+            emulator.DoTap(new PVec2f(0.5f, 0.5f));
+            var configMgr = ConfigMgr.GetInstance();
+            var config = configMgr.Config;
+
             
         }
 
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            ConfigMgr.GetInstance().SaveConfig();
+        }
     }
 }

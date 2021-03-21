@@ -128,9 +128,9 @@ namespace Core.Emulators
             AdbCmd($"connect 127.0.0.1:{AdbPort}");
         }
 
-        private Size resolution;
+        private EmulatorSize resolution;
 
-        public Size GetResolution()
+        public EmulatorSize GetResolution()
         {
             if (!resolution.IsEmpty)
                 return resolution;
@@ -138,26 +138,82 @@ namespace Core.Emulators
             var match = Regex.Match(output, "(\\d+)x(\\d+)");
             if (!match.Success)
                 throw new Exception(AheadWithName("获取模拟器分辨率失败"));
-            var size = new Size(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+            var size = new EmulatorSize(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
             resolution = size;
             return size;
         }
+
+        public void DoTap(PVec2f pf)
+        {
+            DoTap(GetResolution() * pf);
+        }
+
+        public void DoTap(EmulatorPoint point)
+        {
+            var output = AdbShell($"input tap {point.X} {point.Y}");
+        }
     }
 
-    public struct EVec2f
+    public struct EmulatorPoint
     {
-        public float X;
-        public float Y;
+        public int X { get; set; }
 
-        public EVec2f(float x, float y)
+        public int Y { get; set; }
+
+        public EmulatorPoint(int x, int y)
         {
             X = x;
             Y = y;
         }
     }
 
-    public struct EVec4f
+    public struct EmulatorSize
     {
+        public int Width { get; set; }
 
+        public int Height { get; set; }
+
+        public bool IsEmpty { get { return Width == 0 && Height == 0; } }
+
+        public EmulatorSize(int width, int height)
+        {
+            Width = width;
+            Height = height;
+        }
+
+        public static EmulatorPoint operator *(EmulatorSize size, PVec2f pf)
+        {
+            var x = (int)(size.Width * pf.X);
+            var y = (int)(size.Height * pf.Y);
+            return new EmulatorPoint(x, y);
+        }
+    }
+
+    public struct PVec2f
+    {
+        public float X;
+        public float Y;
+
+        public PVec2f(float x, float y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
+    public struct RVec4f
+    {
+        public float X;
+        public float Y;
+        public float W;
+        public float H;
+
+        public RVec4f(float x, float y, float w, float h)
+        {
+            X = x;
+            Y = y;
+            W = w;
+            H = h;
+        }
     }
 }

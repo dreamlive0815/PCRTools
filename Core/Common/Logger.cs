@@ -13,6 +13,8 @@ namespace Core.Common
             return instance;
         }
 
+        public event Action<string, string> OnDebug;
+
         public event Action<string, string> OnInfo;
 
         public event Action<string, string> OnError;
@@ -20,6 +22,12 @@ namespace Core.Common
         private Logger()
         {
 
+        }
+
+        public void Debug(string tag, string msg)
+        {
+            OnDebug?.Invoke(tag, msg);
+            Console.WriteLine($"[DEBUG]{msg}");
         }
 
         public void Info(string tag, string msg)
