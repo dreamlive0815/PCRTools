@@ -5,11 +5,32 @@ using System.Text.RegularExpressions;
 
 using Core.Common;
 using Core.Extensions;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Core.Emulators
 {
     public abstract class Emulator
     {
+
+        public static List<Type> GetEmulatorTypes()
+        {
+            return GetEmulatorTypes(Assembly.GetAssembly(typeof(Emulator)));
+        }
+
+        public static List<Type> GetEmulatorTypes(Assembly assembly)
+        {
+            return Utils.GetChildTypes<Emulator>(assembly);
+        }
+
+        public static Emulator GetInstanceByType(Type type)
+        {
+            if (!type.IsSubclassOf(typeof(Emulator)))
+                throw new Exception("给定类型不属于Emulator子类");
+            var obj = Activator.CreateInstance(type);
+            var emulatorInst = obj as Emulator;
+            return emulatorInst;
+        }
 
         public Emulator()
         {
@@ -49,7 +70,7 @@ namespace Core.Emulators
             return $"[{Name}]{str}";
         }
 
-        protected void AssertAlive()
+        public void AssertAlive()
         {
             if (!Alive)
                 throw new Exception(AheadWithName("无法检测到模拟器"));
@@ -112,7 +133,7 @@ namespace Core.Emulators
                 IgnoreOutput = false,
             });
             var output = result.GetOutput();
-            Logger.GetInstance().Info("AdbCmd", AheadWithName($"{arguments}->{output.LimitLength(32)}"));
+            Logger.GetInstance().Info("AdbCmd", AheadWithName($"{arguments}->{output.LimitLength(40)}"));
             return output;
         }
 

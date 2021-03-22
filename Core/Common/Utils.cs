@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Reflection;
 using System.Text;
 
 namespace Core.Common
@@ -25,7 +27,6 @@ namespace Core.Common
             return bitmap;
         }
 
-
         public static string GetMainModuleFilePath(int processId)
         {
             string wmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + processId;
@@ -41,6 +42,20 @@ namespace Core.Common
                 }
             }
             return null;
+        }
+
+        public static List<Type> GetChildTypes<T>(Assembly assembly)
+        {
+            var list = new List<Type>();
+            var types = assembly.GetExportedTypes();
+            foreach (var type in types)
+            {
+                if (type.IsSubclassOf(typeof(T)))
+                {
+                    list.Add(type);
+                }
+            }
+            return list;
         }
 
         public static void SelectFileInExplorer(string fullPath)

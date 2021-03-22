@@ -3,6 +3,7 @@ using System.IO;
 
 using Newtonsoft.Json;
 
+using Core.Emulators;
 using Core.PCR;
 
 namespace Core.Common
@@ -21,6 +22,14 @@ namespace Core.Common
 #endif
 
         public PCRRegion PCRRegion { get; set; } = PCRRegion.Taiwan;
+
+        public Type DefaultEmulatorType { get; private set; }
+
+        public void SetDefaultEmulator(Emulator emulator)
+        {
+            emulator.AssertAlive();
+            DefaultEmulatorType = emulator.GetType();
+        }
     }
 
     public abstract class ConfigMgr

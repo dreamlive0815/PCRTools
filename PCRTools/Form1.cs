@@ -13,7 +13,7 @@ using Core.Common;
 using Core.Emulators;
 using Core.Extensions;
 using Core.PCR;
-
+using System.Reflection;
 
 namespace PCRTools
 {
@@ -31,15 +31,16 @@ namespace PCRTools
         {
             //emulator = new NOXEmulator();
             emulator = new MuMuEmulator();
-            //emulator.GetScreenCapture().Save("nox.png");
-            //Utils.SelectFileInExplorer(emulator.GetAdbExePath());
             emulator.ConnectToAdbServer();
-            //emulator.GetResolution();
-            emulator.DoTap(new PVec2f(0.5f, 0.5f));
+            var before = DateTime.Now;
+            
+            emulator.DoTap(new PVec2f(0.3656f, 0.6859f));
+            var span = DateTime.Now - before;
+            Console.WriteLine(span.TotalMilliseconds);
             var configMgr = ConfigMgr.GetInstance();
             var config = configMgr.Config;
 
-            
+            var list = Emulator.GetEmulatorTypes();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
