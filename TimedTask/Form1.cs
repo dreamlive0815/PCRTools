@@ -37,8 +37,11 @@ namespace TimedTask
             var now = DateTime.Now;
             var hour = int.Parse(txtHour.Text);
             var minute = int.Parse(txtMinute.Text);
-            var second = int.Parse(txtSecond.Text);
+            var secondF = double.Parse(txtSecond.Text);
+            var second = (int)Math.Floor(secondF);
+            var ms = (int)((secondF - second) * 1000);
             var target = new DateTime(now.Year, now.Month, now.Day, hour, minute, second);
+            target = target.AddMilliseconds(ms);
             if (target.Ticks < now.Ticks)
             {
                 target = target.AddDays(1);
@@ -51,6 +54,11 @@ namespace TimedTask
             txtHour.Text = datetime.Hour.ToString();
             txtMinute.Text = datetime.Minute.ToString();
             txtSecond.Text = datetime.Second.ToString();
+            if (datetime.Millisecond > 100)
+            {
+                var n = datetime.Millisecond / 100;
+                txtSecond.Text += $".{n}";
+            }
         }
 
         void Tap(PVec2f pf)
@@ -128,7 +136,7 @@ namespace TimedTask
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            Text = DateTime.Now.ToHMSString();
+            Text = DateTime.Now.ToString("hh:mm:ss:fff");
         }
 
         private void btnAddMinute_Click(object sender, EventArgs e)
@@ -142,6 +150,18 @@ namespace TimedTask
             var inputTime = GetInputTime();
             SetInputTime(inputTime.AddMinutes(-1));
         }
+
+        private void btnAddSecond_Click(object sender, EventArgs e)
+        {
+            var inputTime = GetInputTime();
+            SetInputTime(inputTime.AddSeconds(1));
+        }
+
+        private void btnSubSecond_Click(object sender, EventArgs e)
+        {
+            var inputTime = GetInputTime();
+            SetInputTime(inputTime.AddSeconds(-1));
+        }
     }
 
     public static class DateTimeExtension
@@ -153,7 +173,7 @@ namespace TimedTask
 
         public static string ToHMSString(this TimeSpan timespan)
         {
-            return string.Format("{0:D2}:{1:D2}:{2:D2}", timespan.Hours, timespan.Minutes, timespan.Seconds);
+            return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D3}", timespan.Hours, timespan.Minutes, timespan.Seconds, timespan.Milliseconds);
         }
     }
 }

@@ -43,6 +43,8 @@
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.btnAddMinute = new System.Windows.Forms.Button();
             this.btnSubMinute = new System.Windows.Forms.Button();
+            this.btnSubSecond = new System.Windows.Forms.Button();
+            this.btnAddSecond = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtHour
@@ -70,7 +72,7 @@
             // txtSecond
             // 
             this.txtSecond.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSecond.Location = new System.Drawing.Point(386, 12);
+            this.txtSecond.Location = new System.Drawing.Point(381, 12);
             this.txtSecond.Multiline = true;
             this.txtSecond.Name = "txtSecond";
             this.txtSecond.Size = new System.Drawing.Size(115, 44);
@@ -84,7 +86,7 @@
             this.lblHour.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHour.Location = new System.Drawing.Point(148, 15);
             this.lblHour.Name = "lblHour";
-            this.lblHour.Size = new System.Drawing.Size(48, 34);
+            this.lblHour.Size = new System.Drawing.Size(60, 43);
             this.lblHour.TabIndex = 3;
             this.lblHour.Text = "时";
             // 
@@ -94,7 +96,7 @@
             this.lblMinute.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMinute.Location = new System.Drawing.Point(332, 15);
             this.lblMinute.Name = "lblMinute";
-            this.lblMinute.Size = new System.Drawing.Size(48, 34);
+            this.lblMinute.Size = new System.Drawing.Size(60, 43);
             this.lblMinute.TabIndex = 4;
             this.lblMinute.Text = "分";
             // 
@@ -104,7 +106,7 @@
             this.label2.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(517, 15);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 34);
+            this.label2.Size = new System.Drawing.Size(60, 43);
             this.label2.TabIndex = 5;
             this.label2.Text = "秒";
             // 
@@ -140,7 +142,7 @@
             this.lblMsg.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMsg.Location = new System.Drawing.Point(28, 73);
             this.lblMsg.Name = "lblMsg";
-            this.lblMsg.Size = new System.Drawing.Size(0, 23);
+            this.lblMsg.Size = new System.Drawing.Size(0, 29);
             this.lblMsg.TabIndex = 8;
             // 
             // btnStop
@@ -179,11 +181,33 @@
             this.btnSubMinute.UseVisualStyleBackColor = true;
             this.btnSubMinute.Click += new System.EventHandler(this.btnSubMinute_Click);
             // 
+            // btnSubSecond
+            // 
+            this.btnSubSecond.Location = new System.Drawing.Point(493, 42);
+            this.btnSubSecond.Name = "btnSubSecond";
+            this.btnSubSecond.Size = new System.Drawing.Size(75, 24);
+            this.btnSubSecond.TabIndex = 13;
+            this.btnSubSecond.Text = "-";
+            this.btnSubSecond.UseVisualStyleBackColor = true;
+            this.btnSubSecond.Click += new System.EventHandler(this.btnSubSecond_Click);
+            // 
+            // btnAddSecond
+            // 
+            this.btnAddSecond.Location = new System.Drawing.Point(493, 1);
+            this.btnAddSecond.Name = "btnAddSecond";
+            this.btnAddSecond.Size = new System.Drawing.Size(75, 24);
+            this.btnAddSecond.TabIndex = 12;
+            this.btnAddSecond.Text = "+";
+            this.btnAddSecond.UseVisualStyleBackColor = true;
+            this.btnAddSecond.Click += new System.EventHandler(this.btnAddSecond_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(570, 263);
+            this.ClientSize = new System.Drawing.Size(604, 262);
+            this.Controls.Add(this.btnSubSecond);
+            this.Controls.Add(this.btnAddSecond);
             this.Controls.Add(this.btnSubMinute);
             this.Controls.Add(this.btnAddMinute);
             this.Controls.Add(this.btnStop);
@@ -225,6 +249,8 @@
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Button btnAddMinute;
         private System.Windows.Forms.Button btnSubMinute;
+        private System.Windows.Forms.Button btnSubSecond;
+        private System.Windows.Forms.Button btnAddSecond;
     }
 }
 
