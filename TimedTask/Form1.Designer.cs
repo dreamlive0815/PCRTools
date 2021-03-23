@@ -45,6 +45,7 @@
             this.btnSubMinute = new System.Windows.Forms.Button();
             this.btnSubSecond = new System.Windows.Forms.Button();
             this.btnAddSecond = new System.Windows.Forms.Button();
+            this.btnAdd5Minutes = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtHour
@@ -86,7 +87,7 @@
             this.lblHour.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHour.Location = new System.Drawing.Point(148, 15);
             this.lblHour.Name = "lblHour";
-            this.lblHour.Size = new System.Drawing.Size(60, 43);
+            this.lblHour.Size = new System.Drawing.Size(48, 34);
             this.lblHour.TabIndex = 3;
             this.lblHour.Text = "时";
             // 
@@ -96,7 +97,7 @@
             this.lblMinute.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMinute.Location = new System.Drawing.Point(332, 15);
             this.lblMinute.Name = "lblMinute";
-            this.lblMinute.Size = new System.Drawing.Size(60, 43);
+            this.lblMinute.Size = new System.Drawing.Size(48, 34);
             this.lblMinute.TabIndex = 4;
             this.lblMinute.Text = "分";
             // 
@@ -106,7 +107,7 @@
             this.label2.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(517, 15);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 43);
+            this.label2.Size = new System.Drawing.Size(48, 34);
             this.label2.TabIndex = 5;
             this.label2.Text = "秒";
             // 
@@ -142,7 +143,7 @@
             this.lblMsg.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMsg.Location = new System.Drawing.Point(28, 73);
             this.lblMsg.Name = "lblMsg";
-            this.lblMsg.Size = new System.Drawing.Size(0, 29);
+            this.lblMsg.Size = new System.Drawing.Size(0, 23);
             this.lblMsg.TabIndex = 8;
             // 
             // btnStop
@@ -201,11 +202,23 @@
             this.btnAddSecond.UseVisualStyleBackColor = true;
             this.btnAddSecond.Click += new System.EventHandler(this.btnAddSecond_Click);
             // 
+            // btnAdd5Minutes
+            // 
+            this.btnAdd5Minutes.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd5Minutes.Location = new System.Drawing.Point(202, 198);
+            this.btnAdd5Minutes.Name = "btnAdd5Minutes";
+            this.btnAdd5Minutes.Size = new System.Drawing.Size(161, 58);
+            this.btnAdd5Minutes.TabIndex = 14;
+            this.btnAdd5Minutes.Text = "设置5分钟后";
+            this.btnAdd5Minutes.UseVisualStyleBackColor = true;
+            this.btnAdd5Minutes.Click += new System.EventHandler(this.btnAdd5Minutes_Click);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(604, 262);
+            this.Controls.Add(this.btnAdd5Minutes);
             this.Controls.Add(this.btnSubSecond);
             this.Controls.Add(this.btnAddSecond);
             this.Controls.Add(this.btnSubMinute);
@@ -251,6 +264,7 @@
         private System.Windows.Forms.Button btnSubMinute;
         private System.Windows.Forms.Button btnSubSecond;
         private System.Windows.Forms.Button btnAddSecond;
+        private System.Windows.Forms.Button btnAdd5Minutes;
     }
 }
 

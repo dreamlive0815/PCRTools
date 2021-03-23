@@ -162,6 +162,11 @@ namespace TimedTask
             var inputTime = GetInputTime();
             SetInputTime(inputTime.AddSeconds(-1));
         }
+
+        private void btnAdd5Minutes_Click(object sender, EventArgs e)
+        {
+            SetInputTime(DateTime.Now.AddMinutes(5));
+        }
     }
 
     public static class DateTimeExtension
