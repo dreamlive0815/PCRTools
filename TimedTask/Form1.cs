@@ -74,6 +74,21 @@ namespace TimedTask
             Tap(new PVec2f(0.3656f, 0.6859f));
         }
 
+        void TapCenter()
+        {
+            Tap(new PVec2f(0.5f, 0.5f));
+        }
+
+        void TapStartBattle()
+        {
+            Tap(new PVec2f(0.8289f, 0.8359f));
+        }
+
+        void TapMenuButton()
+        {
+            Tap(new PVec2f(0.9398f, 0.0406f));
+        }
+
         void DoTimedThing()
         {
             TapBackButton();
@@ -93,12 +108,14 @@ namespace TimedTask
         void StopCountDown()
         {
             timer1.Stop();
+            timerw.Stop();
+            timerb.Stop();
             lblMsg.Text = "";
         }
 
         private void btnTestTap_Click(object sender, EventArgs e)
         {
-            Tap(new PVec2f(0.5f, 0.5f));
+            TapCenter();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -119,7 +136,7 @@ namespace TimedTask
             {
                 Task.Run(() =>
                 {
-                    Tap(new PVec2f(0.5f, 0.5f));
+                    TapCenter();
                 });
                 bPreTap = true;
             }
@@ -137,6 +154,12 @@ namespace TimedTask
         private void timer2_Tick(object sender, EventArgs e)
         {
             Text = DateTime.Now.ToString("hh:mm:ss:fff");
+
+            var span = waitTarget - DateTime.Now;
+            if (span.TotalMilliseconds > 0)
+            {
+                lblMsg.Text = string.Format("等待{0:N1}秒", span.TotalMilliseconds / 1000);
+            }
         }
 
         private void btnAddMinute_Click(object sender, EventArgs e)
@@ -166,6 +189,40 @@ namespace TimedTask
         private void btnAdd5Minutes_Click(object sender, EventArgs e)
         {
             SetInputTime(DateTime.Now.AddMinutes(5));
+        }
+
+        DateTime waitTarget = DateTime.Now;
+
+        void WaitAndBattle()
+        {
+            StopCountDown();
+            var seconds = int.Parse(txtWait.Text);
+            var battleSeconds = int.Parse(txtBattle.Text);
+            timerw.Interval = seconds * 1000;
+            timerb.Interval = 15 * 1000;
+            waitTarget = DateTime.Now.AddSeconds(seconds);
+            lblMsg.Text = $"等待{seconds}秒";
+            timerw.Start();
+        }
+
+        private void btnWaitAndBattle_Click(object sender, EventArgs e)
+        {
+            WaitAndBattle();
+        }
+
+        private void timerw_Tick(object sender, EventArgs e)
+        {
+            timerw.Enabled = false;
+            SetInputTime(DateTime.Now.AddSeconds(int.Parse(txtBattle.Text)));
+            StartCountDown();
+            TapStartBattle();
+            timerb.Start();
+        }
+
+        private void timerb_Tick(object sender, EventArgs e)
+        {
+            timerb.Enabled = false;
+            TapMenuButton();
         }
     }
 

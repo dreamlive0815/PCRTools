@@ -46,6 +46,11 @@
             this.btnSubSecond = new System.Windows.Forms.Button();
             this.btnAddSecond = new System.Windows.Forms.Button();
             this.btnAdd5Minutes = new System.Windows.Forms.Button();
+            this.btnWaitAndBattle = new System.Windows.Forms.Button();
+            this.timerw = new System.Windows.Forms.Timer(this.components);
+            this.timerb = new System.Windows.Forms.Timer(this.components);
+            this.txtWait = new System.Windows.Forms.TextBox();
+            this.txtBattle = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtHour
@@ -213,11 +218,57 @@
             this.btnAdd5Minutes.UseVisualStyleBackColor = true;
             this.btnAdd5Minutes.Click += new System.EventHandler(this.btnAdd5Minutes_Click);
             // 
+            // btnWaitAndBattle
+            // 
+            this.btnWaitAndBattle.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnWaitAndBattle.Location = new System.Drawing.Point(381, 120);
+            this.btnWaitAndBattle.Name = "btnWaitAndBattle";
+            this.btnWaitAndBattle.Size = new System.Drawing.Size(175, 58);
+            this.btnWaitAndBattle.TabIndex = 15;
+            this.btnWaitAndBattle.Text = "准备and战斗";
+            this.btnWaitAndBattle.UseVisualStyleBackColor = true;
+            this.btnWaitAndBattle.Click += new System.EventHandler(this.btnWaitAndBattle_Click);
+            // 
+            // timerw
+            // 
+            this.timerw.Interval = 120000;
+            this.timerw.Tick += new System.EventHandler(this.timerw_Tick);
+            // 
+            // timerb
+            // 
+            this.timerb.Interval = 10000;
+            this.timerb.Tick += new System.EventHandler(this.timerb_Tick);
+            // 
+            // txtWait
+            // 
+            this.txtWait.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtWait.Location = new System.Drawing.Point(381, 198);
+            this.txtWait.Multiline = true;
+            this.txtWait.Name = "txtWait";
+            this.txtWait.Size = new System.Drawing.Size(72, 41);
+            this.txtWait.TabIndex = 16;
+            this.txtWait.Text = "120";
+            this.txtWait.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtBattle
+            // 
+            this.txtBattle.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBattle.Location = new System.Drawing.Point(484, 198);
+            this.txtBattle.Multiline = true;
+            this.txtBattle.Name = "txtBattle";
+            this.txtBattle.Size = new System.Drawing.Size(72, 41);
+            this.txtBattle.TabIndex = 17;
+            this.txtBattle.Text = "180";
+            this.txtBattle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(604, 262);
+            this.Controls.Add(this.txtBattle);
+            this.Controls.Add(this.txtWait);
+            this.Controls.Add(this.btnWaitAndBattle);
             this.Controls.Add(this.btnAdd5Minutes);
             this.Controls.Add(this.btnSubSecond);
             this.Controls.Add(this.btnAddSecond);
@@ -265,6 +316,11 @@
         private System.Windows.Forms.Button btnSubSecond;
         private System.Windows.Forms.Button btnAddSecond;
         private System.Windows.Forms.Button btnAdd5Minutes;
+        private System.Windows.Forms.Button btnWaitAndBattle;
+        private System.Windows.Forms.Timer timerw;
+        private System.Windows.Forms.Timer timerb;
+        private System.Windows.Forms.TextBox txtWait;
+        private System.Windows.Forms.TextBox txtBattle;
     }
 }
 
