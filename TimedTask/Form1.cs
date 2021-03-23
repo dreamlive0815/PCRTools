@@ -29,12 +29,17 @@ namespace TimedTask
             emulator = new MuMuEmulator();
             emulator.ConnectToAdbServer();
 
-            SetInputTime(DateTime.Now.AddMinutes(5));
+            SetInputTime(GetNowTime().AddMinutes(5));
+        }
+
+        DateTime GetNowTime()
+        {
+            return DateTime.Now.AddSeconds(-5);
         }
 
         DateTime GetInputTime()
         {
-            var now = DateTime.Now;
+            var now = GetNowTime();
             var hour = int.Parse(txtHour.Text);
             var minute = int.Parse(txtMinute.Text);
             var secondF = double.Parse(txtSecond.Text);
@@ -63,9 +68,9 @@ namespace TimedTask
 
         void Tap(PVec2f pf)
         {
-            var before = DateTime.Now;
+            var before = GetNowTime();
             emulator.DoTap(pf);
-            var span = DateTime.Now - before;
+            var span = GetNowTime() - before;
             Console.WriteLine($"TapBackButton takes {span.TotalMilliseconds} ms");
         }
 
@@ -110,6 +115,7 @@ namespace TimedTask
             timer1.Stop();
             timerw.Stop();
             timerb.Stop();
+            waitTarget = GetNowTime();
             lblMsg.Text = "";
         }
 
@@ -130,7 +136,7 @@ namespace TimedTask
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            var now = DateTime.Now;
+            var now = GetNowTime();
             var span = target - now;
             if (!bPreTap && span.TotalMilliseconds <= 8000)
             {
@@ -153,9 +159,9 @@ namespace TimedTask
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            Text = DateTime.Now.ToString("hh:mm:ss:fff");
+            Text = GetNowTime().ToString("hh:mm:ss:fff");
 
-            var span = waitTarget - DateTime.Now;
+            var span = waitTarget - GetNowTime();
             if (span.TotalMilliseconds > 0)
             {
                 lblMsg.Text = string.Format("等待{0:N1}秒", span.TotalMilliseconds / 1000);
@@ -188,10 +194,10 @@ namespace TimedTask
 
         private void btnAdd5Minutes_Click(object sender, EventArgs e)
         {
-            SetInputTime(DateTime.Now.AddMinutes(5));
+            SetInputTime(GetNowTime().AddMinutes(5));
         }
 
-        DateTime waitTarget = DateTime.Now;
+        DateTime waitTarget;
 
         void WaitAndBattle()
         {
@@ -200,7 +206,7 @@ namespace TimedTask
             var battleSeconds = int.Parse(txtBattle.Text);
             timerw.Interval = seconds * 1000;
             timerb.Interval = 15 * 1000;
-            waitTarget = DateTime.Now.AddSeconds(seconds);
+            waitTarget = GetNowTime().AddSeconds(seconds);
             lblMsg.Text = $"等待{seconds}秒";
             timerw.Start();
         }
@@ -213,7 +219,7 @@ namespace TimedTask
         private void timerw_Tick(object sender, EventArgs e)
         {
             timerw.Enabled = false;
-            SetInputTime(DateTime.Now.AddSeconds(int.Parse(txtBattle.Text)));
+            SetInputTime(GetNowTime().AddSeconds(int.Parse(txtBattle.Text)));
             StartCountDown();
             TapStartBattle();
             timerb.Start();
