@@ -51,6 +51,9 @@
             this.timerb = new System.Windows.Forms.Timer(this.components);
             this.txtWait = new System.Windows.Forms.TextBox();
             this.txtBattle = new System.Windows.Forms.TextBox();
+            this.txtOffset = new System.Windows.Forms.TextBox();
+            this.lblOffset = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtHour
@@ -92,7 +95,7 @@
             this.lblHour.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblHour.Location = new System.Drawing.Point(148, 15);
             this.lblHour.Name = "lblHour";
-            this.lblHour.Size = new System.Drawing.Size(48, 34);
+            this.lblHour.Size = new System.Drawing.Size(60, 43);
             this.lblHour.TabIndex = 3;
             this.lblHour.Text = "时";
             // 
@@ -102,7 +105,7 @@
             this.lblMinute.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMinute.Location = new System.Drawing.Point(332, 15);
             this.lblMinute.Name = "lblMinute";
-            this.lblMinute.Size = new System.Drawing.Size(48, 34);
+            this.lblMinute.Size = new System.Drawing.Size(60, 43);
             this.lblMinute.TabIndex = 4;
             this.lblMinute.Text = "分";
             // 
@@ -112,7 +115,7 @@
             this.label2.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(517, 15);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(48, 34);
+            this.label2.Size = new System.Drawing.Size(60, 43);
             this.label2.TabIndex = 5;
             this.label2.Text = "秒";
             // 
@@ -148,7 +151,7 @@
             this.lblMsg.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMsg.Location = new System.Drawing.Point(28, 73);
             this.lblMsg.Name = "lblMsg";
-            this.lblMsg.Size = new System.Drawing.Size(0, 23);
+            this.lblMsg.Size = new System.Drawing.Size(0, 29);
             this.lblMsg.TabIndex = 8;
             // 
             // btnStop
@@ -261,11 +264,45 @@
             this.txtBattle.Text = "180";
             this.txtBattle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // txtOffset
+            // 
+            this.txtOffset.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOffset.Location = new System.Drawing.Point(120, 279);
+            this.txtOffset.Multiline = true;
+            this.txtOffset.Name = "txtOffset";
+            this.txtOffset.Size = new System.Drawing.Size(152, 43);
+            this.txtOffset.TabIndex = 18;
+            this.txtOffset.Text = "0";
+            this.txtOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lblOffset
+            // 
+            this.lblOffset.AutoSize = true;
+            this.lblOffset.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOffset.Location = new System.Drawing.Point(25, 279);
+            this.lblOffset.Name = "lblOffset";
+            this.lblOffset.Size = new System.Drawing.Size(101, 43);
+            this.lblOffset.TabIndex = 19;
+            this.lblOffset.Text = "偏移";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(278, 279);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(101, 43);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "毫秒";
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(604, 262);
+            this.ClientSize = new System.Drawing.Size(631, 332);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblOffset);
+            this.Controls.Add(this.txtOffset);
             this.Controls.Add(this.txtBattle);
             this.Controls.Add(this.txtWait);
             this.Controls.Add(this.btnWaitAndBattle);
@@ -320,6 +357,9 @@
         private System.Windows.Forms.Timer timerb;
         private System.Windows.Forms.TextBox txtWait;
         private System.Windows.Forms.TextBox txtBattle;
+        private System.Windows.Forms.TextBox txtOffset;
+        private System.Windows.Forms.Label lblOffset;
+        private System.Windows.Forms.Label label1;
     }
 }
 

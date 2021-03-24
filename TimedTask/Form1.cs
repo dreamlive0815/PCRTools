@@ -30,11 +30,15 @@ namespace TimedTask
             emulator.ConnectToAdbServer();
 
             SetInputTime(GetNowTime().AddMinutes(5));
+
+
         }
 
         DateTime GetNowTime()
         {
-            return DateTime.Now.AddSeconds(-5);
+            var offsetMS = 0;
+            int.TryParse(txtOffset.Text, out offsetMS);
+            return DateTime.Now.AddMilliseconds(offsetMS);
         }
 
         DateTime GetInputTime()
