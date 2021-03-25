@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Core.Emulators;
+using SimpleHTTPClient;
 
 namespace TimedTask
 {
@@ -26,12 +27,18 @@ namespace TimedTask
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            long timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds(); // 相差秒数
+            Console.WriteLine(timeStamp);
+            using (var client = new Client())
+            {
+                var s = client.Get("http://bjtime.cn/nt3.php");
+                Console.WriteLine(s);
+            }
+
             emulator = new MuMuEmulator();
             emulator.ConnectToAdbServer();
 
             SetInputTime(GetNowTime().AddMinutes(5));
-
-
         }
 
         DateTime GetNowTime()
