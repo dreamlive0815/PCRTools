@@ -30,16 +30,12 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             ConfigMgr.GetInstance().SaveConfig();
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
         }
     }
 }

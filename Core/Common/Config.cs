@@ -84,6 +84,8 @@ namespace Core.Common
     {
         public static void AddConfigItemsToMenuStrip(MenuStrip menuStrip)
         {
+            var config = ConfigMgr.GetInstance().Config;
+
             menuStrip.SuspendLayout();
 
             var settingItems = new ToolStripMenuItem();
@@ -95,14 +97,25 @@ namespace Core.Common
             settingItems.DropDownItems.Add(regionItems);
             var refreshRegionCheckStatus = new Action(() =>
             {
-
+                foreach (ToolStripMenuItem item in regionItems.DropDownItems)
+                {
+                    var bChecked = item.Text == config.PCRRegion.ToString();
+                    item.Checked = bChecked;
+                    regionItems.Text = bChecked ? $"区域: {item.Text}" : regionItems.Text;
+                }
             });
             foreach (var name in Enum.GetNames(typeof(PCRRegion)))
             {
                 var regionItem = new ToolStripMenuItem();
                 regionItem.Text = name;
                 regionItems.DropDownItems.Add(regionItem);
+                regionItem.Click += (s, e) => {
+                    config.PCRRegion = (PCRRegion) Enum.Parse(typeof(PCRRegion), regionItem.Text);
+                    ConfigMgr.GetInstance().SaveConfig();
+                    refreshRegionCheckStatus();
+                };
             }
+            refreshRegionCheckStatus();
 
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
