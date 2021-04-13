@@ -134,6 +134,7 @@ namespace Core.Emulators
             });
             var output = result.GetOutput();
             Logger.GetInstance().Info("AdbCmd", AheadWithName($"{arguments}->{output.LimitLength(40)}"));
+            result.Dispose();
             return output;
         }
 
@@ -212,10 +213,10 @@ namespace Core.Emulators
 
     public struct PVec2f
     {
-        public float X;
-        public float Y;
+        public double X;
+        public double Y;
 
-        public PVec2f(float x, float y)
+        public PVec2f(double x, double y)
         {
             X = x;
             Y = y;
@@ -224,12 +225,12 @@ namespace Core.Emulators
 
     public struct RVec4f
     {
-        public float X;
-        public float Y;
-        public float W;
-        public float H;
+        public double X;
+        public double Y;
+        public double W;
+        public double H;
 
-        public RVec4f(float x, float y, float w, float h)
+        public RVec4f(double x, double y, double w, double h)
         {
             X = x;
             Y = y;

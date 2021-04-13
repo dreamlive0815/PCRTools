@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms;
 
 using Newtonsoft.Json;
 
@@ -76,6 +77,35 @@ namespace Core.Common
         {
             var content = JsonConvert.SerializeObject(Config, Formatting.Indented);
             File.WriteAllText(JSON_PATH, content);
+        }
+    }
+
+    public static class ConfigUITool
+    {
+        public static void AddConfigItemsToMenuStrip(MenuStrip menuStrip)
+        {
+            menuStrip.SuspendLayout();
+
+            var settingItems = new ToolStripMenuItem();
+            settingItems.Text = "设置(&S)";
+            menuStrip.Items.Add(settingItems);
+
+            var regionItems = new ToolStripMenuItem();
+            regionItems.Text = "区域";
+            settingItems.DropDownItems.Add(regionItems);
+            var refreshRegionCheckStatus = new Action(() =>
+            {
+
+            });
+            foreach (var name in Enum.GetNames(typeof(PCRRegion)))
+            {
+                var regionItem = new ToolStripMenuItem();
+                regionItem.Text = name;
+                regionItems.DropDownItems.Add(regionItem);
+            }
+
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
         }
     }
 }

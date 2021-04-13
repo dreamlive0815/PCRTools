@@ -25,27 +25,21 @@ namespace PCRTools
         public Form1()
         {
             InitializeComponent();
+            ConfigUITool.AddConfigItemsToMenuStrip(menuStrip1);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //emulator = new NOXEmulator();
-            emulator = new MuMuEmulator();
-            emulator.ConnectToAdbServer();
-            var before = DateTime.Now;
-            
-            emulator.DoTap(new PVec2f(0.3656f, 0.6859f));
-            var span = DateTime.Now - before;
-            Console.WriteLine(span.TotalMilliseconds);
-            var configMgr = ConfigMgr.GetInstance();
-            var config = configMgr.Config;
-
-            var list = Emulator.GetEmulatorTypes();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             ConfigMgr.GetInstance().SaveConfig();
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }

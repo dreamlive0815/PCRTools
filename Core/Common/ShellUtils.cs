@@ -94,7 +94,7 @@ namespace Core.Common
             }
         }
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             Dispose(true);
         }

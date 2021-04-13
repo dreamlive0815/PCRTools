@@ -17,16 +17,16 @@ namespace SimpleHTTPClient
         public Client()
         {
             client = new HttpClient();
-            setTimeoutMS(5000);
-            setRequestHeader(Headers.UserAgent, UserAgents.Chrome);
+            SetTimeoutMS(5000);
+            SetRequestHeader(Headers.UserAgent, UserAgents.Chrome);
         }
 
-        public void setTimeoutMS(int timeoutMS)
+        public void SetTimeoutMS(int timeoutMS)
         {
             client.Timeout = TimeSpan.FromMilliseconds(timeoutMS);
         }
 
-        public void setRequestHeader(string name, string value)
+        public void SetRequestHeader(string name, string value)
         {
             client.DefaultRequestHeaders.TryAddWithoutValidation(name, value);
         }
@@ -38,13 +38,12 @@ namespace SimpleHTTPClient
 
         public void DownloadFile(string uri, string fileStorePath)
         {
-            var task = DownloadFileAsync(uri, fileStorePath);
-            task.Wait();
+            DownloadFileAsync(uri, fileStorePath).Wait();
         }
 
         public async Task DownloadFileAsync(string uri, string fileStorePath)
         {
-            var stream = await client.GetStreamAsync(uri);
+            var stream = await client.GetStreamAsync(uri).ConfigureAwait(false);
             var fileStream = new FileStream(fileStorePath, FileMode.Create, FileAccess.Write);
             using (stream)
             using (fileStream)
