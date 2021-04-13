@@ -55,14 +55,12 @@ namespace SimpleHTTPClient
 
         public string Get(string uri)
         {
-            var task = GetAsync(uri);
-            task.Wait();
-            return task.Result;
+            return GetAsync(uri).Result;
         }
 
         public async Task<string> GetAsync(string uri)
         {
-            var response = await client.GetAsync(uri);
+            var response = await client.GetAsync(uri).ConfigureAwait(false);
             HandleResponse(response);
             var rawText = await response.Content.ReadAsStringAsync();
             return rawText;
@@ -76,16 +74,14 @@ namespace SimpleHTTPClient
 
         public string Post(string uri, string data, string contentType)
         {
-            var task = PostAsync(uri, data, contentType);
-            task.Wait();
-            return task.Result;
+            return PostAsync(uri, data, contentType).Result;
         }
 
         public async Task<string> PostAsync(string uri, string data, string contentType)
         {
             var content = new StringContent(data);
             content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-            var response = await client.PostAsync(uri, content);
+            var response = await client.PostAsync(uri, content).ConfigureAwait(false);
             HandleResponse(response);
             var rawText = await response.Content.ReadAsStringAsync();
             return rawText;
