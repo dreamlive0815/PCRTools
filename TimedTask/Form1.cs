@@ -29,10 +29,18 @@ namespace TimedTask
         {
             long timeStamp = DateTimeOffset.Now.ToUnixTimeSeconds(); // 相差秒数
             Console.WriteLine(timeStamp);
+            var startTicks = DateTime.Now.Ticks;
             using (var client = new Client())
             {
                 var s = client.Get("http://bjtime.cn/nt3.php");
                 Console.WriteLine(s);
+                var endTicks = DateTime.Now.Ticks;
+                var spanInMS = (endTicks - startTicks) / 10000;
+                var ss = s.Split(' ');
+                var bjTimeStamp0 = double.Parse(ss[0]);
+                var bjTimeStamp1 = long.Parse(ss[1]);
+                var diff = bjTimeStamp0 + bjTimeStamp1 - timeStamp;
+                label1.Text += $" {diff.ToString("0.00")}s {spanInMS}ms";
             }
 
             emulator = new MuMuEmulator();
