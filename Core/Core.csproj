@@ -55,6 +55,7 @@
     <Compile Include="Emulators\Emulator.cs" />
     <Compile Include="Emulators\MumuEmulator.cs" />
     <Compile Include="Emulators\NOXEmulator.cs" />
+    <Compile Include="EventSystem.cs" />
     <Compile Include="Extensions\ProcessExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="PCR\Enums.cs" />

@@ -15,6 +15,8 @@ using Core.Extensions;
 using Core.PCR;
 using System.Reflection;
 
+using EventSystem;
+
 namespace PCRTools
 {
     public partial class Form1 : Form
@@ -30,7 +32,12 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            EventMgr.RegisterListener("PCRRegionChanged", (args) =>
+            {
+                Invoke(new Action(() => {
+                    Text = ConfigMgr.GetInstance().Config.PCRRegion.ToString();
+                }));
+            });
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

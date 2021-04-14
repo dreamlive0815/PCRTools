@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 using Core.Emulators;
 using Core.PCR;
+using EventSystem;
 
 namespace Core.Common
 {
@@ -113,6 +114,7 @@ namespace Core.Common
                     config.PCRRegion = (PCRRegion) Enum.Parse(typeof(PCRRegion), regionItem.Text);
                     ConfigMgr.GetInstance().SaveConfig();
                     refreshRegionCheckStatus();
+                    EventMgr.FireEvent("PCRRegionChanged", null);
                 };
             }
             refreshRegionCheckStatus();
