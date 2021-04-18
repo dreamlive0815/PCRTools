@@ -10,6 +10,6 @@ namespace Core.PCR
     {
         Japan,
         Taiwan,
-        China,
+        Mainland,
     }
 }

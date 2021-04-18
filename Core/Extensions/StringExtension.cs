@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Core.Extensions
 {
@@ -11,6 +12,11 @@ namespace Core.Extensions
                 return str;
             else
                 return str.Substring(0, length) + "...";
+        }
+
+        public static string PathJoin(this string parentPath, string name)
+        {
+            return $"{parentPath}{Path.DirectorySeparatorChar}{name}";
         }
     }
 }

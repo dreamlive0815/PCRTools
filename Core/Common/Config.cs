@@ -23,8 +23,6 @@ namespace Core.Common
         public bool Debug { get; set; } = false;
 #endif
 
-        public PCRRegion PCRRegion { get; set; } = PCRRegion.Taiwan;
-
         public Type DefaultEmulatorType { get; private set; }
 
         public void SetDefaultEmulator(Emulator emulator)
@@ -32,6 +30,12 @@ namespace Core.Common
             emulator.AssertAlive();
             DefaultEmulatorType = emulator.GetType();
         }
+
+        public string ResourceRootDirectory { get; set; } = "./res";
+
+        public PCRRegion PCRRegion { get; set; } = PCRRegion.Taiwan;
+
+        
     }
 
     public abstract class ConfigMgr

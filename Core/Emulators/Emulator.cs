@@ -209,6 +209,12 @@ namespace Core.Emulators
             var y = (int)(size.Height * pf.Y);
             return new EmulatorPoint(x, y);
         }
+
+        public Tuple<int, int> Simplify()
+        {
+            var divisor = Utils.GetLargestCommonDivisor(Width, Height);
+            return new Tuple<int, int>(Width / divisor, Height / divisor);
+        }
     }
 
     public struct PVec2f
@@ -236,6 +242,42 @@ namespace Core.Emulators
             Y = y;
             W = w;
             H = h;
+        }
+    }
+
+    public class AspectRatio
+    {
+        public static List<AspectRatio> SupportedAspectRatio { get; } = new List<AspectRatio>()
+        {
+            new AspectRatio(16,9),
+        };
+
+        public static AspectRatio GetAspectRatio(EmulatorSize resolution)
+        {
+            var simplified = resolution.Simplify();
+            foreach (var ratio in SupportedAspectRatio)
+            {
+                if (ratio.W == simplified.Item1 && ratio.H == simplified.Item2)
+                {
+                    return ratio;
+                }
+            }
+            return null;
+        }
+
+        public int W { get; private set; }
+
+        public int H { get; private set; }
+
+        public AspectRatio(int w, int h)
+        {
+            W = w;
+            H = h;
+        }
+
+        public override string ToString()
+        {
+            return $"{W}_{H}";
         }
     }
 }

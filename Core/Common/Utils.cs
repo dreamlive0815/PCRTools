@@ -27,6 +27,45 @@ namespace Core.Common
             return bitmap;
         }
 
+        public static List<Type> GetChildTypes<T>(Assembly assembly)
+        {
+            var list = new List<Type>();
+            var types = assembly.GetExportedTypes();
+            foreach (var type in types)
+            {
+                if (type.IsSubclassOf(typeof(T)))
+                {
+                    list.Add(type);
+                }
+            }
+            return list;
+        }
+
+        #region FileSystem
+
+        public static void SelectFileInExplorer(string fullPath)
+        {
+            Process.Start("Explorer.exe", $"/select,{fullPath}");
+        }
+
+        public static void OpenDirectoryInExplorer(string fullPath)
+        {
+            Process.Start("Explorer.exe", $"{fullPath}");
+        }
+
+        public static void MakeDirectory(string dirPath)
+        {
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+        }
+
+        #endregion
+
+
+        #region Process
+
         public static string GetMainModuleFilePath(int processId)
         {
             string wmiQueryString = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + processId;
@@ -42,30 +81,6 @@ namespace Core.Common
                 }
             }
             return null;
-        }
-
-        public static List<Type> GetChildTypes<T>(Assembly assembly)
-        {
-            var list = new List<Type>();
-            var types = assembly.GetExportedTypes();
-            foreach (var type in types)
-            {
-                if (type.IsSubclassOf(typeof(T)))
-                {
-                    list.Add(type);
-                }
-            }
-            return list;
-        }
-
-        public static void SelectFileInExplorer(string fullPath)
-        {
-            Process.Start("Explorer.exe", $"/select,{fullPath}");
-        }
-
-        public static void OpenDirectoryInExplorer(string fullPath)
-        {
-            Process.Start("Explorer.exe", $"{fullPath}");
         }
 
         public static void PrintProcessesInfoToFile(string filePath)
@@ -94,5 +109,25 @@ namespace Core.Common
             }
             Console.Write(sb.ToString());
         }
+
+        #endregion
+
+        #region Math
+
+        public static int GetLargestCommonDivisor(int a, int b)
+        {
+            var min = Math.Min(a, b);
+            var max = Math.Max(a, b);
+            var remainder = 0;
+            while (min != 0)
+            {
+                remainder = max % min;
+                max = min;
+                min = remainder;
+            }
+            return max;
+        }
+
+        #endregion
     }
 }
