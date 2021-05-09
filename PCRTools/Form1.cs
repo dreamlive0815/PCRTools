@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using Core.Common;
 using Core.Emulators;
 using Core.Extensions;
-using Core.PCR;
 using System.Reflection;
 
 using EventSystem;
@@ -32,10 +31,10 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            EventMgr.RegisterListener("PCRRegionChanged", (args) =>
+            EventMgr.RegisterListener("ConfigRegionChanged", (args) =>
             {
                 Invoke(new Action(() => {
-                    Text = ConfigMgr.GetInstance().Config.PCRRegion.ToString();
+                    Text = ConfigMgr.GetInstance().Config.Region.ToString();
                 }));
             });
         }

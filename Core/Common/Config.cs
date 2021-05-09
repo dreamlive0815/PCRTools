@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
 using Newtonsoft.Json;
 
 using Core.Emulators;
-using Core.PCR;
+using Core.Extensions;
 using EventSystem;
 
 namespace Core.Common
@@ -27,15 +28,34 @@ namespace Core.Common
 
         public void SetDefaultEmulator(Emulator emulator)
         {
-            emulator.AssertAlive();
+            //emulator.AssertAlive();
             DefaultEmulatorType = emulator.GetType();
         }
 
+        public void SetDefaultEmulator(Type emulatorType)
+        {
+            if (!emulatorType.IsSubclassOf(typeof(Emulator)))
+                throw new Exception("给定类型不属于Emulator子类");
+            DefaultEmulatorType = emulatorType;
+        }
+
+#if DEBUG
+        public string ResourceRootDirectory { get; set; } = "../../../res";
+#else
         public string ResourceRootDirectory { get; set; } = "./res";
+#endif
 
-        public PCRRegion PCRRegion { get; set; } = PCRRegion.Taiwan;
+        public string GameKey { get; set; } = "PCR";
 
+        public Region Region { get; set; } = Region.Taiwan;
         
+    }
+
+    public enum Region
+    {
+        Mainland,
+        Taiwan,
+        Japan,
     }
 
     public abstract class ConfigMgr
@@ -46,6 +66,11 @@ namespace Core.Common
         {
             instance = instance ?? new JsonConfigMgr();
             return instance;
+        }
+
+        public static Config GetConfig()
+        {
+            return GetInstance().Config;
         }
 
         protected ConfigMgr()
@@ -97,6 +122,35 @@ namespace Core.Common
             settingItems.Text = "设置(&S)";
             menuStrip.Items.Add(settingItems);
 
+            var emulatorItems = new ToolStripMenuItem();
+            emulatorItems.Text = "模拟器";
+            settingItems.DropDownItems.Add(emulatorItems);
+            var emulatorMap = new Dictionary<string, Type>();
+            var refreshEmulatorCheckStatus = new Action(() =>
+            {
+                foreach (ToolStripMenuItem item in emulatorItems.DropDownItems)
+                {
+                    var emulatorType = emulatorMap.Get(item.Text);
+                    var bChecked = emulatorType == config.DefaultEmulatorType;
+                    item.Checked = bChecked;
+                    emulatorItems.Text = bChecked ? $"模拟器: {item.Text}" : emulatorItems.Text;
+                }
+            });
+            foreach (var emulatorType in Emulator.GetEmulatorTypes())
+            {
+                var name = Emulator.GetInstanceByType(emulatorType).Name;
+                var emulatorItem = new ToolStripMenuItem();
+                emulatorItem.Text = name;
+                emulatorMap[name] = emulatorType;
+                emulatorItems.DropDownItems.Add(emulatorItem);
+                emulatorItem.Click += (s, e) => {
+                    config.SetDefaultEmulator(emulatorType);
+                    ConfigMgr.GetInstance().SaveConfig();
+                    refreshEmulatorCheckStatus();
+                    EventMgr.FireEvent("ConfigEmulatorTypeChanged", null);
+                };
+            }
+
             var regionItems = new ToolStripMenuItem();
             regionItems.Text = "区域";
             settingItems.DropDownItems.Add(regionItems);
@@ -104,21 +158,21 @@ namespace Core.Common
             {
                 foreach (ToolStripMenuItem item in regionItems.DropDownItems)
                 {
-                    var bChecked = item.Text == config.PCRRegion.ToString();
+                    var bChecked = item.Text == config.Region.ToString();
                     item.Checked = bChecked;
                     regionItems.Text = bChecked ? $"区域: {item.Text}" : regionItems.Text;
                 }
             });
-            foreach (var name in Enum.GetNames(typeof(PCRRegion)))
+            foreach (var name in Enum.GetNames(typeof(Region)))
             {
                 var regionItem = new ToolStripMenuItem();
                 regionItem.Text = name;
                 regionItems.DropDownItems.Add(regionItem);
                 regionItem.Click += (s, e) => {
-                    config.PCRRegion = (PCRRegion) Enum.Parse(typeof(PCRRegion), regionItem.Text);
+                    config.Region = (Region) Enum.Parse(typeof(Region), regionItem.Text);
                     ConfigMgr.GetInstance().SaveConfig();
                     refreshRegionCheckStatus();
-                    EventMgr.FireEvent("PCRRegionChanged", null);
+                    EventMgr.FireEvent("ConfigRegionChanged", null);
                 };
             }
             refreshRegionCheckStatus();

@@ -9,7 +9,7 @@ namespace Core.Emulators
 {
     public class MuMuEmulator : Emulator
     {
-        public override string Name { get; } = "MuMuEmulator";
+        public override string Name { get; } = "Mumu模拟器";
 
         public override int AdbPort { get; } = 7555;
 

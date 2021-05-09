@@ -26,6 +26,8 @@ namespace Core.Common
 
         public void Debug(string tag, string msg)
         {
+            if (!ConfigMgr.GetConfig().Debug)
+                return;
             OnDebug?.Invoke(tag, msg);
             Console.WriteLine($"[DEBUG]{msg}");
         }

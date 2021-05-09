@@ -165,6 +165,14 @@ namespace Core.Emulators
             return size;
         }
 
+        public void AssertResolutionIsSupported()
+        {
+            var resolution = GetResolution();
+            var aspectRatio = AspectRatio.GetAspectRatio(resolution);
+            if (aspectRatio == null)
+                throw new Exception($"不支持的分辨率: {resolution}");
+        }
+
         public void DoTap(PVec2f pf)
         {
             DoTap(GetResolution() * pf);
@@ -214,6 +222,11 @@ namespace Core.Emulators
         {
             var divisor = Utils.GetLargestCommonDivisor(Width, Height);
             return new Tuple<int, int>(Width / divisor, Height / divisor);
+        }
+
+        public override string ToString()
+        {
+            return $"{Width},{Height}";
         }
     }
 

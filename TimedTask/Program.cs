@@ -15,6 +15,7 @@ namespace TimedTask
         static void Main()
         {
             Application.ThreadException += Application_ThreadException;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

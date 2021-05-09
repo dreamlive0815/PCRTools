@@ -18,6 +18,7 @@ namespace GetVec
         public Form1()
         {
             InitializeComponent();
+            ConfigUITool.AddConfigItemsToMenuStrip(menuStrip1);
         }
 
         private void Form1_Load(object sender, EventArgs e)

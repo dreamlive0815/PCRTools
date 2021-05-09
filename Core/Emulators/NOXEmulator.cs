@@ -9,7 +9,7 @@ namespace Core.Emulators
 {
     public class NOXEmulator : Emulator
     {
-        public override string Name { get { return "NOXEmulator"; } }
+        public override string Name { get { return "夜神模拟器"; } }
 
         public override int AdbPort { get; } = 62001;
 

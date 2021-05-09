@@ -27,23 +27,20 @@ namespace Core.Common
 
         public string RootDirectory { get { return ConfigMgr.GetInstance().Config.ResourceRootDirectory; } }
 
-        public string GetResourcePath(string type, string region, string resourceName)
+        public string GetResourcePath(string gameKey, string region, string resourceName)
         {
             var sep = Path.DirectorySeparatorChar;
-            var path = $"{RootDirectory}{sep}{type}{sep}{region}{sep}{resourceName}";
+            var path = $"{RootDirectory}{sep}{gameKey}{sep}{region}{sep}{resourceName}";
             var dir = Path.GetDirectoryName(path);
             Utils.MakeDirectory(dir);
             return path;
         }
 
-        public string GetResourcePath(string type, string region, EmulatorSize resolution, string resourceName)
+        public string GetResourcePath(string gameKey, string region, EmulatorSize resolution, string resourceName)
         {
-            return GetResourcePath(type, region, $"{resolution}{Path.DirectorySeparatorChar}{resourceName}");
+            return GetResourcePath(gameKey, region, $"{resolution}{Path.DirectorySeparatorChar}{resourceName}");
         }
 
-        public string SelectResourcePath(string type, string region, EmulatorSize resolution, string resourceName)
-        {
-            return null;
-        }
+        
     }
 }
