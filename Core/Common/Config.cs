@@ -24,19 +24,17 @@ namespace Core.Common
         public bool Debug { get; set; } = false;
 #endif
 
-        public Type DefaultEmulatorType { get; private set; }
+        private Type emulatorType;
 
-        public void SetDefaultEmulator(Emulator emulator)
+        public Type EmulatorType
         {
-            //emulator.AssertAlive();
-            DefaultEmulatorType = emulator.GetType();
-        }
-
-        public void SetDefaultEmulator(Type emulatorType)
-        {
-            if (!emulatorType.IsSubclassOf(typeof(Emulator)))
-                throw new Exception("给定类型不属于Emulator子类");
-            DefaultEmulatorType = emulatorType;
+            get { return emulatorType; }
+            set
+            {
+                if (!value.IsSubclassOf(typeof(Emulator)))
+                    throw new Exception("给定类型不属于Emulator子类");
+                emulatorType = value;
+            }
         }
 
 #if DEBUG
@@ -131,7 +129,7 @@ namespace Core.Common
                 foreach (ToolStripMenuItem item in emulatorItems.DropDownItems)
                 {
                     var emulatorType = emulatorMap.Get(item.Text);
-                    var bChecked = emulatorType == config.DefaultEmulatorType;
+                    var bChecked = emulatorType == config.EmulatorType;
                     item.Checked = bChecked;
                     emulatorItems.Text = bChecked ? $"模拟器: {item.Text}" : emulatorItems.Text;
                 }
@@ -144,12 +142,13 @@ namespace Core.Common
                 emulatorMap[name] = emulatorType;
                 emulatorItems.DropDownItems.Add(emulatorItem);
                 emulatorItem.Click += (s, e) => {
-                    config.SetDefaultEmulator(emulatorType);
+                    config.EmulatorType = emulatorType;
                     ConfigMgr.GetInstance().SaveConfig();
                     refreshEmulatorCheckStatus();
-                    EventMgr.FireEvent("ConfigEmulatorTypeChanged", null);
+                    EventMgr.FireEvent(EventKeys.ConfigEmulatorTypeChanged);
                 };
             }
+            refreshEmulatorCheckStatus();
 
             var regionItems = new ToolStripMenuItem();
             regionItems.Text = "区域";
@@ -172,10 +171,20 @@ namespace Core.Common
                     config.Region = (Region) Enum.Parse(typeof(Region), regionItem.Text);
                     ConfigMgr.GetInstance().SaveConfig();
                     refreshRegionCheckStatus();
-                    EventMgr.FireEvent("ConfigRegionChanged", null);
+                    EventMgr.FireEvent(EventKeys.ConfigRegionChanged);
                 };
             }
             refreshRegionCheckStatus();
+
+#if DEBUG
+            var openDirItem = new ToolStripMenuItem();
+            openDirItem.Text = "打开工作目录";
+            menuStrip.Items.Add(openDirItem);
+            openDirItem.Click += (s, e) =>
+            {
+                Utils.OpenDirectoryInExplorer(Environment.CurrentDirectory);
+            };
+#endif
 
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();

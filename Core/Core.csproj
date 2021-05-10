@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Config.cs" />
+    <Compile Include="Common\FrequencyLimitor.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\ResourceMgr.cs" />
     <Compile Include="Common\ShellUtils.cs" />

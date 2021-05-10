@@ -25,6 +25,8 @@ namespace Core.Emulators
 
         public static Emulator GetInstanceByType(Type type)
         {
+            if (type == null)
+                return null;
             if (!type.IsSubclassOf(typeof(Emulator)))
                 throw new Exception("给定类型不属于Emulator子类");
             var obj = Activator.CreateInstance(type);
@@ -150,11 +152,12 @@ namespace Core.Emulators
             AdbCmd($"connect 127.0.0.1:{AdbPort}");
         }
 
+        private FrequencyLimitor limitor = new FrequencyLimitor(2000);
         private EmulatorSize resolution;
 
         public EmulatorSize GetResolution()
         {
-            if (!resolution.IsEmpty)
+            if (!resolution.IsEmpty && !limitor.CanHit)
                 return resolution;
             var output = AdbShell("wm size");
             var match = Regex.Match(output, "(\\d+)x(\\d+)");
@@ -162,6 +165,7 @@ namespace Core.Emulators
                 throw new Exception(AheadWithName("获取模拟器分辨率失败"));
             var size = new EmulatorSize(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
             resolution = size;
+            limitor.Hit();
             return size;
         }
 

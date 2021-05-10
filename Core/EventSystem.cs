@@ -15,6 +15,11 @@ namespace EventSystem
             Default.Register(key, handler);
         }
 
+        public static void FireEvent(string key)
+        {
+            Default.Fire(key, null);
+        }
+
         public static void FireEvent(string key, object arg)
         {
             Default.Fire(key, arg);
@@ -64,5 +69,13 @@ namespace EventSystem
         {
             handlers.Clear();
         }
+    }
+
+    public class EventKeys
+    {
+
+        public static string ConfigEmulatorTypeChanged { get; } = "ConfigEmulatorTypeChanged";
+
+        public static string ConfigRegionChanged { get; } = "ConfigRegionChanged";
     }
 }

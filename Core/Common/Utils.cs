@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Reflection;
+using System.Security.Principal;
 using System.Text;
 
 namespace Core.Common
@@ -62,7 +63,6 @@ namespace Core.Common
         }
 
         #endregion
-
 
         #region Process
 
@@ -129,5 +129,18 @@ namespace Core.Common
         }
 
         #endregion
+
+        public static bool IsAdministrator()
+        {
+            var current = WindowsIdentity.GetCurrent();
+            var windowsPrincipal = new WindowsPrincipal(current);
+            return windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        public static void AssertAdministrator()
+        {
+            if (!IsAdministrator())
+                throw new Exception("需要管理员权限");
+        }
     }
 }

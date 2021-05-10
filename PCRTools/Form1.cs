@@ -34,7 +34,7 @@ namespace PCRTools
             EventMgr.RegisterListener("ConfigRegionChanged", (args) =>
             {
                 Invoke(new Action(() => {
-                    Text = ConfigMgr.GetInstance().Config.Region.ToString();
+                    Text = ConfigMgr.GetConfig().Region.ToString();
                 }));
             });
         }

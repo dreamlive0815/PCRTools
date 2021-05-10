@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace GetVec
         [STAThread]
         static void Main()
         {
+            Utils.AssertAdministrator();
             Application.ThreadException += Application_ThreadException;
 
             Application.EnableVisualStyles();
