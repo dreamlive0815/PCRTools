@@ -7,6 +7,7 @@ using Core.Common;
 using Core.Extensions;
 using System.Collections.Generic;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace Core.Emulators
 {
@@ -207,6 +208,7 @@ namespace Core.Emulators
 
         public int Height { get; set; }
 
+        [JsonIgnore]
         public bool IsEmpty { get { return Width == 0 && Height == 0; } }
 
         public EmulatorSize(int width, int height)
@@ -230,7 +232,7 @@ namespace Core.Emulators
 
         public override string ToString()
         {
-            return $"{Width},{Height}";
+            return $"{Width}x{Height}";
         }
     }
 
@@ -266,6 +268,7 @@ namespace Core.Emulators
     {
         public static List<AspectRatio> SupportedAspectRatio { get; } = new List<AspectRatio>()
         {
+            new AspectRatio(2,1),
             new AspectRatio(16,9),
         };
 
@@ -294,7 +297,7 @@ namespace Core.Emulators
 
         public override string ToString()
         {
-            return $"{W}_{H}";
+            return $"{W}x{H}";
         }
     }
 }
