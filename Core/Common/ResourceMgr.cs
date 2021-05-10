@@ -25,7 +25,12 @@ namespace Core.Common
             Utils.MakeDirectory(RootDirectory);
         }
 
-        public string RootDirectory { get { return ConfigMgr.GetInstance().Config.ResourceRootDirectory; } }
+        public string RootDirectory { get { return ConfigMgr.GetConfig().ResourceRootDirectory; } }
+
+        public string GetResourcePath(EmulatorSize resolution, string resourceName)
+        {
+            return GetResourcePath(ConfigMgr.GetConfig().GameKey, ConfigMgr.GetConfig().Region.ToString(), resolution, resourceName);
+        }
 
         public string GetResourcePath(string gameKey, string region, string resourceName)
         {
@@ -41,6 +46,5 @@ namespace Core.Common
             return GetResourcePath(gameKey, region, $"{resolution}{Path.DirectorySeparatorChar}{resourceName}");
         }
 
-        
     }
 }

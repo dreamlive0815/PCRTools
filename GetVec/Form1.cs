@@ -11,13 +11,14 @@ using System.Windows.Forms;
 using Core.Common;
 using Core.Emulators;
 using EventSystem;
+using Newtonsoft.Json;
 
 namespace GetVec
 {
     public partial class Form1 : Form
     {
 
-        Emulator emulator;
+        
 
         public Form1()
         {
@@ -30,6 +31,12 @@ namespace GetVec
             InitEmulator();
             RefreshTitle();
             RegisterEvents();
+
+            var dic = new Dictionary<string, RVec4f>()
+            {
+                {  "key", new RVec4f() },
+            };
+            var s = JsonConvert.SerializeObject(dic);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -37,28 +44,43 @@ namespace GetVec
             ConfigMgr.GetInstance().SaveConfig();
         }
 
+        Emulator emulator;
+
+        Emulator Emulator
+        {
+            get
+            {
+                if (emulator != null && emulator.IsAlive && !emulator.IsConnected)
+                    emulator.ConnectToAdbServer();
+                return emulator;
+            }
+            set
+            {
+                emulator = value;
+            }
+        }
+
         void InitEmulator()
         {
-            emulator = Emulator.GetInstanceByType(ConfigMgr.GetConfig().EmulatorType);
+            Emulator = Emulator.GetInstanceByType(ConfigMgr.GetConfig().EmulatorType);
         }
 
         void AssertEmulatorAlive()
         {
-            if (emulator == null)
+            if (Emulator == null)
                 throw new Exception("未选择模拟器");
-            if (!emulator.Alive)
-                throw new Exception("模拟器不在线");
+            Emulator.AssertAlive();
         }
 
         string GetEmulatorInfo()
         {
-            if (emulator == null)
+            if (Emulator == null)
                 return "未选择模拟器";
-            var msg = $"模拟器: {emulator.Name}";
-            if (emulator.Alive)
+            var msg = $"模拟器: {Emulator.Name}";
+            if (Emulator.IsAlive)
             {
                 msg += "[ON]";
-                var resolution = emulator.GetResolution();
+                var resolution = Emulator.GetResolution();
                 var aspectRatio = AspectRatio.GetAspectRatio(resolution);
                 msg += $"[{resolution},{(aspectRatio != null ? aspectRatio.ToString() : "未找到支持的宽高比")}]";
             }
@@ -103,34 +125,67 @@ namespace GetVec
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            RefreshTitle();
+            try
+            {
+                RefreshTitle();
+            }
+            catch (Exception ex)
+            {
+                Text = $"发生错误: {ex.Message}";
+            }
         }
 
         private void menuCapture_Click(object sender, EventArgs e)
         {
             AssertEmulatorAlive();
-            var capture = emulator.GetScreenCapture();
+            var capture = Emulator.GetScreenCapture();
             SetPic(capture);
         }
 
+        private void menuSelectAdbInExplorer_Click(object sender, EventArgs e)
+        {
+            AssertEmulatorAlive();
+            Utils.SelectFileInExplorer(Emulator.GetAdbExePath());
+        }
 
         bool press = false;
         int startX, startY;
         int endX, endY;
 
+        Rectangle GetRect()
+        {
+            var x1 = Math.Min(startX, endX);
+            var y1 = Math.Min(startY, endY);
+            var x2 = Math.Max(startX, endX);
+            var y2 = Math.Max(startY, endY);
+            return new Rectangle(x1, y1, x2 - x1, y2 - y1);
+        }
+
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-
+            press = false;
+            if (pictureBox1.Image == null)
+                return;
+            press = true;
+            startX = e.X;
+            startY = e.Y;
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-
+            if (!press)
+                return;
+            endX = e.X;
+            endY = e.Y;
+            pictureBox1.Refresh();
+            var g = pictureBox1.CreateGraphics();
+            var pen = new Pen(Color.Red, 1);
+            g.DrawRectangle(pen, GetRect());
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-
+            press = false;
         }
 
         

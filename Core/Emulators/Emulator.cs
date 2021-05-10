@@ -42,7 +42,7 @@ namespace Core.Emulators
 
         public abstract string Name { get; }
 
-        public virtual bool Alive
+        public virtual bool IsAlive
         {
             get
             {
@@ -62,6 +62,8 @@ namespace Core.Emulators
 
         public virtual int AdbPort { get; } = 5555;
 
+        public bool IsConnected { get; protected set; } = false;
+
         public abstract Process GetMainProcess();
 
         public abstract IntPtr GetMainWindowHandle();
@@ -75,7 +77,7 @@ namespace Core.Emulators
 
         public void AssertAlive()
         {
-            if (!Alive)
+            if (!IsAlive)
                 throw new Exception(AheadWithName("无法检测到模拟器"));
         }
 
@@ -151,6 +153,7 @@ namespace Core.Emulators
         public void ConnectToAdbServer()
         {
             AdbCmd($"connect 127.0.0.1:{AdbPort}");
+            IsConnected = true;
         }
 
         private FrequencyLimitor limitor = new FrequencyLimitor(2000);
