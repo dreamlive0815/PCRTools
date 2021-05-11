@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using Core.Common;
 using Core.Extensions;
-using System.Collections.Generic;
-using System.Reflection;
-using Newtonsoft.Json;
 
 namespace Core.Emulators
 {
@@ -161,7 +160,7 @@ namespace Core.Emulators
 
         public EmulatorSize GetResolution()
         {
-            if (!resolution.IsEmpty && !limitor.CanHit)
+            if (resolution != null && !limitor.CanHit)
                 return resolution;
             var output = AdbShell("wm size");
             var match = Regex.Match(output, "(\\d+)x(\\d+)");
@@ -192,7 +191,7 @@ namespace Core.Emulators
         }
     }
 
-    public struct EmulatorPoint
+    public class EmulatorPoint
     {
         public int X { get; set; }
 
@@ -205,14 +204,11 @@ namespace Core.Emulators
         }
     }
 
-    public struct EmulatorSize
+    public class EmulatorSize
     {
         public int Width { get; set; }
 
         public int Height { get; set; }
-
-        [JsonIgnore]
-        public bool IsEmpty { get { return Width == 0 && Height == 0; } }
 
         public EmulatorSize(int width, int height)
         {
