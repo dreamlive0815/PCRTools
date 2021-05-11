@@ -216,7 +216,7 @@ namespace Core.Emulators
             Height = height;
         }
 
-        public static EmulatorPoint operator *(EmulatorSize size, PVec2f pf)
+        public static EmulatorPoint operator * (EmulatorSize size, PVec2f pf)
         {
             var x = (int)(size.Width * pf.X);
             var y = (int)(size.Height * pf.Y);
@@ -255,7 +255,7 @@ namespace Core.Emulators
 
         public override string ToString()
         {
-            return $"{X},{Y}";
+            return $"{Math.Round(X, 2)},{Math.Round(Y, 2)}";
         }
     }
 
@@ -285,7 +285,16 @@ namespace Core.Emulators
 
         public override string ToString()
         {
-            return $"{X},{Y},{W},{H}";
+            return $"{Math.Round(X, 2)},{Math.Round(Y, 2)},{Math.Round(W, 2)},{Math.Round(H, 2)}";
+        }
+
+        public static Rectangle operator * (Size size, RVec4f rf)
+        {
+            var x = (int)(size.Width * rf.X);
+            var y = (int)(size.Height * rf.Y);
+            var w = (int)(size.Width * rf.W);
+            var h = (int)(size.Height * rf.H);
+            return new Rectangle(x, y, w, h);
         }
     }
 

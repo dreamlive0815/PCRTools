@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SysSize = System.Drawing.Size;
+
+using Core.Emulators;
 
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
@@ -28,6 +28,25 @@ namespace Core.Common
         }
 
         private Mat MT { get; set; }
+
+        public int Width { get { return MT.Width; } }
+
+        public int Height { get { return MT.Height; } }
+
+
+        public Img GetPartial(Rectangle rect)
+        {
+            var xRange = new Range(Math.Max(rect.Left, 0), Math.Min(rect.Right, Width));
+            var yRange = new Range(Math.Max(rect.Top, 0), Math.Min(rect.Bottom, Height));
+            var partial = MT[yRange, xRange];
+            return new Img(partial);
+        }
+
+        public Img GetPartial(RVec4f rf)
+        {
+            var rect = new SysSize(Width, Height) * rf;
+            return GetPartial(rect);
+        }
 
         public void Save(string filePath)
         {
