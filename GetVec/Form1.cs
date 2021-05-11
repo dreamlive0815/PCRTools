@@ -31,12 +31,6 @@ namespace GetVec
             InitEmulator();
             RefreshTitle();
             RegisterEvents();
-
-            var dic = new Dictionary<string, RVec4f>()
-            {
-                {  "key", new RVec4f() },
-            };
-            var s = JsonConvert.SerializeObject(dic);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -72,6 +66,16 @@ namespace GetVec
             Emulator.AssertAlive();
         }
 
+        string GetSizeInfo(Size size)
+        {
+            return $"W={size.Width},H={size.Height}";
+        }
+
+        string GetRectInfo(Rectangle rect)
+        {
+            return $"X={rect.X},Y={rect.Y},W={rect.Width},H={rect.Height}";
+        }
+
         string GetEmulatorInfo()
         {
             if (Emulator == null)
@@ -83,6 +87,7 @@ namespace GetVec
                 var resolution = Emulator.GetResolution();
                 var aspectRatio = AspectRatio.GetAspectRatio(resolution);
                 msg += $"[{resolution},{(aspectRatio != null ? aspectRatio.ToString() : "未找到支持的宽高比")}]";
+                msg += $"[{GetRectInfo(emulator.Area)}]";
             }
             else
                 msg += "[OFF]";
@@ -98,7 +103,7 @@ namespace GetVec
         {
             if (pictureBox1.Image == null)
                 return "未选择图像";
-            return $"当前图像尺寸: {pictureBox1.Image.Size} 容器尺寸: {pictureBox1.Size}";
+            return $"图像:{GetSizeInfo(pictureBox1.Image.Size)} 容器:{GetSizeInfo(pictureBox1.Size)}";
         }
 
         void RefreshTitle()

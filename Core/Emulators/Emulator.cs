@@ -239,24 +239,45 @@ namespace Core.Emulators
         }
     }
 
-    public struct PVec2f
+    public class PVec2f
     {
-        public double X;
-        public double Y;
+        public static PVec2f Parse(string s)
+        {
+            var arr = s.Split(',');
+            return new PVec2f(double.Parse(arr[0]), double.Parse(arr[1]));
+        }
+
+        public double X { get; set; }
+
+        public double Y { get; set; }
 
         public PVec2f(double x, double y)
         {
             X = x;
             Y = y;
         }
+
+        public override string ToString()
+        {
+            return $"{X},{Y}";
+        }
     }
 
-    public struct RVec4f
+    public class RVec4f
     {
-        public double X;
-        public double Y;
-        public double W;
-        public double H;
+        public static RVec4f Parse(string s)
+        {
+            var arr = s.Split(',');
+            return new RVec4f(double.Parse(arr[0]), double.Parse(arr[1]), double.Parse(arr[2]), double.Parse(arr[3]));
+        }
+
+        public double X { get; set; }
+
+        public double Y { get; set; }
+
+        public double W { get; set; }
+
+        public double H { get; set; }
 
         public RVec4f(double x, double y, double w, double h)
         {
@@ -264,6 +285,11 @@ namespace Core.Emulators
             Y = y;
             W = w;
             H = h;
+        }
+
+        public override string ToString()
+        {
+            return $"{X},{Y},{W},{H}";
         }
     }
 

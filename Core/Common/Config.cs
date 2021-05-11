@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
-using Newtonsoft.Json;
-
 using Core.Emulators;
 using Core.Extensions;
 using EventSystem;
@@ -97,13 +95,13 @@ namespace Core.Common
             if (!File.Exists(JSON_PATH))
                 return new Config();
             var content = File.ReadAllText(JSON_PATH);
-            var config = JsonConvert.DeserializeObject<Config>(content);
+            var config = JsonUtils.DeserializeObject<Config>(content);
             return config;
         }
 
         public override void SaveConfig()
         {
-            var content = JsonConvert.SerializeObject(Config, Formatting.Indented);
+            var content = JsonUtils.SerializeObject(Config);
             File.WriteAllText(JSON_PATH, content);
         }
     }
