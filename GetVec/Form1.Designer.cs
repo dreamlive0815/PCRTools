@@ -31,9 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuCapture = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSelectAdbInExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.menuSelectAdbInExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -46,17 +46,24 @@
             this.menuSelectAdbInExplorer});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(963, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(722, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // menuCapture
             // 
             this.menuCapture.Name = "menuCapture";
-            this.menuCapture.Size = new System.Drawing.Size(96, 24);
+            this.menuCapture.Size = new System.Drawing.Size(80, 21);
             this.menuCapture.Text = "模拟器截图";
             this.menuCapture.Click += new System.EventHandler(this.menuCapture_Click);
+            // 
+            // menuSelectAdbInExplorer
+            // 
+            this.menuSelectAdbInExplorer.Name = "menuSelectAdbInExplorer";
+            this.menuSelectAdbInExplorer.Size = new System.Drawing.Size(104, 21);
+            this.menuSelectAdbInExplorer.Text = "模拟器Adb目录";
+            this.menuSelectAdbInExplorer.Click += new System.EventHandler(this.menuSelectAdbInExplorer_Click);
             // 
             // timer1
             // 
@@ -67,10 +74,9 @@
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 28);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Location = new System.Drawing.Point(0, 25);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(963, 456);
+            this.pictureBox1.Size = new System.Drawing.Size(722, 362);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -78,24 +84,16 @@
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
-            // menuSelectAdbInExplorer
-            // 
-            this.menuSelectAdbInExplorer.Name = "menuSelectAdbInExplorer";
-            this.menuSelectAdbInExplorer.Size = new System.Drawing.Size(157, 24);
-            this.menuSelectAdbInExplorer.Text = "打开模拟器Adb目录";
-            this.menuSelectAdbInExplorer.Click += new System.EventHandler(this.menuSelectAdbInExplorer_Click);
-            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(963, 484);
+            this.ClientSize = new System.Drawing.Size(722, 387);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Form1";

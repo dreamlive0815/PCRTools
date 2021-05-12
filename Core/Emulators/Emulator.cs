@@ -206,6 +206,7 @@ namespace Core.Emulators
 
     public class EmulatorSize
     {
+
         public int Width { get; set; }
 
         public int Height { get; set; }
@@ -295,6 +296,15 @@ namespace Core.Emulators
             var w = (int)(size.Width * rf.W);
             var h = (int)(size.Height * rf.H);
             return new Rectangle(x, y, w, h);
+        }
+
+        public static RVec4f Div(Size size, Rectangle rect)
+        {
+            var x = 1.0f * rect.X / size.Width;
+            var y = 1.0f * rect.Y / size.Height;
+            var w = 1.0f * rect.Width / size.Width;
+            var h = 1.0f * rect.Height / size.Height;
+            return new RVec4f(x, y, w, h);
         }
     }
 

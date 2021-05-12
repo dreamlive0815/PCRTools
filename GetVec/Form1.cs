@@ -86,7 +86,7 @@ namespace GetVec
                 msg += "[ON]";
                 var resolution = Emulator.GetResolution();
                 var aspectRatio = AspectRatio.GetAspectRatio(resolution);
-                msg += $"[{resolution},{(aspectRatio != null ? aspectRatio.ToString() : "未找到支持的宽高比")}]";
+                msg += $"[{resolution}|{(aspectRatio != null ? aspectRatio.ToString() : "未找到支持的宽高比")}]";
                 msg += $"[{GetRectInfo(emulator.Area)}]";
             }
             else
@@ -99,9 +99,14 @@ namespace GetVec
             return $"区域: {ConfigMgr.GetConfig().Region}";
         }
 
+        bool HasPic()
+        {
+            return pictureBox1.Image != null;
+        }
+
         string GetPicInfo()
         {
-            if (pictureBox1.Image == null)
+            if (!HasPic())
                 return "未选择图像";
             return $"图像:{GetSizeInfo(pictureBox1.Image.Size)} 容器:{GetSizeInfo(pictureBox1.Size)}";
         }
@@ -109,7 +114,7 @@ namespace GetVec
         void RefreshTitle()
         {
             Invoke(new Action(() => {
-                Text = $"{GetEmulatorInfo()}  {GetRegionInfo()} {GetPicInfo()}";
+                Text = $"{GetEmulatorInfo()} {GetRegionInfo()} {GetPicInfo()}";
             }));
         }
 
@@ -166,10 +171,30 @@ namespace GetVec
             return new Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
+        bool IsPoint()
+        {
+            if (!HasPic())
+                return false;
+            var rect = GetRect();
+            if (rect.IsEmpty)
+                return false;
+            return rect.Width < 5 && rect.Height < 5;
+        }
+
+        bool IsRect()
+        {
+            if (!HasPic())
+                return false;
+            var rect = GetRect();
+            if (rect.IsEmpty)
+                return false;
+            return rect.Width >= 5 || rect.Height >= 5;
+        }
+
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             press = false;
-            if (pictureBox1.Image == null)
+            if (!HasPic())
                 return;
             press = true;
             startX = e.X;

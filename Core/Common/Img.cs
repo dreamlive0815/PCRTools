@@ -33,6 +33,8 @@ namespace Core.Common
 
         public int Height { get { return MT.Height; } }
 
+        public SysSize Size { get { return new SysSize(Width, Height); } }
+
 
         public Img GetPartial(Rectangle rect)
         {
@@ -44,7 +46,7 @@ namespace Core.Common
 
         public Img GetPartial(RVec4f rf)
         {
-            var rect = new SysSize(Width, Height) * rf;
+            var rect = Size * rf;
             return GetPartial(rect);
         }
 
