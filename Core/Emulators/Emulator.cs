@@ -155,7 +155,7 @@ namespace Core.Emulators
             IsConnected = true;
         }
 
-        private FrequencyLimitor limitor = new FrequencyLimitor(2000);
+        private FrequencyLimitor limitor = new FrequencyLimitor(1000 * 60 * 60);
         private EmulatorSize resolution;
 
         public EmulatorSize GetResolution()
@@ -170,14 +170,6 @@ namespace Core.Emulators
             resolution = size;
             limitor.Hit();
             return size;
-        }
-
-        public void AssertResolutionIsSupported()
-        {
-            var resolution = GetResolution();
-            var aspectRatio = AspectRatio.GetAspectRatio(resolution);
-            if (aspectRatio == null)
-                throw new Exception($"不支持的分辨率: {resolution}");
         }
 
         public void DoTap(PVec2f pf)
@@ -327,6 +319,13 @@ namespace Core.Emulators
                 }
             }
             return null;
+        }
+
+        public static void AssertResolutionIsSupported(EmulatorSize resolution)
+        {
+            var aspectRatio = AspectRatio.GetAspectRatio(resolution);
+            if (aspectRatio == null)
+                throw new Exception($"不支持的分辨率: {resolution}");
         }
 
         public int W { get; private set; }

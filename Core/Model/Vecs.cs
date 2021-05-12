@@ -1,8 +1,10 @@
-﻿using Core.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+
+using Core.Common;
+using Core.Emulators;
 
 namespace Core.Model
 {
@@ -16,8 +18,11 @@ namespace Core.Model
             return r;
         }
 
-        public Dictionary<string, Size> ContainerSize = new Dictionary<string, Size>();
+        public Dictionary<string, Size> ContainerSize { get; set; } = new Dictionary<string, Size>();
 
+        public Dictionary<string, PVec2f> PVec2fs { get; set; } = new Dictionary<string, PVec2f>();
+
+        public Dictionary<string, RVec4f> RVec4fs { get; set; } = new Dictionary<string, RVec4f>();
 
         public void Save(string filePath)
         {
