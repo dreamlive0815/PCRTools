@@ -36,9 +36,12 @@ namespace Core.Model
     public class KVContainer<T> : SortedDictionary<string, T>
     {
 
-        public new void Add(string key, T value)
+        public void Set(string key, T value)
         {
-            base.Add(key, value);
+            if (ContainsKey(key))
+                this[key] = value;
+            else
+                Add(key, value);
         }
     }
 }

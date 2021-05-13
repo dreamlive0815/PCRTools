@@ -31,7 +31,7 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            EventMgr.RegisterListener("ConfigRegionChanged", (args) =>
+            EventMgr.RegisterListener(EventKeys.ConfigRegionChanged, (args) =>
             {
                 Invoke(new Action(() => {
                     Text = ConfigMgr.GetConfig().Region.ToString();
