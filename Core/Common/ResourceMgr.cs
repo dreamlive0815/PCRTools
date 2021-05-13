@@ -27,6 +27,12 @@ namespace Core.Common
             return GetResourcePath(ConfigMgr.GetConfig().GameKey, ConfigMgr.GetConfig().Region.ToString(), resolution, resourceName);
         }
 
+        public string GetResourcePath(EmulatorSize resolution, ResourceType resourceType, string resourceName)
+        {
+            resourceName = $"{resourceType}{Path.DirectorySeparatorChar}{resourceName}";
+            return GetResourcePath(resolution, resourceName);
+        }
+
         public string GetResourcePath(string gameKey, string region, string resourceName)
         {
             var sep = Path.DirectorySeparatorChar;
@@ -38,8 +44,17 @@ namespace Core.Common
 
         public string GetResourcePath(string gameKey, string region, EmulatorSize resolution, string resourceName)
         {
-            return GetResourcePath(gameKey, region, $"{resolution}{Path.DirectorySeparatorChar}{resourceName}");
+            AspectRatio.AssertResolutionIsSupported(resolution);
+            var aspectRatio = AspectRatio.GetAspectRatio(resolution);
+            resourceName = $"{aspectRatio}{Path.DirectorySeparatorChar}{resourceName}";
+            return GetResourcePath(gameKey, region, resourceName);
         }
 
+    }
+
+    public enum ResourceType
+    {
+        Image,
+        Json,
     }
 }

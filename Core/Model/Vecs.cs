@@ -10,24 +10,35 @@ namespace Core.Model
 {
     public class Vecs
     {
+
         public static Vecs Parse(string filePath)
         {
             if (!File.Exists(filePath))
                 return new Vecs();
-            var r = JsonUtils.DeserializeObject<Vecs>(filePath);
+            var s = File.ReadAllText(filePath);
+            var r = JsonUtils.DeserializeObject<Vecs>(s);
             return r;
         }
 
-        public Dictionary<string, Size> ContainerSize { get; set; } = new Dictionary<string, Size>();
+        public KVContainer<Size> ContainerSizes { get; set; } = new KVContainer<Size>();
 
-        public Dictionary<string, PVec2f> PVec2fs { get; set; } = new Dictionary<string, PVec2f>();
+        public KVContainer<PVec2f> PVec2fs { get; set; } = new KVContainer<PVec2f>();
 
-        public Dictionary<string, RVec4f> RVec4fs { get; set; } = new Dictionary<string, RVec4f>();
+        public KVContainer<RVec4f> RVec4fs { get; set; } = new KVContainer<RVec4f>();
 
         public void Save(string filePath)
         {
             var s = JsonUtils.SerializeObject(this);
             File.WriteAllText(filePath, s);
+        }
+    }
+
+    public class KVContainer<T> : SortedDictionary<string, T>
+    {
+
+        public new void Add(string key, T value)
+        {
+            base.Add(key, value);
         }
     }
 }

@@ -115,7 +115,7 @@ namespace Core.Common
             menuStrip.SuspendLayout();
 
             var settingItems = new ToolStripMenuItem();
-            settingItems.Text = "设置(&S)";
+            settingItems.Text = "设置";
             menuStrip.Items.Add(settingItems);
 
             var emulatorItems = new ToolStripMenuItem();

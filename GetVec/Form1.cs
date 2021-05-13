@@ -10,8 +10,9 @@ using System.Windows.Forms;
 
 using Core.Common;
 using Core.Emulators;
+using Core.Model;
+
 using EventSystem;
-using Newtonsoft.Json;
 
 namespace GetVec
 {
@@ -31,6 +32,8 @@ namespace GetVec
             InitEmulator();
             RefreshTitle();
             RegisterEvents();
+
+            AccessModel((v) => { });
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -171,6 +174,24 @@ namespace GetVec
             return new Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
+        PVec2f GetPVec2f()
+        {
+            return PVec2f.Div(new Size(pictureBox1.Width, pictureBox1.Height), GetRect());
+        }
+
+        RVec4f GetRVec4f()
+        {
+            return RVec4f.Div(new Size(pictureBox1.Width, pictureBox1.Height), GetRect());
+        }
+
+        string GetValidKey()
+        {
+            var s = txtKey.Text.Trim();
+            if (string.IsNullOrWhiteSpace(s))
+                throw new Exception("Key不能为空");
+            return s;
+        }
+
         bool IsPoint()
         {
             if (!HasPic())
@@ -218,7 +239,48 @@ namespace GetVec
             press = false;
         }
 
-        
+        private void menuRefreshInfo_Click(object sender, EventArgs e)
+        {
+            RefreshTitle();
+        }
+
+        void AccessModel(Action<Vecs> callback)
+        {
+            AssertEmulatorAlive();
+            var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), "vecs.json");
+            var vesc = Vecs.Parse(path);
+            callback(vesc);
+            vesc.Save(path);
+        }
+
+        private void menuSaveImageSample_Click(object sender, EventArgs e)
+        {
+            var key = GetValidKey();
+            AssertEmulatorAlive();
+            if (!IsRect())
+                throw new Exception("请先选择矩形区域");
+            var img = new Img(pictureBox1.Image);
+            var partial = img.GetPartial(GetRect());
+            var resName = $"{key}.png";
+            var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), ResourceType.Image, resName);
+            partial.Save(path);
+            AccessModel((vecs) =>
+            {
+                vecs.ContainerSizes.Add(resName, new Size(pictureBox1.Width, pictureBox1.Height));
+            });
+        }
+
+        private void menuPoint_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void menuRect_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
 
 
 

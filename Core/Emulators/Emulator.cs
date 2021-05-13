@@ -230,6 +230,8 @@ namespace Core.Emulators
 
     public class PVec2f
     {
+        public static int DecimalPlaces { get; } = 4;
+
         public static PVec2f Parse(string s)
         {
             var arr = s.Split(',');
@@ -248,12 +250,26 @@ namespace Core.Emulators
 
         public override string ToString()
         {
-            return $"{Math.Round(X, 2)},{Math.Round(Y, 2)}";
+            return $"{Math.Round(X, DecimalPlaces)},{Math.Round(Y, DecimalPlaces)}";
+        }
+
+        public static PVec2f Div(Size size, Point point)
+        {
+            var x = 1.0 * point.X / size.Width;
+            var y = 1.0 * point.Y / size.Height;
+            return new PVec2f(x, y);
+        }
+
+        public static PVec2f Div(Size size, Rectangle rect)
+        {
+            return Div(size, rect.GetCenterPoint());
         }
     }
 
     public class RVec4f
     {
+        public static int DecimalPlaces { get; } = 4;
+
         public static RVec4f Parse(string s)
         {
             var arr = s.Split(',');
@@ -278,7 +294,7 @@ namespace Core.Emulators
 
         public override string ToString()
         {
-            return $"{Math.Round(X, 2)},{Math.Round(Y, 2)},{Math.Round(W, 2)},{Math.Round(H, 2)}";
+            return $"{Math.Round(X, DecimalPlaces)},{Math.Round(Y, DecimalPlaces)},{Math.Round(W, DecimalPlaces)},{Math.Round(H, DecimalPlaces)}";
         }
 
         public static Rectangle operator * (Size size, RVec4f rf)
@@ -292,10 +308,10 @@ namespace Core.Emulators
 
         public static RVec4f Div(Size size, Rectangle rect)
         {
-            var x = 1.0f * rect.X / size.Width;
-            var y = 1.0f * rect.Y / size.Height;
-            var w = 1.0f * rect.Width / size.Width;
-            var h = 1.0f * rect.Height / size.Height;
+            var x = 1.0 * rect.X / size.Width;
+            var y = 1.0 * rect.Y / size.Height;
+            var w = 1.0 * rect.Width / size.Width;
+            var h = 1.0 * rect.Height / size.Height;
             return new RVec4f(x, y, w, h);
         }
     }
@@ -323,7 +339,7 @@ namespace Core.Emulators
 
         public static void AssertResolutionIsSupported(EmulatorSize resolution)
         {
-            var aspectRatio = AspectRatio.GetAspectRatio(resolution);
+            var aspectRatio = GetAspectRatio(resolution);
             if (aspectRatio == null)
                 throw new Exception($"不支持的分辨率: {resolution}");
         }
