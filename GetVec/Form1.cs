@@ -19,7 +19,7 @@ namespace GetVec
     public partial class Form1 : Form
     {
 
-        
+        FrmInfo frmInfo;
 
         public Form1()
         {
@@ -29,16 +29,30 @@ namespace GetVec
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            InitFrmInfo();
             InitEmulator();
-            RefreshTitle();
             RegisterEvents();
-
-            AccessModel((v) => { });
+            new FrmInput().Show();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             ConfigMgr.GetInstance().SaveConfig();
+        }
+
+        void InitFrmInfo()
+        {
+            frmInfo = new FrmInfo();
+            frmInfo.GetEmulatorInfoFunc = GetEmulatorInfo;
+            frmInfo.GetRegionInfoFunc = GetRegionInfo;
+            frmInfo.GetImageInfoFunc = GetPicInfo;
+        }
+
+        void ShowFrmInfo()
+        {
+            if (frmInfo == null || frmInfo.IsDisposed)
+                InitFrmInfo();
+            frmInfo.Show();
         }
 
         Emulator emulator;
@@ -83,17 +97,19 @@ namespace GetVec
         {
             if (Emulator == null)
                 return "未选择模拟器";
-            var msg = $"模拟器: {Emulator.Name}";
+            var msg = $"模拟器:{Emulator.Name}";
+            var nl = Environment.NewLine;
             if (Emulator.IsAlive)
             {
-                msg += "[ON]";
+                msg += "  状态:在线";
                 var resolution = Emulator.GetResolution();
+                msg += $"{nl}分辨率:{resolution}";
                 var aspectRatio = AspectRatio.GetAspectRatio(resolution);
-                msg += $"[{resolution}|{(aspectRatio != null ? aspectRatio.ToString() : "未找到支持的宽高比")}]";
-                msg += $"[{GetRectInfo(emulator.Area)}]";
+                msg += $"  宽高比:{(aspectRatio?.ToString() ?? "不支持")}";
+                msg += $"{nl}实际窗口大小:" + (emulator.IsAreaValid() ? GetRectInfo(emulator.Area) : "尺寸不合法");
             }
             else
-                msg += "[OFF]";
+                msg += "  状态:离线";
             return msg;
         }
 
@@ -111,14 +127,10 @@ namespace GetVec
         {
             if (!HasPic())
                 return "未选择图像";
-            return $"图像:{GetSizeInfo(pictureBox1.Image.Size)} 容器:{GetSizeInfo(pictureBox1.Size)} 所选区域:{startX},{startY},{endX},{endY}";
-        }
-
-        void RefreshTitle()
-        {
-            Invoke(new Action(() => {
-                Text = $"{GetEmulatorInfo()} {GetRegionInfo()} {GetPicInfo()}";
-            }));
+            var nl = Environment.NewLine;
+            var msg = $"图像:{GetSizeInfo(pictureBox1.Image.Size)} 容器:{GetSizeInfo(pictureBox1.Size)}";
+            msg += $"{nl}所选区域:{GetRectInfo(GetRect())}{nl}{GetRVec4f()}";
+            return msg;
         }
 
         void RegisterEvents()
@@ -126,26 +138,13 @@ namespace GetVec
             EventMgr.RegisterListener(EventKeys.ConfigEmulatorTypeChanged, (args) =>
             {
                 InitEmulator();
-                RefreshTitle();
             });
-            EventMgr.RegisterListener(EventKeys.ConfigRegionChanged, (args) => { RefreshTitle(); });
         }
 
         void SetPic(Image image)
         {
             pictureBox1.Image = image;
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                RefreshTitle();
-            }
-            catch (Exception ex)
-            {
-                Text = $"发生错误: {ex.Message}";
-            }
+            Size = new Size(1, 1);
         }
 
         private void menuCapture_Click(object sender, EventArgs e)
@@ -225,6 +224,8 @@ namespace GetVec
         void DrawRect()
         {
             ClearRect();
+            if (!HasPic())
+                return;
             var g = pictureBox1.CreateGraphics();
             var pen = new Pen(Color.Red, 1);
             var rect = GetRect();
@@ -263,14 +264,14 @@ namespace GetVec
 
         private void menuRefreshInfo_Click(object sender, EventArgs e)
         {
-            RefreshTitle();
+            ShowFrmInfo();
         }
 
-        void AccessModel(Action<Vecs> callback)
+        void AccessModel(Action<ImageSamplingData> callback)
         {
             AssertEmulatorAlive();
-            var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), "vecs.json");
-            var vesc = Vecs.Parse(path);
+            var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), "image_sampling_data.json");
+            var vesc = ImageSamplingData.Parse(path);
             callback(vesc);
             vesc.Save(path);
         }
@@ -286,15 +287,15 @@ namespace GetVec
             key = $"{key}.png";
             var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), ResourceType.Image, key);
             partial.Save(path);
-            AccessModel((vecs) =>
+            AccessModel((data) =>
             {
-                if (!vecs.ContainerSizes.ContainsKey(key) || MessageBox.Show($"ContainerSizes已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (!data.ContainerSizes.ContainsKey(key) || MessageBox.Show($"ContainerSizes已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    vecs.ContainerSizes.Set(key, GetContainerSize());
+                    data.ContainerSizes.Set(key, GetContainerSize());
                 }
-                if (!vecs.RVec4fs.ContainsKey(key) || MessageBox.Show($"RVec4fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (!data.RVec4fs.ContainsKey(key) || MessageBox.Show($"RVec4fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    vecs.RVec4fs.Set(key, RVec4f.Div(GetContainerSize(), GetRect()));
+                    data.RVec4fs.Set(key, RVec4f.Div(GetContainerSize(), GetRect()));
                 }
             });
         }
@@ -305,11 +306,11 @@ namespace GetVec
             AssertEmulatorAlive();
             if (!IsPoint())
                 throw new Exception("请先选择点击区域");
-            AccessModel((vecs) =>
+            AccessModel((data) =>
             {
-                if (!vecs.PVec2fs.ContainsKey(key) || MessageBox.Show($"PVec2fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (!data.PVec2fs.ContainsKey(key) || MessageBox.Show($"PVec2fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    vecs.PVec2fs.Set(key, PVec2f.Div(GetContainerSize(), GetRect()));
+                    data.PVec2fs.Set(key, PVec2f.Div(GetContainerSize(), GetRect()));
                 }
             });
         }
@@ -320,11 +321,11 @@ namespace GetVec
             AssertEmulatorAlive();
             if (!IsRect())
                 throw new Exception("请先选择矩形区域");
-            AccessModel((vecs) =>
+            AccessModel((data) =>
             {
-                if (!vecs.RVec4fs.ContainsKey(key) || MessageBox.Show($"RVec4fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (!data.RVec4fs.ContainsKey(key) || MessageBox.Show($"RVec4fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    vecs.RVec4fs.Set(key, RVec4f.Div(GetContainerSize(), GetRect()));
+                    data.RVec4fs.Set(key, RVec4f.Div(GetContainerSize(), GetRect()));
                 }
             });
         }

@@ -54,8 +54,9 @@ namespace Core.Emulators
         {
             get
             {
-                var handle = GetMainWindowHandle();
-                return GetAreaWithWindowHandle(handle);
+                var area = GetArea();
+                AssertAreaValid(area);
+                return area;
             }
         }
 
@@ -80,12 +81,35 @@ namespace Core.Emulators
                 throw new Exception(AheadWithName("无法检测到模拟器"));
         }
 
+        protected Rectangle GetArea()
+        {
+            var handle = GetMainWindowHandle();
+            return GetAreaWithWindowHandle(handle);
+        }
+
         protected Rectangle GetAreaWithWindowHandle(IntPtr handle)
         {
             var rect = Win32API.GetWindowRect(handle);
-            if (!rect.Valid || rect.Width < 10 || rect.Height < 10)
-                throw new Exception(AheadWithName("模拟器尺寸不合法"));
             return rect.ToRectangle();
+        }
+
+        public bool IsAreaValid()
+        {
+            if (!IsAlive)
+                return false;
+            var area = GetArea();
+            return IsAreaValid(area);
+        }
+
+        protected bool IsAreaValid(Rectangle area)
+        {
+            return area.Width > 10 && area.Height > 10;
+        }
+
+        protected void AssertAreaValid(Rectangle area)
+        {
+            if (!IsAreaValid(area))
+                throw new Exception(AheadWithName("模拟器尺寸不合法"));
         }
 
         protected Process GetProcessByName(string processName)

@@ -66,11 +66,6 @@ namespace Core.Common
 
         public int Height { get { return Bottom - Top; } }
 
-        public bool Valid
-        {
-            get { return Left >= 0 && Top >= 0 && Right >= 0 && Bottom >= 0; }
-        }
-
         public Rectangle ToRectangle()
         {
             return new Rectangle(Left, Top, Width, Height);

@@ -84,7 +84,7 @@
     <Compile Include="Extensions\ProcessExtension.cs" />
     <Compile Include="Extensions\RectangleExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
-    <Compile Include="Model\Vecs.cs" />
+    <Compile Include="Model\ImageSamplingData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleHTTPClient.cs" />
   </ItemGroup>

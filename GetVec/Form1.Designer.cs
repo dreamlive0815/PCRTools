@@ -28,18 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuFrmInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCapture = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSelectAdbInExplorer = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txtKey = new System.Windows.Forms.ToolStripTextBox();
+            this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveImageSample = new System.Windows.Forms.ToolStripMenuItem();
             this.menuPoint = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRect = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuRefreshInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -48,7 +46,7 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuRefreshInfo,
+            this.menuFrmInfo,
             this.menuCapture,
             this.menuSelectAdbInExplorer,
             this.txtKey,
@@ -59,6 +57,13 @@
             this.menuStrip1.Size = new System.Drawing.Size(722, 27);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // menuFrmInfo
+            // 
+            this.menuFrmInfo.Name = "menuFrmInfo";
+            this.menuFrmInfo.Size = new System.Drawing.Size(44, 23);
+            this.menuFrmInfo.Text = "信息";
+            this.menuFrmInfo.Click += new System.EventHandler(this.menuRefreshInfo_Click);
             // 
             // menuCapture
             // 
@@ -74,6 +79,11 @@
             this.menuSelectAdbInExplorer.Text = "模拟器Adb目录";
             this.menuSelectAdbInExplorer.Click += new System.EventHandler(this.menuSelectAdbInExplorer_Click);
             // 
+            // txtKey
+            // 
+            this.txtKey.Name = "txtKey";
+            this.txtKey.Size = new System.Drawing.Size(100, 23);
+            // 
             // menuSave
             // 
             this.menuSave.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -84,10 +94,26 @@
             this.menuSave.Size = new System.Drawing.Size(44, 23);
             this.menuSave.Text = "保存";
             // 
-            // timer1
+            // menuSaveImageSample
             // 
-            this.timer1.Interval = 2000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.menuSaveImageSample.Name = "menuSaveImageSample";
+            this.menuSaveImageSample.Size = new System.Drawing.Size(100, 22);
+            this.menuSaveImageSample.Text = "图例";
+            this.menuSaveImageSample.Click += new System.EventHandler(this.menuSaveImageSample_Click);
+            // 
+            // menuPoint
+            // 
+            this.menuPoint.Name = "menuPoint";
+            this.menuPoint.Size = new System.Drawing.Size(100, 22);
+            this.menuPoint.Text = "点";
+            this.menuPoint.Click += new System.EventHandler(this.menuPoint_Click);
+            // 
+            // menuRect
+            // 
+            this.menuRect.Name = "menuRect";
+            this.menuRect.Size = new System.Drawing.Size(100, 22);
+            this.menuRect.Text = "矩形";
+            this.menuRect.Click += new System.EventHandler(this.menuRect_Click);
             // 
             // pictureBox1
             // 
@@ -101,39 +127,6 @@
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
-            // 
-            // txtKey
-            // 
-            this.txtKey.Name = "txtKey";
-            this.txtKey.Size = new System.Drawing.Size(100, 23);
-            // 
-            // menuSaveImageSample
-            // 
-            this.menuSaveImageSample.Name = "menuSaveImageSample";
-            this.menuSaveImageSample.Size = new System.Drawing.Size(152, 22);
-            this.menuSaveImageSample.Text = "图例";
-            this.menuSaveImageSample.Click += new System.EventHandler(this.menuSaveImageSample_Click);
-            // 
-            // menuPoint
-            // 
-            this.menuPoint.Name = "menuPoint";
-            this.menuPoint.Size = new System.Drawing.Size(152, 22);
-            this.menuPoint.Text = "点";
-            this.menuPoint.Click += new System.EventHandler(this.menuPoint_Click);
-            // 
-            // menuRect
-            // 
-            this.menuRect.Name = "menuRect";
-            this.menuRect.Size = new System.Drawing.Size(152, 22);
-            this.menuRect.Text = "矩形";
-            this.menuRect.Click += new System.EventHandler(this.menuRect_Click);
-            // 
-            // menuRefreshInfo
-            // 
-            this.menuRefreshInfo.Name = "menuRefreshInfo";
-            this.menuRefreshInfo.Size = new System.Drawing.Size(44, 23);
-            this.menuRefreshInfo.Text = "刷新";
-            this.menuRefreshInfo.Click += new System.EventHandler(this.menuRefreshInfo_Click);
             // 
             // Form1
             // 
@@ -161,7 +154,6 @@
         #endregion
 
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolStripMenuItem menuCapture;
         private System.Windows.Forms.ToolStripMenuItem menuSelectAdbInExplorer;
@@ -170,7 +162,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuSaveImageSample;
         private System.Windows.Forms.ToolStripMenuItem menuPoint;
         private System.Windows.Forms.ToolStripMenuItem menuRect;
-        private System.Windows.Forms.ToolStripMenuItem menuRefreshInfo;
+        private System.Windows.Forms.ToolStripMenuItem menuFrmInfo;
     }
 }
 
