@@ -78,7 +78,7 @@ namespace Core.Emulators
         public void AssertAlive()
         {
             if (!IsAlive)
-                throw new Exception(AheadWithName("无法检测到模拟器"));
+                throw new Exception(AheadWithName("模拟器不在线"));
         }
 
         protected Rectangle GetArea()

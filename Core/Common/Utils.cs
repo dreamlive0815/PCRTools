@@ -46,11 +46,13 @@ namespace Core.Common
 
         public static void SelectFileInExplorer(string fullPath)
         {
+            fullPath = Path.GetFullPath(fullPath);
             Process.Start("Explorer.exe", $"/select,{fullPath}");
         }
 
         public static void OpenDirectoryInExplorer(string fullPath)
         {
+            fullPath = Path.GetFullPath(fullPath);
             Process.Start("Explorer.exe", $"{fullPath}");
         }
 

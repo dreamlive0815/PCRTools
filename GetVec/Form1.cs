@@ -32,7 +32,6 @@ namespace GetVec
             InitFrmInfo();
             InitEmulator();
             RegisterEvents();
-            new FrmInput().Show();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -53,6 +52,21 @@ namespace GetVec
             if (frmInfo == null || frmInfo.IsDisposed)
                 InitFrmInfo();
             frmInfo.Show();
+        }
+
+        void DoInput(Action<Input> callback)
+        {
+            DoInput(null, callback);
+        }
+
+        void DoInput(Action<FrmInput> init, Action<Input> callback)
+        {
+            var frmInput = new FrmInput();
+            init?.Invoke(frmInput);
+            if (frmInput.ShowDialog() == DialogResult.OK)
+            {
+                callback(frmInput.Input);
+            }
         }
 
         Emulator emulator;
@@ -154,12 +168,6 @@ namespace GetVec
             SetPic(capture);
         }
 
-        private void menuSelectAdbInExplorer_Click(object sender, EventArgs e)
-        {
-            AssertEmulatorAlive();
-            Utils.SelectFileInExplorer(Emulator.GetAdbExePath());
-        }
-
         bool press = false;
         int startX, startY;
         int endX, endY;
@@ -178,6 +186,18 @@ namespace GetVec
             return new Rectangle(x1, y1, x2 - x1, y2 - y1);
         }
 
+        void SetRect(RVec4f rf)
+        {
+            if (!HasPic())
+                return;
+            var rect = GetContainerSize() * rf;
+            startX = rect.Left;
+            startY = rect.Top;
+            endX = rect.Right;
+            endY = rect.Bottom;
+            DrawRect();
+        }
+
         PVec2f GetPVec2f()
         {
             return PVec2f.Div(GetContainerSize(), GetRect());
@@ -186,14 +206,6 @@ namespace GetVec
         RVec4f GetRVec4f()
         {
             return RVec4f.Div(GetContainerSize(), GetRect());
-        }
-
-        string GetValidKey()
-        {
-            var s = txtKey.Text.Trim();
-            if (string.IsNullOrWhiteSpace(s))
-                throw new Exception("Key不能为空");
-            return s;
         }
 
         bool IsPoint()
@@ -278,56 +290,98 @@ namespace GetVec
 
         private void menuSaveImageSample_Click(object sender, EventArgs e)
         {
-            var key = GetValidKey();
-            AssertEmulatorAlive();
             if (!IsRect())
                 throw new Exception("请先选择矩形区域");
-            var img = new Img(pictureBox1.Image);
-            var partial = img.GetPartial(GetRect());
-            key = $"{key}.png";
-            var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), ResourceType.Image, key);
-            partial.Save(path);
-            AccessModel((data) =>
+            DoInput((frm) => { frm.ShowThreshold = true; }, (input) =>
             {
-                if (!data.ContainerSizes.ContainsKey(key) || MessageBox.Show($"ContainerSizes已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                AssertEmulatorAlive();
+                var img = new Img(pictureBox1.Image);
+                var partial = img.GetPartial(GetRect());
+                var key = $"{input.Key}.png";
+                var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), ResourceType.Image, key);
+                partial.Save(path);
+                AccessModel((data) =>
                 {
-                    data.ContainerSizes.Set(key, GetContainerSize());
-                }
-                if (!data.RVec4fs.ContainsKey(key) || MessageBox.Show($"RVec4fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    data.RVec4fs.Set(key, RVec4f.Div(GetContainerSize(), GetRect()));
-                }
+                    if (!data.ContainerSizes.ContainsKey(key) || MessageBox.Show($"ContainerSizes已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        data.ContainerSizes.Set(key, GetContainerSize());
+                    }
+                    if (!data.MatchThresholds.ContainsKey(key) || MessageBox.Show($"MatchThresholds已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        data.MatchThresholds.Set(key, input.Threshold);
+                    }
+                    if (!data.RVec4fs.ContainsKey(key) || MessageBox.Show($"RVec4fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        data.RVec4fs.Set(key, GetRVec4f());
+                    }
+                });
             });
         }
 
         private void menuPoint_Click(object sender, EventArgs e)
         {
-            var key = GetValidKey();
-            AssertEmulatorAlive();
             if (!IsPoint())
                 throw new Exception("请先选择点击区域");
-            AccessModel((data) =>
+            DoInput((input) =>
             {
-                if (!data.PVec2fs.ContainsKey(key) || MessageBox.Show($"PVec2fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                AssertEmulatorAlive();
+                var key = input.Key;
+                AccessModel((data) =>
                 {
-                    data.PVec2fs.Set(key, PVec2f.Div(GetContainerSize(), GetRect()));
-                }
+                    if (!data.PVec2fs.ContainsKey(key) || MessageBox.Show($"PVec2fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        data.PVec2fs.Set(key, GetPVec2f());
+                    }
+                });
             });
         }
 
         private void menuRect_Click(object sender, EventArgs e)
         {
-            var key = GetValidKey();
-            AssertEmulatorAlive();
             if (!IsRect())
                 throw new Exception("请先选择矩形区域");
-            AccessModel((data) =>
+            DoInput((input) =>
             {
-                if (!data.RVec4fs.ContainsKey(key) || MessageBox.Show($"RVec4fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                AssertEmulatorAlive();
+                var key = input.Key;
+                AccessModel((data) =>
                 {
-                    data.RVec4fs.Set(key, RVec4f.Div(GetContainerSize(), GetRect()));
+                    if (!data.RVec4fs.ContainsKey(key) || MessageBox.Show($"RVec4fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        data.RVec4fs.Set(key, GetRVec4f());
+                    }
+                });
+            });
+        }
+
+        private void menuSetRect_Click(object sender, EventArgs e)
+        {
+
+            DoInput((input) =>
+            {
+                var s = input.Key;
+                try
+                {
+                    var rect = RVec4f.Parse(s);
+                    SetRect(rect);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("解析失败");
                 }
             });
         }
+
+        private void menuOpenAdbDir_Click(object sender, EventArgs e)
+        {
+            AssertEmulatorAlive();
+            Utils.SelectFileInExplorer(Emulator.GetAdbExePath());
+        }
+
+        private void menuOpenResDir_Click(object sender, EventArgs e)
+        {
+            Utils.OpenDirectoryInExplorer(ConfigMgr.GetConfig().ResourceRootDirectory);
+        }
+
     }
 }
