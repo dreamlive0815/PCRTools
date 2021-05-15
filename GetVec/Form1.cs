@@ -29,7 +29,7 @@ namespace GetVec
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            InitFrmInfo();
+            //InitFrmInfo();
             InitEmulator();
             RegisterEvents();
         }

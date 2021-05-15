@@ -81,13 +81,13 @@ namespace Core.Emulators
                 throw new Exception(AheadWithName("模拟器不在线"));
         }
 
-        protected Rectangle GetArea()
+        private Rectangle GetArea()
         {
             var handle = GetMainWindowHandle();
             return GetAreaWithWindowHandle(handle);
         }
 
-        protected Rectangle GetAreaWithWindowHandle(IntPtr handle)
+        private Rectangle GetAreaWithWindowHandle(IntPtr handle)
         {
             var rect = Win32API.GetWindowRect(handle);
             return rect.ToRectangle();
@@ -101,12 +101,12 @@ namespace Core.Emulators
             return IsAreaValid(area);
         }
 
-        protected bool IsAreaValid(Rectangle area)
+        private bool IsAreaValid(Rectangle area)
         {
             return area.Width > 10 && area.Height > 10;
         }
 
-        protected void AssertAreaValid(Rectangle area)
+        private void AssertAreaValid(Rectangle area)
         {
             if (!IsAreaValid(area))
                 throw new Exception(AheadWithName("模拟器尺寸不合法"));
@@ -131,7 +131,7 @@ namespace Core.Emulators
             return null;
         }
 
-        protected Bitmap CaptureScreen(Rectangle rect)
+        private Bitmap CaptureScreen(Rectangle rect)
         {
             return Utils.CaptureScreen(rect);
         }
@@ -160,17 +160,52 @@ namespace Core.Emulators
                 Arguments = arguments,
                 IgnoreOutput = false,
             });
+            Logger.GetInstance().Info("AdbCmd", AheadWithName($"arguments = {arguments}"));
             var output = result.GetOutput();
-            Logger.GetInstance().Info("AdbCmd", AheadWithName($"{arguments}->{output.LimitLength(40)}"));
+            Logger.GetInstance().Info("AdbCmd", AheadWithName($"output = {output.LimitLength(40)}"));
             result.Dispose();
             return output;
         }
 
+        protected virtual string GetSpecificIdentity()
+        {
+            return $"127.0.0.1:{AdbPort}";
+        }
+
         private string AdbShell(string args)
         {
-            var fullArguments = $"-s 127.0.0.1:{AdbPort} shell {args}";
+            var fullArguments = $"-s {GetSpecificIdentity()} shell {args}";
             var output = AdbCmd(fullArguments);
             return output;
+        }
+
+        public List<AdbDevice> GetAdbDevices()
+        {
+            var output = AdbCmd("devices");
+            var arr = output.Split(new char[] { '\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+            var list = new List<AdbDevice>();
+            for (var i = 1; i < arr.Length; i++)
+            {
+                var line = arr[i];
+                var a = line.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                list.Add(new AdbDevice()
+                {
+                    SpecificIdentity = a[0],
+                    State = a[1],
+                });
+            }
+            return list;
+        }
+
+        public AdbDevice GetFirstOnlineDevice()
+        {
+            var devices = GetAdbDevices();
+            foreach (var device in devices)
+            {
+                if (device.State == "device")
+                    return device;
+            }
+            return null;
         }
 
         public void ConnectToAdbServer()
@@ -250,6 +285,13 @@ namespace Core.Emulators
         {
             return $"{Width}x{Height}";
         }
+    }
+
+    public class AdbDevice
+    {
+        public string SpecificIdentity { get; set; }
+
+        public string State { get; set; }
     }
 
     public class PVec2f

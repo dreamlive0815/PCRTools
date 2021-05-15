@@ -43,7 +43,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 17);
+            this.label1.Size = new System.Drawing.Size(115, 22);
             this.label1.TabIndex = 0;
             this.label1.Text = "模拟器信息";
             // 
@@ -62,7 +62,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 120);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 17);
+            this.label2.Size = new System.Drawing.Size(94, 22);
             this.label2.TabIndex = 2;
             this.label2.Text = "区域配置";
             // 
@@ -71,7 +71,7 @@
             this.txtRegion.Location = new System.Drawing.Point(111, 120);
             this.txtRegion.Name = "txtRegion";
             this.txtRegion.ReadOnly = true;
-            this.txtRegion.Size = new System.Drawing.Size(159, 24);
+            this.txtRegion.Size = new System.Drawing.Size(159, 28);
             this.txtRegion.TabIndex = 3;
             // 
             // label3
@@ -79,7 +79,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 167);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(76, 17);
+            this.label3.Size = new System.Drawing.Size(94, 22);
             this.label3.TabIndex = 4;
             this.label3.Text = "图像信息";
             // 
@@ -101,7 +101,7 @@
             // 
             // FrmInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(557, 267);
             this.Controls.Add(this.txtImage);
@@ -119,6 +119,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FrmInfo";
             this.Load += new System.EventHandler(this.FrmInfo_Load);
+            this.VisibleChanged += new System.EventHandler(this.FrmInfo_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
 

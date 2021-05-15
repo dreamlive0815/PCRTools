@@ -54,5 +54,10 @@ namespace GetVec
         {
             RefreshInfo();
         }
+
+        private void FrmInfo_VisibleChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine(Visible);
+        }
     }
 }

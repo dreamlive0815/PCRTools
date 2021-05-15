@@ -29,7 +29,7 @@ namespace Core.Common
             get { return emulatorType; }
             set
             {
-                if (!value.IsSubclassOf(typeof(Emulator)))
+                if (value != null && !value.IsSubclassOf(typeof(Emulator)))
                     throw new Exception("给定类型不属于Emulator子类");
                 emulatorType = value;
             }
