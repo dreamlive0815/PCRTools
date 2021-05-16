@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Config.cs" />
+    <Compile Include="Common\Csv.cs" />
     <Compile Include="Common\FrequencyLimitor.cs" />
     <Compile Include="Common\Img.cs" />
     <Compile Include="Common\JsonUtils.cs" />
