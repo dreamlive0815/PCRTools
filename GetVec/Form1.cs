@@ -120,7 +120,7 @@ namespace GetVec
                 msg += $"{nl}分辨率:{resolution}";
                 var aspectRatio = AspectRatio.GetAspectRatio(resolution);
                 msg += $"  宽高比:{(aspectRatio?.ToString() ?? "不支持")}";
-                msg += $"{nl}实际窗口大小:" + (emulator.IsAreaValid() ? GetRectInfo(emulator.Area) : "尺寸不合法");
+                msg += $"{nl}实际窗口大小:" + (emulator.IsAreaValid() ? GetRectInfo(emulator.Area) : "模拟器区域不合法");
             }
             else
                 msg += "  状态:离线";
@@ -367,6 +367,7 @@ namespace GetVec
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     MessageBox.Show("解析失败");
                 }
             });

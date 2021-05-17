@@ -103,13 +103,13 @@ namespace Core.Emulators
 
         private bool IsAreaValid(Rectangle area)
         {
-            return area.Width > 10 && area.Height > 10;
+            return area.X >= 0 && area.Y >= 0 && area.Width > 10 && area.Height > 10;
         }
 
         private void AssertAreaValid(Rectangle area)
         {
             if (!IsAreaValid(area))
-                throw new Exception(AheadWithName("模拟器尺寸不合法"));
+                throw new Exception(AheadWithName("模拟器区域不合法"));
         }
 
         protected Process GetProcessByName(string processName)

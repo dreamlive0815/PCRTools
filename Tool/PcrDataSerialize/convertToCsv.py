@@ -1,7 +1,11 @@
 
+import os
 import _pcr_data
 
-f = open('./_pcr_data.csv', mode = 'w', encoding='utf-8')
+dir = os.path.dirname(__file__)
+csvPath = dir + '/_pcr_data.csv'
+
+f = open(csvPath, mode = 'w', encoding = 'utf-8')
 
 def appendLine(line):
     f.write(line)

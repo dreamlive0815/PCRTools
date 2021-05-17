@@ -22,16 +22,6 @@ namespace Core.Common
 
         public string RootDirectory { get { return ConfigMgr.GetConfig().ResourceRootDirectory; } }
 
-        public string GetResourcePath(EmulatorSize resolution, string resourceName)
-        {
-            return GetResourcePath(ConfigMgr.GetConfig().GameKey, ConfigMgr.GetConfig().Region.ToString(), resolution, resourceName);
-        }
-
-        public string GetResourcePath(EmulatorSize resolution, ResourceType resourceType, string resourceName)
-        {
-            resourceName = $"{resourceType}{Path.DirectorySeparatorChar}{resourceName}";
-            return GetResourcePath(resolution, resourceName);
-        }
 
         public string GetResourcePath(string gameKey, string region, string resourceName)
         {
@@ -42,6 +32,17 @@ namespace Core.Common
             return path;
         }
 
+        public string GetResourcePath(string gameKey, string region, ResourceType resourceType, string resourceName)
+        {
+            resourceName = $"{resourceType}{Path.DirectorySeparatorChar}{resourceName}";
+            return GetResourcePath(gameKey, region, resourceName);
+        }
+
+        public string GetResourcePath(ResourceType resourceType, string resourceName)
+        {
+            return GetResourcePath(ConfigMgr.GetConfig().GameKey, ConfigMgr.GetConfig().Region.ToString(), resourceType, resourceName);
+        }
+
         public string GetResourcePath(string gameKey, string region, EmulatorSize resolution, string resourceName)
         {
             AspectRatio.AssertResolutionIsSupported(resolution);
@@ -50,10 +51,22 @@ namespace Core.Common
             return GetResourcePath(gameKey, region, resourceName);
         }
 
+        public string GetResourcePath(EmulatorSize resolution, ResourceType resourceType, string resourceName)
+        {
+            resourceName = $"{resourceType}{Path.DirectorySeparatorChar}{resourceName}";
+            return GetResourcePath(resolution, resourceName);
+        }
+
+        public string GetResourcePath(EmulatorSize resolution, string resourceName)
+        {
+            return GetResourcePath(ConfigMgr.GetConfig().GameKey, ConfigMgr.GetConfig().Region.ToString(), resolution, resourceName);
+        }
+
     }
 
     public enum ResourceType
     {
+        Csv,
         Image,
         Json,
     }
