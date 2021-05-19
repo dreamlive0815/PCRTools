@@ -67,6 +67,52 @@ namespace Core.Common
     public class ResourceManager
     {
 
+        private static ResourceManager instance;
+
+        public static ResourceManager Default
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    var config = ConfigMgr.GetConfig();
+                    return new ResourceManager(config.ResourceRootDirectory)
+                    {
+                        GameKey = config.GameKey,
+                        Region = config.Region.ToString(),
+                    };
+                }
+                return instance;
+                
+            }
+        }
+
+        public ResourceManager(string rootDirectory)
+        {
+#if !DEBUG
+
+            if (!Directory.Exists(rootDirectory))
+                throw new Exception($"资源目录不存在: {rootDirectory}");
+#endif
+            Utils.MakeDirectory(rootDirectory);
+            RootDirectory = rootDirectory;
+            
+        }
+
+        public string RootDirectory { get; private set; }
+
+        public string GameKey { get; set; }
+
+        public string Region { get; set; }
+
+        public AspectRatio AspectRatio { get; private set; }
+
+        public void SetAspectRatioByResolution(EmulatorSize resolution)
+        {
+            AspectRatio.AssertResolutionIsSupported(resolution);
+            var aspectRatio = AspectRatio.GetAspectRatio(resolution);
+            AspectRatio = aspectRatio;
+        }
     }
 
     public enum ResourceType

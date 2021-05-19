@@ -32,5 +32,31 @@ namespace Core.Common
         }
     }
 
-    //public class 
+    public class FrequencyLimitGetter<T>
+    {
+        private FrequencyLimitor limitor;
+        private Func<T> getter;
+        private T val;
+        private bool vis;
+
+        public FrequencyLimitGetter(int milliseconds, Func<T> rawGetter)
+        {
+            limitor = new FrequencyLimitor(milliseconds);
+            CD = milliseconds;
+            getter = rawGetter;
+            vis = false;
+        }
+
+        public int CD { get; private set; }
+
+        public T Get()
+        {
+            if (vis && !limitor.CanHit)
+                return val;
+            val = getter();
+            limitor.Hit();
+            vis = true;
+            return val;
+        }
+    }
 }

@@ -36,6 +36,7 @@ namespace Core.Emulators
 
         public Emulator()
         {
+            resolutionGetter = new FrequencyLimitGetter<EmulatorSize>(refreshResolutionCD, GetResolutionDirectly);
             //ConnectToAdbServer();
         }
 
@@ -214,21 +215,22 @@ namespace Core.Emulators
             IsConnected = true;
         }
 
-        private FrequencyLimitor limitor = new FrequencyLimitor(1000 * 60 * 60);
-        private EmulatorSize resolution;
-
-        public EmulatorSize GetResolution()
+        private EmulatorSize GetResolutionDirectly()
         {
-            if (resolution != null && !limitor.CanHit)
-                return resolution;
             var output = AdbShell("wm size");
             var match = Regex.Match(output, "(\\d+)x(\\d+)");
             if (!match.Success)
                 throw new Exception(AheadWithName("获取模拟器分辨率失败"));
             var size = new EmulatorSize(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
-            resolution = size;
-            limitor.Hit();
             return size;
+        }
+
+        private int refreshResolutionCD = 60 * 1000; //ms
+        private FrequencyLimitGetter<EmulatorSize> resolutionGetter;
+
+        public EmulatorSize GetResolution()
+        {
+            return resolutionGetter.Get();
         }
 
         public void DoTap(PVec2f pf)
