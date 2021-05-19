@@ -64,6 +64,11 @@ namespace Core.Common
 
     }
 
+    public class ResourceManager
+    {
+
+    }
+
     public enum ResourceType
     {
         Csv,

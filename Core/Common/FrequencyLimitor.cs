@@ -31,4 +31,6 @@ namespace Core.Common
             lastHitTime = DateTime.Now;
         }
     }
+
+    //public class 
 }

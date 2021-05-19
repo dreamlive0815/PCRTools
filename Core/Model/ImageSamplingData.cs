@@ -20,16 +20,16 @@ namespace Core.Model
             return r;
         }
 
-        public KVContainer<Size> ContainerSizes { get; set; } = new KVContainer<Size>();
+        public ImageSamplingDataContainer<Size> ContainerSizes { get; set; } = new ImageSamplingDataContainer<Size>();
 
         /// <summary>
         /// 百分比
         /// </summary>
-        public KVContainer<int> MatchThresholds { get; set; } = new KVContainer<int>();
+        public ImageSamplingDataContainer<int> MatchThresholds { get; set; } = new ImageSamplingDataContainer<int>();
 
-        public KVContainer<PVec2f> PVec2fs { get; set; } = new KVContainer<PVec2f>();
+        public ImageSamplingDataContainer<PVec2f> PVec2fs { get; set; } = new ImageSamplingDataContainer<PVec2f>();
 
-        public KVContainer<RVec4f> RVec4fs { get; set; } = new KVContainer<RVec4f>();
+        public ImageSamplingDataContainer<RVec4f> RVec4fs { get; set; } = new ImageSamplingDataContainer<RVec4f>();
 
         public void Save(string filePath)
         {
@@ -38,15 +38,12 @@ namespace Core.Model
         }
     }
 
-    public class KVContainer<T> : SortedDictionary<string, T>
+    public class ImageSamplingDataContainer<T> : SortedDictionary<string, T>
     {
 
         public void Set(string key, T value)
         {
-            if (ContainsKey(key))
-                this[key] = value;
-            else
-                Add(key, value);
+            this[key] = value;
         }
     }
 }
