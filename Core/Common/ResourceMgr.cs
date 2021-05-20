@@ -105,6 +105,8 @@ namespace Core.Common
 
         public string Region { get; set; }
 
+        private bool UseAspectRatio = true;
+
         public AspectRatio AspectRatio { get; private set; }
 
         public void SetAspectRatioByResolution(EmulatorSize resolution)
@@ -112,6 +114,32 @@ namespace Core.Common
             AspectRatio.AssertResolutionIsSupported(resolution);
             var aspectRatio = AspectRatio.GetAspectRatio(resolution);
             AspectRatio = aspectRatio;
+        }
+
+        public ResourceManager Clone()
+        {
+            var r = new ResourceManager(RootDirectory)
+            {
+                GameKey = GameKey,
+                Region = Region,
+                AspectRatio = AspectRatio,
+            };
+            return r;
+        }
+    }
+
+    public class Resource
+    {
+        public Resource(string fullPath)
+        {
+            Fullpath = fullPath;
+        }
+
+        public string Fullpath { get; private set; }
+
+        public bool Exists
+        {
+            get { return File.Exists(Fullpath); }
         }
     }
 

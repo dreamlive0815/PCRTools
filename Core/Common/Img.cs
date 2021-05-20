@@ -7,6 +7,7 @@ using Core.Emulators;
 
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using CvSize = OpenCvSharp.Size;
 
 
 namespace Core.Common
@@ -35,6 +36,17 @@ namespace Core.Common
 
         public SysSize Size { get { return new SysSize(Width, Height); } }
 
+        private CvSize GetCvSize()
+        {
+            return new CvSize(Width, Height);
+        }
+
+        private CvSize GetScaledCvSize(CvSize size, double scale)
+        {
+            var wid = size.Width * scale;
+            var hei = size.Height * scale;
+            return new CvSize(wid, hei);
+        }
 
         public Img GetPartial(Rectangle rect)
         {
@@ -48,6 +60,13 @@ namespace Core.Common
         {
             var rect = Size * rf;
             return GetPartial(rect);
+        }
+
+        public Img GetScaled(double scale)
+        {
+            var size = GetScaledCvSize(GetCvSize(), scale);
+            var scaled = MT.Resize(size);
+            return new Img(scaled);
         }
 
         public void Save(string filePath)
