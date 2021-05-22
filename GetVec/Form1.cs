@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using Core.Common;
 using Core.Emulators;
 using Core.Model;
-
+using Core.PCR;
 using EventSystem;
 
 namespace GetVec
@@ -32,6 +32,8 @@ namespace GetVec
             //InitFrmInfo();
             InitEmulator();
             RegisterEvents();
+
+            var keys = Unit.GetAllIds();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -73,16 +75,8 @@ namespace GetVec
 
         Emulator Emulator
         {
-            get
-            {
-                if (emulator != null && emulator.IsAlive && !emulator.IsConnected)
-                    emulator.ConnectToAdbServer();
-                return emulator;
-            }
-            set
-            {
-                emulator = value;
-            }
+            get { return emulator; }
+            set { emulator = value; }
         }
 
         void InitEmulator()
@@ -95,6 +89,8 @@ namespace GetVec
             if (Emulator == null)
                 throw new Exception("未选择模拟器");
             Emulator.AssertAlive();
+            if (!emulator.IsConnected) emulator.ConnectToAdbServer();
+            if (ResourceMgr.DefaultUseAspectRatio.AspectRatio == null) ResourceMgr.DefaultUseAspectRatio.SetAspectRatioByResolution(emulator.GetResolution());
         }
 
         string GetSizeInfo(Size size)
@@ -282,8 +278,8 @@ namespace GetVec
         void AccessModel(Action<ImageSamplingData> callback)
         {
             AssertEmulatorAlive();
-            var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), "image_sampling_data.json");
-            var vesc = ImageSamplingData.Parse(path);
+            var path = ResourceMgr.DefaultUseAspectRatio.Json(ImageSamplingData.DefaultFileName).Fullpath;
+            var vesc = ImageSamplingData.FromFile(path);
             callback(vesc);
             vesc.Save(path);
         }
@@ -298,7 +294,7 @@ namespace GetVec
                 var img = new Img(pictureBox1.Image);
                 var partial = img.GetPartial(GetRect());
                 var key = $"{input.Key}.png";
-                var path = ResourceMgr.GetInstance().GetResourcePath(Emulator.GetResolution(), ResourceType.Image, key);
+                var path = ResourceMgr.DefaultUseAspectRatio.Image(key).Fullpath;
                 partial.Save(path);
                 AccessModel((data) =>
                 {

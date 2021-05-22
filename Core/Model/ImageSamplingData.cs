@@ -11,7 +11,9 @@ namespace Core.Model
     public class ImageSamplingData
     {
 
-        public static ImageSamplingData Parse(string filePath)
+        public static string DefaultFileName { get { return "image_sampling_data.json"; } }
+
+        public static ImageSamplingData FromFile(string filePath)
         {
             if (!File.Exists(filePath))
                 return new ImageSamplingData();

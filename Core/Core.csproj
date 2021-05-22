@@ -87,12 +87,11 @@
     <Compile Include="Extensions\RectangleExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Model\ImageSamplingData.cs" />
+    <Compile Include="PCR\Unit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleHTTPClient.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PCR\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

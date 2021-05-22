@@ -37,9 +37,6 @@ namespace PCRTools
                     Text = ConfigMgr.GetConfig().Region.ToString();
                 }));
             });
-
-            emulator = new LeidianEmulator();
-            var device = emulator.GetFirstOnlineDevice();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

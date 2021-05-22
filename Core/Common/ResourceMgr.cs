@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Core.Emulators;
@@ -6,88 +7,43 @@ using Core.Extensions;
 
 namespace Core.Common
 {
+
     public class ResourceMgr
     {
+
         private static ResourceMgr instance;
+        private static ResourceMgr instanceUseAspectRatio;
 
-        public static ResourceMgr GetInstance()
-        {
-            return instance = instance ?? new ResourceMgr();
-        }
-
-        protected ResourceMgr()
-        {
-            Utils.MakeDirectory(RootDirectory);
-        }
-
-        public string RootDirectory { get { return ConfigMgr.GetConfig().ResourceRootDirectory; } }
-
-
-        public string GetResourcePath(string gameKey, string region, string resourceName)
-        {
-            var sep = Path.DirectorySeparatorChar;
-            var path = $"{RootDirectory}{sep}{gameKey}{sep}{region}{sep}{resourceName}";
-            var dir = Path.GetDirectoryName(path);
-            Utils.MakeDirectory(dir);
-            return path;
-        }
-
-        public string GetResourcePath(string gameKey, string region, ResourceType resourceType, string resourceName)
-        {
-            resourceName = $"{resourceType}{Path.DirectorySeparatorChar}{resourceName}";
-            return GetResourcePath(gameKey, region, resourceName);
-        }
-
-        public string GetResourcePath(ResourceType resourceType, string resourceName)
-        {
-            return GetResourcePath(ConfigMgr.GetConfig().GameKey, ConfigMgr.GetConfig().Region.ToString(), resourceType, resourceName);
-        }
-
-        public string GetResourcePath(string gameKey, string region, EmulatorSize resolution, string resourceName)
-        {
-            AspectRatio.AssertResolutionIsSupported(resolution);
-            var aspectRatio = AspectRatio.GetAspectRatio(resolution);
-            resourceName = $"{aspectRatio}{Path.DirectorySeparatorChar}{resourceName}";
-            return GetResourcePath(gameKey, region, resourceName);
-        }
-
-        public string GetResourcePath(EmulatorSize resolution, ResourceType resourceType, string resourceName)
-        {
-            resourceName = $"{resourceType}{Path.DirectorySeparatorChar}{resourceName}";
-            return GetResourcePath(resolution, resourceName);
-        }
-
-        public string GetResourcePath(EmulatorSize resolution, string resourceName)
-        {
-            return GetResourcePath(ConfigMgr.GetConfig().GameKey, ConfigMgr.GetConfig().Region.ToString(), resolution, resourceName);
-        }
-
-    }
-
-    public class ResourceManager
-    {
-
-        private static ResourceManager instance;
-
-        public static ResourceManager Default
+        public static ResourceMgr Default
         {
             get
             {
                 if (instance == null)
                 {
                     var config = ConfigMgr.GetConfig();
-                    return new ResourceManager(config.ResourceRootDirectory)
+                    instance = new ResourceMgr(config.ResourceRootDirectory)
                     {
                         GameKey = config.GameKey,
                         Region = config.Region.ToString(),
                     };
                 }
                 return instance;
-                
             }
         }
 
-        public ResourceManager(string rootDirectory)
+        public static ResourceMgr DefaultUseAspectRatio
+        {
+            get
+            {
+                if (instanceUseAspectRatio == null)
+                {
+                    instanceUseAspectRatio = Default.WithAspectRatio();
+                }
+                return instanceUseAspectRatio;
+            }
+        }
+
+        public ResourceMgr(string rootDirectory)
         {
 #if !DEBUG
 
@@ -101,29 +57,96 @@ namespace Core.Common
 
         public string RootDirectory { get; private set; }
 
+        private bool UseGameKeyAndRegion = true;
+
         public string GameKey { get; set; }
 
         public string Region { get; set; }
 
-        private bool UseAspectRatio = true;
+        private bool UseAspectRatio = false;
 
         public AspectRatio AspectRatio { get; private set; }
 
-        public void SetAspectRatioByResolution(EmulatorSize resolution)
+        public ResourceMgr SetAspectRatioByResolution(EmulatorSize resolution)
         {
             AspectRatio.AssertResolutionIsSupported(resolution);
             var aspectRatio = AspectRatio.GetAspectRatio(resolution);
             AspectRatio = aspectRatio;
+            return this;
         }
 
-        public ResourceManager Clone()
+        private void AssertFieldsNotEmpty()
         {
-            var r = new ResourceManager(RootDirectory)
+            if (UseGameKeyAndRegion && (string.IsNullOrWhiteSpace(GameKey) || string.IsNullOrWhiteSpace(Region)))
+                throw new Exception("GameKey和Region不能为空");
+            if (UseAspectRatio && AspectRatio == null)
+                throw new Exception("AspectRatio不能为空");
+        }
+
+        private List<string> GetPathPieces(params string[] otherPieces)
+        {
+            var r = new List<string>() { RootDirectory };
+            if (UseGameKeyAndRegion)
+                r.AddRange(new List<string>() { GameKey, Region });
+            if (UseAspectRatio)
+                r.Add(AspectRatio.ToString());
+            foreach (var piece in otherPieces)
+                r.Add(piece);
+            return r;
+        }
+
+        public string GetFullPath(params string[] pieces)
+        {
+            AssertFieldsNotEmpty();
+            var arr = GetPathPieces(pieces);
+            var path = string.Join($"{Path.DirectorySeparatorChar}", arr);
+            path = Path.GetFullPath(path);
+
+            var dir = Path.GetDirectoryName(path);
+            Utils.MakeDirectory(dir);
+
+            return path;
+        }
+
+        public Resource GetResource(params string[] pieces)
+        {
+            var fullPath = GetFullPath(pieces);
+            return new Resource(fullPath);
+        }
+
+        public Resource Csv(string resourceName)
+        {
+            var fullPath = GetFullPath("Csv", resourceName);
+            return new Resource(fullPath);
+        }
+
+        public Resource Image(string resourceName)
+        {
+            var fullPath = GetFullPath("Image", resourceName);
+            return new Resource(fullPath);
+        }
+
+        public Resource Json(string resourceName)
+        {
+            var fullPath = GetFullPath("Json", resourceName);
+            return new Resource(fullPath);
+        }
+
+        public ResourceMgr Clone()
+        {
+            var r = new ResourceMgr(RootDirectory)
             {
                 GameKey = GameKey,
                 Region = Region,
                 AspectRatio = AspectRatio,
             };
+            return r;
+        }
+
+        public ResourceMgr WithAspectRatio()
+        {
+            var r = Clone();
+            r.UseAspectRatio = true;
             return r;
         }
     }
@@ -141,12 +164,12 @@ namespace Core.Common
         {
             get { return File.Exists(Fullpath); }
         }
-    }
 
-    public enum ResourceType
-    {
-        Csv,
-        Image,
-        Json,
+        public Resource AssertExists()
+        {
+            if (!Exists)
+                throw new Exception($"资源不存在 {Fullpath}");
+            return this;
+        }
     }
 }
