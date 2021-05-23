@@ -12,9 +12,10 @@ using System.Windows.Forms;
 using Core.Common;
 using Core.Emulators;
 using Core.Extensions;
-using System.Reflection;
+using Core.PCR;
 
 using EventSystem;
+
 
 namespace PCRTools
 {

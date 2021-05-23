@@ -43,6 +43,8 @@ namespace Core.Common
             }
         }
 
+        public static string Separator { get { return $"{Path.DirectorySeparatorChar}"; } }
+
         public ResourceMgr(string rootDirectory)
         {
 #if !DEBUG
@@ -57,13 +59,13 @@ namespace Core.Common
 
         public string RootDirectory { get; private set; }
 
-        private bool UseGameKeyAndRegion = true;
+        private bool useGameKeyAndRegion = true;
 
         public string GameKey { get; set; }
 
         public string Region { get; set; }
 
-        private bool UseAspectRatio = false;
+        private bool useAspectRatio = false;
 
         public AspectRatio AspectRatio { get; private set; }
 
@@ -77,19 +79,23 @@ namespace Core.Common
 
         private void AssertFieldsNotEmpty()
         {
-            if (UseGameKeyAndRegion && (string.IsNullOrWhiteSpace(GameKey) || string.IsNullOrWhiteSpace(Region)))
+            if (useGameKeyAndRegion && (string.IsNullOrWhiteSpace(GameKey) || string.IsNullOrWhiteSpace(Region)))
                 throw new Exception("GameKey和Region不能为空");
-            if (UseAspectRatio && AspectRatio == null)
+            if (useAspectRatio && AspectRatio == null)
                 throw new Exception("AspectRatio不能为空");
         }
+
+        private List<string> pieces = new List<string>();
 
         private List<string> GetPathPieces(params string[] otherPieces)
         {
             var r = new List<string>() { RootDirectory };
-            if (UseGameKeyAndRegion)
+            if (useGameKeyAndRegion)
                 r.AddRange(new List<string>() { GameKey, Region });
-            if (UseAspectRatio)
+            if (useAspectRatio)
                 r.Add(AspectRatio.ToString());
+            foreach (var piece in pieces)
+                r.Add(piece);
             foreach (var piece in otherPieces)
                 r.Add(piece);
             return r;
@@ -114,21 +120,27 @@ namespace Core.Common
             return new Resource(fullPath);
         }
 
+        public static readonly string CSV_PIECE = "Csv";
+
         public Resource Csv(string resourceName)
         {
-            var fullPath = GetFullPath("Csv", resourceName);
+            var fullPath = GetFullPath(CSV_PIECE, resourceName);
             return new Resource(fullPath);
         }
+
+        public static readonly string IMAGE_PIECE = "Image";
 
         public Resource Image(string resourceName)
         {
-            var fullPath = GetFullPath("Image", resourceName);
+            var fullPath = GetFullPath(IMAGE_PIECE, resourceName);
             return new Resource(fullPath);
         }
 
+        public static readonly string JSON_PIECE = "Json";
+
         public Resource Json(string resourceName)
         {
-            var fullPath = GetFullPath("Json", resourceName);
+            var fullPath = GetFullPath(JSON_PIECE, resourceName);
             return new Resource(fullPath);
         }
 
@@ -139,6 +151,11 @@ namespace Core.Common
                 GameKey = GameKey,
                 Region = Region,
                 AspectRatio = AspectRatio,
+
+                useGameKeyAndRegion = useGameKeyAndRegion,
+                useAspectRatio = useAspectRatio,
+
+                pieces = new List<string>(pieces),
             };
             return r;
         }
@@ -146,7 +163,14 @@ namespace Core.Common
         public ResourceMgr WithAspectRatio()
         {
             var r = Clone();
-            r.UseAspectRatio = true;
+            r.useAspectRatio = true;
+            return r;
+        }
+
+        public ResourceMgr WithPieces(IEnumerable<string> pieces)
+        {
+            var r = Clone();
+            r.pieces.AddRange(pieces);
             return r;
         }
     }

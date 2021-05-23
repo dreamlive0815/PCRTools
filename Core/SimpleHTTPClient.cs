@@ -12,6 +12,20 @@ namespace SimpleHTTPClient
     public class Client : IDisposable
     {
 
+        private static Client instance;
+
+        public static Client Default
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Client();
+                }
+                return instance;
+            }
+        }
+
         private HttpClient client;
 
         public Client()
@@ -50,6 +64,12 @@ namespace SimpleHTTPClient
             {
                 stream.CopyTo(fileStream);
             }
+        }
+
+        public Stream GetStream(string uri)
+        {
+            var stream = client.GetStreamAsync(uri).Result;
+            return stream;
         }
 
         public string Get(string uri)

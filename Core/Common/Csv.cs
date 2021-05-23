@@ -50,6 +50,20 @@ namespace Core.Common
             Headers = headers;
         }
 
+        public bool HasHeader(string headerVal)
+        {
+            return columnIndexes.ContainsKey(headerVal);
+        }
+
+        public bool TryAddHeader(string headerVal)
+        {
+            if (HasHeader(headerVal))
+                return false;
+            columnIndexes[headerVal] = Headers.Count;
+            Headers.Add(new CsvHeader() { Value = headerVal });
+            return true;
+        }
+
         public int GetColumnIndex(string headerVal)
         {
             return columnIndexes[headerVal];
