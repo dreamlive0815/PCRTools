@@ -41,6 +41,7 @@
             this.menuOpenResDir = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuRectSizeOnly = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuThreshold = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -79,6 +80,7 @@
             // 
             this.menuSave.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuSaveImageSample,
+            this.menuThreshold,
             this.menuPoint,
             this.menuRectSizeOnly,
             this.menuRect});
@@ -158,6 +160,13 @@
             this.menuRectSizeOnly.Text = "矩形(仅大小)";
             this.menuRectSizeOnly.Click += new System.EventHandler(this.menuRectSizeOnly_Click);
             // 
+            // menuThreshold
+            // 
+            this.menuThreshold.Name = "menuThreshold";
+            this.menuThreshold.Size = new System.Drawing.Size(216, 26);
+            this.menuThreshold.Text = "阈值";
+            this.menuThreshold.Click += new System.EventHandler(this.menuThreshold_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -197,6 +206,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuOpenResDir;
         private System.Windows.Forms.ToolStripMenuItem menuSetRect;
         private System.Windows.Forms.ToolStripMenuItem menuRectSizeOnly;
+        private System.Windows.Forms.ToolStripMenuItem menuThreshold;
     }
 }
 

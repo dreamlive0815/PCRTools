@@ -319,6 +319,22 @@ namespace GetVec
             });
         }
 
+        private void menuThreshold_Click(object sender, EventArgs e)
+        {
+            DoInput((frm) => { frm.ShowThreshold = true; }, (input) =>
+            {
+                AssertEmulatorAlive();
+                var key = input.Key;
+                AccessModel((data) =>
+                {
+                    if (!data.MatchThresholds.ContainsKey(key) || MessageBox.Show($"MatchThresholds已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        data.MatchThresholds.Set(key, input.Threshold);
+                    }
+                });
+            });
+        }
+
         private void menuPoint_Click(object sender, EventArgs e)
         {
             if (!IsPoint())

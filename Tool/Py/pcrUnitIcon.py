@@ -50,5 +50,5 @@ class PCRUnit:
         print(f'Saved Icon To {savePath}')
 
 
-
-PCRUnit.downloadIcons()
+if __name__ == "__main__":
+    PCRUnit.downloadIcons()
