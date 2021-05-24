@@ -1,7 +1,7 @@
 
 import os
 
-resRootDir = './res/PCR/Taiwan'
+resRootDir = './res'
 
 def getResPath(*paths):
     return os.path.join(resRootDir, *paths)

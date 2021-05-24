@@ -175,6 +175,42 @@ namespace Core.Common
         }
     }
 
+
+    public class ResourceManager
+    {
+        public ResourceManager(string rootDirectory)
+        {
+#if !DEBUG
+
+            if (!Directory.Exists(rootDirectory))
+                throw new Exception($"资源目录不存在: {rootDirectory}");
+#endif
+            Utils.MakeDirectory(rootDirectory);
+            RootDirectory = rootDirectory;
+
+        }
+
+        public string RootDirectory { get; private set; }
+
+        public string GameKey { get; set; }
+
+        public string Region { get; set; }
+
+        public AspectRatio AspectRatio { get; private set; }
+
+        public ResourceManager SetAspectRatioByResolution(EmulatorSize resolution)
+        {
+            AspectRatio.AssertResolutionIsSupported(resolution);
+            var aspectRatio = AspectRatio.GetAspectRatio(resolution);
+            AspectRatio = aspectRatio;
+            return this;
+        }
+
+
+
+    }
+
+
     public class Resource
     {
         public Resource(string fullPath)

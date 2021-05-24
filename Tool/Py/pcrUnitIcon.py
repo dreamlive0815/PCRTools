@@ -22,7 +22,7 @@ class PCRUnit:
 
     @staticmethod
     def downloadIcons():
-        csvPath = res.getResPath("Csv/Unit.csv")
+        csvPath = res.getResPath("PCR/Csv/Unit.csv")
         csv = Csv(csvPath)
         ids = csv.getRowKeys()
         stars = (1, 3, 6)
