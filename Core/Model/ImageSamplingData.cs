@@ -31,6 +31,8 @@ namespace Core.Model
 
         public ImageSamplingDataContainer<PVec2f> PVec2fs { get; set; } = new ImageSamplingDataContainer<PVec2f>();
 
+        public ImageSamplingDataContainer<RVec2f> RVec2fs { get; set; } = new ImageSamplingDataContainer<RVec2f>();
+
         public ImageSamplingDataContainer<RVec4f> RVec4fs { get; set; } = new ImageSamplingDataContainer<RVec4f>();
 
         public void Save(string filePath)

@@ -90,7 +90,7 @@ namespace GetVec
                 throw new Exception("未选择模拟器");
             Emulator.AssertAlive();
             if (!emulator.IsConnected) emulator.ConnectToAdbServer();
-            if (ResourceMgr.DefaultUseAspectRatio.AspectRatio == null) ResourceMgr.DefaultUseAspectRatio.SetAspectRatioByResolution(emulator.GetResolution());
+            ResourceManager.Default.SetAspectRatioByResolution(emulator.GetResolution());
         }
 
         string GetSizeInfo(Size size)
@@ -199,6 +199,11 @@ namespace GetVec
             return PVec2f.Div(GetContainerSize(), GetRect());
         }
 
+        RVec2f GetRVec2f()
+        {
+            return RVec2f.Div(GetContainerSize(), GetRect().Size);
+        }
+
         RVec4f GetRVec4f()
         {
             return RVec4f.Div(GetContainerSize(), GetRect());
@@ -278,7 +283,7 @@ namespace GetVec
         void AccessModel(Action<ImageSamplingData> callback)
         {
             AssertEmulatorAlive();
-            var path = ResourceMgr.DefaultUseAspectRatio.Json(ImageSamplingData.DefaultFileName).Fullpath;
+            var path = ResourceManager.Default.GetFullPath("${G}/${R}/${A}/Json/" + ImageSamplingData.DefaultFileName);
             var vesc = ImageSamplingData.FromFile(path);
             callback(vesc);
             vesc.Save(path);
@@ -294,7 +299,7 @@ namespace GetVec
                 var img = new Img(pictureBox1.Image);
                 var partial = img.GetPartial(GetRect());
                 var key = $"{input.Key}.png";
-                var path = ResourceMgr.DefaultUseAspectRatio.Image(key).Fullpath;
+                var path = ResourceManager.Default.GetFullPath("${G}/${R}/${A}/Image/" + key);
                 partial.Save(path);
                 AccessModel((data) =>
                 {
@@ -327,6 +332,24 @@ namespace GetVec
                     if (!data.PVec2fs.ContainsKey(key) || MessageBox.Show($"PVec2fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         data.PVec2fs.Set(key, GetPVec2f());
+                    }
+                });
+            });
+        }
+
+        private void menuRectSizeOnly_Click(object sender, EventArgs e)
+        {
+            if (!IsRect())
+                throw new Exception("请先选择矩形区域");
+            DoInput((input) =>
+            {
+                AssertEmulatorAlive();
+                var key = input.Key;
+                AccessModel((data) =>
+                {
+                    if (!data.RVec2fs.ContainsKey(key) || MessageBox.Show($"RVec2fs已存在相同的键:{key},继续吗?", "键名冲突", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        data.RVec2fs.Set(key, GetRVec2f());
                     }
                 });
             });

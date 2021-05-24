@@ -31,15 +31,16 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuFrmInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCapture = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuOpenDir = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveImageSample = new System.Windows.Forms.ToolStripMenuItem();
             this.menuPoint = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRect = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.menuSetRect = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuOpenDir = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenAdbDir = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenResDir = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuSetRect = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.menuRectSizeOnly = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -74,20 +75,12 @@
             this.menuCapture.Text = "捕获";
             this.menuCapture.Click += new System.EventHandler(this.menuCapture_Click);
             // 
-            // menuOpenDir
-            // 
-            this.menuOpenDir.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuOpenAdbDir,
-            this.menuOpenResDir});
-            this.menuOpenDir.Name = "menuOpenDir";
-            this.menuOpenDir.Size = new System.Drawing.Size(51, 24);
-            this.menuOpenDir.Text = "目录";
-            // 
             // menuSave
             // 
             this.menuSave.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuSaveImageSample,
             this.menuPoint,
+            this.menuRectSizeOnly,
             this.menuRect});
             this.menuSave.Name = "menuSave";
             this.menuSave.Size = new System.Drawing.Size(51, 24);
@@ -111,14 +104,44 @@
             // 
             this.menuRect.Name = "menuRect";
             this.menuRect.Size = new System.Drawing.Size(216, 26);
-            this.menuRect.Text = "矩形";
+            this.menuRect.Text = "矩形(位置和大小)";
             this.menuRect.Click += new System.EventHandler(this.menuRect_Click);
+            // 
+            // menuSetRect
+            // 
+            this.menuSetRect.Name = "menuSetRect";
+            this.menuSetRect.Size = new System.Drawing.Size(111, 24);
+            this.menuSetRect.Text = "设置矩形区域";
+            this.menuSetRect.Click += new System.EventHandler(this.menuSetRect_Click);
+            // 
+            // menuOpenDir
+            // 
+            this.menuOpenDir.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuOpenAdbDir,
+            this.menuOpenResDir});
+            this.menuOpenDir.Name = "menuOpenDir";
+            this.menuOpenDir.Size = new System.Drawing.Size(51, 24);
+            this.menuOpenDir.Text = "目录";
+            // 
+            // menuOpenAdbDir
+            // 
+            this.menuOpenAdbDir.Name = "menuOpenAdbDir";
+            this.menuOpenAdbDir.Size = new System.Drawing.Size(115, 26);
+            this.menuOpenAdbDir.Text = "Adb";
+            this.menuOpenAdbDir.Click += new System.EventHandler(this.menuOpenAdbDir_Click);
+            // 
+            // menuOpenResDir
+            // 
+            this.menuOpenResDir.Name = "menuOpenResDir";
+            this.menuOpenResDir.Size = new System.Drawing.Size(115, 26);
+            this.menuOpenResDir.Text = "资源";
+            this.menuOpenResDir.Click += new System.EventHandler(this.menuOpenResDir_Click);
             // 
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 28);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(963, 456);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -128,26 +151,12 @@
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
-            // menuOpenAdbDir
+            // menuRectSizeOnly
             // 
-            this.menuOpenAdbDir.Name = "menuOpenAdbDir";
-            this.menuOpenAdbDir.Size = new System.Drawing.Size(216, 26);
-            this.menuOpenAdbDir.Text = "Adb";
-            this.menuOpenAdbDir.Click += new System.EventHandler(this.menuOpenAdbDir_Click);
-            // 
-            // menuOpenResDir
-            // 
-            this.menuOpenResDir.Name = "menuOpenResDir";
-            this.menuOpenResDir.Size = new System.Drawing.Size(216, 26);
-            this.menuOpenResDir.Text = "资源";
-            this.menuOpenResDir.Click += new System.EventHandler(this.menuOpenResDir_Click);
-            // 
-            // menuSetRect
-            // 
-            this.menuSetRect.Name = "menuSetRect";
-            this.menuSetRect.Size = new System.Drawing.Size(111, 24);
-            this.menuSetRect.Text = "设置矩形区域";
-            this.menuSetRect.Click += new System.EventHandler(this.menuSetRect_Click);
+            this.menuRectSizeOnly.Name = "menuRectSizeOnly";
+            this.menuRectSizeOnly.Size = new System.Drawing.Size(216, 26);
+            this.menuRectSizeOnly.Text = "矩形(仅大小)";
+            this.menuRectSizeOnly.Click += new System.EventHandler(this.menuRectSizeOnly_Click);
             // 
             // Form1
             // 
@@ -159,7 +168,7 @@
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Form1";
@@ -187,6 +196,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuOpenAdbDir;
         private System.Windows.Forms.ToolStripMenuItem menuOpenResDir;
         private System.Windows.Forms.ToolStripMenuItem menuSetRect;
+        private System.Windows.Forms.ToolStripMenuItem menuRectSizeOnly;
     }
 }
 

@@ -16,7 +16,7 @@ namespace Core.PCR
 
         public static Csv GetCsv()
         {
-            var path = ResourceMgr.Default.Csv("Unit.csv").AssertExists().Fullpath;
+            var path = ResourceManager.Default.GetResource("${G}/Csv/Unit.csv").AssertExists().Fullpath;
             var csv = Csv.FromFile(path);
             return csv;
         }
@@ -39,20 +39,20 @@ namespace Core.PCR
             return $"icon_unit_{id}{star}1.png";
         }
 
-        private static string GetIconFullPath(string iconFileName)
+        private static Resource GetIconResource(string iconFileName)
         {
-            return ResourceMgr.Default.GetFullPath(ResourceMgr.IMAGE_PIECE, "Unit", iconFileName);
+            return ResourceManager.Default.GetResource("${G}/Image/Unit/" + iconFileName);
         }
 
-        public static string GetIconFullPath(string id, int star)
+        public static Resource GetIconResource(string id, int star)
         {
             var fileName = GetIconFileName(id, star);
-            return GetIconFullPath(fileName);
+            return GetIconResource(fileName);
         }
 
         private static void DownloadIcon(string id, int star)
         {
-            var fullPath = GetIconFullPath(id, star);
+            var fullPath = GetIconResource(id, star).Fullpath;
             DownloadIcon(id, star, fullPath);
         }
 

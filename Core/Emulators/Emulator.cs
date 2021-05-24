@@ -334,6 +334,39 @@ namespace Core.Emulators
         }
     }
 
+    public class RVec2f
+    {
+        public static int DecimalPlaces { get; } = 4;
+
+        public static RVec2f Parse(string s)
+        {
+            var arr = s.Split(',');
+            return new RVec2f(double.Parse(arr[0]), double.Parse(arr[1]));
+        }
+
+        public double W { get; set; }
+
+        public double H { get; set; }
+
+        public RVec2f(double w, double h)
+        {
+            W = w;
+            H = h;
+        }
+
+        public override string ToString()
+        {
+            return $"{Math.Round(W, DecimalPlaces)},{Math.Round(H, DecimalPlaces)}";
+        }
+
+        public static RVec2f Div(Size size0, Size size)
+        {
+            var w = 1.0 * size.Width / size0.Width;
+            var h = 1.0 * size.Height / size0.Height;
+            return new RVec2f(w, h);
+        }
+    }
+
     public class RVec4f
     {
         public static int DecimalPlaces { get; } = 4;

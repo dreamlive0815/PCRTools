@@ -3,6 +3,7 @@
 from utils import res
 from utils.csv import Csv
 
+import os
 import requests
 from io import BytesIO
 from PIL import Image
@@ -36,9 +37,12 @@ class PCRUnit:
 
     @staticmethod
     def downloadIcon(id, star):
-        url = f'https://redive.estertion.win/icon/unit/{id}{star}1.webp'
         fileName = PCRUnit.getIconFileName(id, star)
-        savePath = res.getResPath(f'Image/Unit/{fileName}')
+        savePath = res.getResPath(f'PCR/Image/Unit/{fileName}')
+        if os.path.exists(savePath):
+            print(f'Icon: {savePath} exists, skip')
+            return
+        url = f'https://redive.estertion.win/icon/unit/{id}{star}1.webp'
         print(f'Downloading Icon From {url}')
         rsp = requests.get(url, stream=True, timeout=5)
         img = Image.open(BytesIO(rsp.content))

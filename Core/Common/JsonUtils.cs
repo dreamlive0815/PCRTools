@@ -16,7 +16,7 @@ namespace Core.Common
             Formatting = Formatting.Indented,
             Converters = new List<JsonConverter>()
                 {
-                    new PVec2fConverter(), new RVec4fConverter(),
+                    new PVec2fConverter(), new RVec2fConverter(), new RVec4fConverter(),
                     new SizeConverter(), new RectangleConverter(),
                 },
         };
@@ -45,6 +45,26 @@ namespace Core.Common
         {
             var s = reader.Value.ToString();
             return PVec2f.Parse(s);
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            writer.WriteValue(value.ToString());
+        }
+    }
+
+
+    public class RVec2fConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(RVec2f);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var s = reader.Value.ToString();
+            return RVec2f.Parse(s);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
