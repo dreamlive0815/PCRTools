@@ -4,6 +4,7 @@ using System.IO;
 
 using Core.Emulators;
 using Core.Extensions;
+using System.Text.RegularExpressions;
 
 namespace Core.Common
 {
@@ -204,6 +205,18 @@ namespace Core.Common
             var aspectRatio = AspectRatio.GetAspectRatio(resolution);
             AspectRatio = aspectRatio;
             return this;
+        }
+
+        private string GetEscapeString(string str)
+        {
+
+            //var matches = Regex.Replace(str, "$\\(.+?){\\}", );
+            return null;
+        }
+
+        public string GetFullPath(string path)
+        {
+            return path;
         }
 
 
