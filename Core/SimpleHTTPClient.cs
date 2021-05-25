@@ -66,12 +66,6 @@ namespace SimpleHTTPClient
             }
         }
 
-        public Stream GetStream(string uri)
-        {
-            var stream = client.GetStreamAsync(uri).Result;
-            return stream;
-        }
-
         public string Get(string uri)
         {
             return GetAsync(uri).Result;

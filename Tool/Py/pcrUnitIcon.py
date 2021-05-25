@@ -24,7 +24,8 @@ class PCRUnit:
     @staticmethod
     def downloadIcons():
         csvPath = res.getResPath("PCR/Csv/Unit.csv")
-        csv = Csv(csvPath)
+        csv = Csv()
+        csv.loadFromFile(csvPath)
         ids = csv.getRowKeys()
         stars = (1, 3, 6)
         for id in ids:

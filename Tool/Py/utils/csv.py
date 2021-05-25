@@ -2,10 +2,9 @@
 
 class Csv:
 
-    def __init__(self, filePath):
+    def __init__(self):
         self.headers = []
         self.dataRows = []
-        self.loadFromFile(filePath)
 
     def loadFromFile(self, filePath):
         with open(filePath, 'r', encoding='utf-8') as f:
@@ -29,6 +28,18 @@ class Csv:
         for row in self.dataRows:
             keys.append(row[0])
         return keys
+
+    def saveAsFile(self, filePath):
+        with open(filePath, 'w', encoding='utf-8') as f:
+            def writeLine(vals):
+                f.write(','.join(vals))
+                f.write("\n")
+            writeLine(self.headers)
+            for row in self.dataRows:
+                writeLine(row)
+            
+
+
 
 
 
