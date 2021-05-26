@@ -75,6 +75,7 @@
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\ResourceMgr.cs" />
     <Compile Include="Common\ShellUtils.cs" />
+    <Compile Include="Common\SimpleEncryptor.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\Win32API.cs" />
     <Compile Include="Emulators\Emulator.cs" />
