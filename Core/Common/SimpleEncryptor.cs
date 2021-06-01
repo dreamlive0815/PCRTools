@@ -18,7 +18,7 @@ namespace Core.Common
             get
             {
                 if (instance == null)
-                    instance = new SimpleEncryptor("KoishiKokoro", "MadokaHomura");
+                    instance = new SimpleEncryptor("KoishiKo", "MadokaHo");
                 return instance;
             }
         }
