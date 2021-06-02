@@ -29,7 +29,7 @@ namespace Core.PCR
             return $"http://{SERVER_IP}:{SERVER_PORT}/{uri}";
         }
 
-        public static void AttackTeamQuery(ArenaAttackTeamQueryParams args)
+        public static List<ArenaAttackTeam> AttackTeamQuery(ArenaAttackTeamQueryParams args)
         {
             var url = GetFullUrl("/PCRArena");
             var jsonStr = JsonUtils.SerializeObject(args);
@@ -37,13 +37,83 @@ namespace Core.PCR
             var r = Client.Default.Post(url, encrtpted, ContentTypes.PlainText);
             var apiResult = APIResult.Parse<string>(r);
             apiResult.AssertSuccessCode();
+            var rawData = apiResult.Data;
+            var arenaApiResult = ArenaAPIResult.Parse<ArenaAttackTeamQueryResult>(rawData);
+            arenaApiResult.AssertSuccessCode();
+            var teams = arenaApiResult.Data.Teams;
+            return teams;
         }
     }
 
 
-    public class ArenaTeam
+    public class ArenaAPIResult
     {
+        public static ArenaAPIResult<T> Parse<T>(string s)
+        {
+            var r = JsonUtils.DeserializeObject<ArenaAPIResult<T>>(s);
+            return r;
+        }
+    }
 
+    public class ArenaAPIResult<T>
+    {
+        public static readonly int SUCCESS_CODE = 0;
+
+        [JsonProperty("code")]
+        public int Code { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
+        [JsonProperty("data")]
+        public T Data { get; set; }
+
+        public void AssertSuccessCode()
+        {
+            if (Code != SUCCESS_CODE)
+            {
+                throw new Exception(Message);
+            }
+        }
+    }
+
+    public class ArenaAttackTeamQueryResult
+    {
+        [JsonProperty("result")]
+        public List<ArenaAttackTeam> Teams { get; set; }
+    }
+
+    public class ArenaAttackTeam
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("atk")]
+        public List<ArenaUnit> AttackUnits { get; set; }
+
+        [JsonProperty("def")]
+        public List<ArenaUnit> DefenceUnits { get; set; }
+
+        [JsonProperty("updated")]
+        public string Time { get; set; }
+
+        [JsonProperty("up")]
+        public int Like { get; set; }
+
+        [JsonProperty("down")]
+        public int Dislike { get; set; }
+    }
+
+    public class ArenaUnit
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("star")]
+        public int Star { get; set; }
+
+        [JsonProperty("equip")]
+        public bool HasSpecialEquip { get; set; }
     }
 
     public class ArenaAttackTeamQueryParams
