@@ -38,6 +38,9 @@ namespace PCRTools
                     Text = ConfigMgr.GetConfig().Region.ToString();
                 }));
             });
+
+            var ids = new int[] { 1052, 1034, 1122, 1018, 1010 };
+            Arena.AttackTeamQuery(new ArenaAttackTeamQueryParams().SetDefenceTeamIds(ids));
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

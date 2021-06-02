@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-using Newtonsoft.Json;
+using Core.Common;
 
 namespace SimpleHTTPClient
 {
@@ -81,7 +81,7 @@ namespace SimpleHTTPClient
 
         public string PostJson(string uri, object data)
         {
-            var jsonStr = JsonConvert.SerializeObject(data);
+            var jsonStr = JsonUtils.SerializeObject(data);
             return Post(uri, jsonStr, ContentTypes.Json);
         }
 
@@ -125,4 +125,33 @@ namespace SimpleHTTPClient
         public static string PlainText { get { return "text/plain"; } }
     }
 
+
+    public class APIResult
+    {
+        public static APIResult<T> Parse<T>(string s)
+        {
+            var r = JsonUtils.DeserializeObject<APIResult<T>>(s);
+            return r;
+        }
+    }
+
+
+    public class APIResult<T>
+    {
+        public static readonly int SUCCESS_CODE = 0;
+
+        public int Code { get; set; } = SUCCESS_CODE;
+
+        public string Message { get; set; }
+
+        public T Data { get; set; }
+
+        public void AssertSuccessCode()
+        {
+            if (Code != SUCCESS_CODE)
+            {
+                throw new Exception(Message);
+            }
+        }
+    }
 }
