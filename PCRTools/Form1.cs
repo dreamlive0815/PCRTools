@@ -16,6 +16,7 @@ using Core.PCR;
 
 using EventSystem;
 
+using OpenCvSharp;
 
 namespace PCRTools
 {
@@ -39,13 +40,21 @@ namespace PCRTools
                 }));
             });
 
-            var ids = new int[] { 1052, 1034, 1122, 1018, 1010 };
-            Arena.AttackTeamQuery(new ArenaAttackTeamQueryParams().SetDefenceTeamIds(ids));
+            Test();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             ConfigMgr.GetInstance().SaveConfig();
+        }
+
+        void Test()
+        {
+            var img = Cv2.ImRead("11.png");
+            var gray = img.ToGray();
+            Cv2.ImShow("gray", gray);
+            var bin = gray.ToBinary(200);
+            Cv2.ImShow("bin", bin);
         }
     }
 }
