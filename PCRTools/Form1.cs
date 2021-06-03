@@ -50,11 +50,30 @@ namespace PCRTools
 
         void Test()
         {
-            var img = Cv2.ImRead("11.png");
+            var img = Cv2.ImRead("22.png");
+            img = img.GaussianBlur(new OpenCvSharp.Size(3, 3), 0);
             var gray = img.ToGray();
-            Cv2.ImShow("gray", gray);
-            var bin = gray.ToBinary(200);
-            Cv2.ImShow("bin", bin);
+            //Cv2.ImShow("gray", gray);
+            var canny = gray.Canny(30, 100);
+            Cv2.ImShow("bin", canny);
+
+            OpenCvSharp.Point[][] contours;
+            HierarchyIndex[] hierarchy;
+            canny.FindContours(out contours, out hierarchy, RetrievalModes.Tree, ContourApproximationModes.ApproxSimple);
+            var list = new List<OpenCvSharp.Point[]>();
+            foreach (var contour in contours)
+            {
+                var borderLen = Cv2.ArcLength(contour, true);
+                var approx = Cv2.ApproxPolyDP(contour, 0.02 * borderLen, true);
+
+                if (approx.Length == 4 && Cv2.IsContourConvex(approx) && borderLen > 100)
+                {
+                    list.Add(approx);
+                }
+            }
+
+            img.DrawContours(list, -1, Scalar.Red, 2);
+            Cv2.ImShow("img", img);
         }
     }
 }

@@ -12,7 +12,7 @@ using CvSize = OpenCvSharp.Size;
 
 namespace Core.Common
 {
-    public class Img
+    public class Img : IDisposable
     {
 
         public Img(Image image) : this(new Bitmap(image))
@@ -82,6 +82,12 @@ namespace Core.Common
         public Mat ToMat()
         {
             return MT;
+        }
+
+        public void Dispose()
+        {
+            MT?.Dispose();
+            MT = null;
         }
     }
 }
