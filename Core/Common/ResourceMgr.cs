@@ -106,6 +106,12 @@ namespace Core.Common
             var fullPath = GetFullPath(path);
             return new Resource(fullPath);
         }
+
+        public ImageResource GetImageResource(string path)
+        {
+            var fullPath = GetFullPath(path);
+            return new ImageResource(fullPath);
+        }
     }
 
 
@@ -128,6 +134,19 @@ namespace Core.Common
             if (!Exists)
                 throw new Exception($"资源不存在 {Fullpath}");
             return this;
+        }
+    }
+
+
+    public class ImageResource : Resource
+    {
+        public ImageResource(string fullPath) : base(fullPath)
+        {
+        }
+
+        public Img ToImg()
+        {
+            return new Img(OpenCvSharp.Cv2.ImRead(Fullpath));
         }
     }
 }

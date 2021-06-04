@@ -39,12 +39,12 @@ namespace Core.PCR
             return $"icon_unit_{id}{star}1.png";
         }
 
-        private static Resource GetIconResource(string iconFileName)
+        private static ImageResource GetIconResource(string iconFileName)
         {
-            return ResourceManager.Default.GetResource("${G}/Image/Unit/" + iconFileName);
+            return ResourceManager.Default.GetImageResource("${G}/Image/Unit/" + iconFileName);
         }
 
-        public static Resource GetIconResource(string id, int star)
+        public static ImageResource GetIconResource(string id, int star)
         {
             var fileName = GetIconFileName(id, star);
             return GetIconResource(fileName);
