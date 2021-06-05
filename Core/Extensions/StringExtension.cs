@@ -18,5 +18,11 @@ namespace Core.Extensions
         {
             return $"{parentPath}{Path.DirectorySeparatorChar}{name}";
         }
+
+        public static string SplitAndGet(this string str, char splitChar, int index)
+        {
+            var ss = str.Split(new char[]{ splitChar });
+            return index < ss.Length ? ss[index] : "";
+        }
     }
 }

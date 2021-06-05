@@ -33,15 +33,17 @@
             this.menuCapture = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveImageSample = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuThreshold = new System.Windows.Forms.ToolStripMenuItem();
             this.menuPoint = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRectSizeOnly = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRect = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSetRect = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenDir = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenAdbDir = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpenResDir = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.menuRectSizeOnly = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuThreshold = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveImage = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -83,7 +85,8 @@
             this.menuThreshold,
             this.menuPoint,
             this.menuRectSizeOnly,
-            this.menuRect});
+            this.menuRect,
+            this.menuSaveImage});
             this.menuSave.Name = "menuSave";
             this.menuSave.Size = new System.Drawing.Size(51, 24);
             this.menuSave.Text = "保存";
@@ -95,12 +98,26 @@
             this.menuSaveImageSample.Text = "图例";
             this.menuSaveImageSample.Click += new System.EventHandler(this.menuSaveImageSample_Click);
             // 
+            // menuThreshold
+            // 
+            this.menuThreshold.Name = "menuThreshold";
+            this.menuThreshold.Size = new System.Drawing.Size(216, 26);
+            this.menuThreshold.Text = "阈值";
+            this.menuThreshold.Click += new System.EventHandler(this.menuThreshold_Click);
+            // 
             // menuPoint
             // 
             this.menuPoint.Name = "menuPoint";
             this.menuPoint.Size = new System.Drawing.Size(216, 26);
             this.menuPoint.Text = "点";
             this.menuPoint.Click += new System.EventHandler(this.menuPoint_Click);
+            // 
+            // menuRectSizeOnly
+            // 
+            this.menuRectSizeOnly.Name = "menuRectSizeOnly";
+            this.menuRectSizeOnly.Size = new System.Drawing.Size(216, 26);
+            this.menuRectSizeOnly.Text = "矩形(仅大小)";
+            this.menuRectSizeOnly.Click += new System.EventHandler(this.menuRectSizeOnly_Click);
             // 
             // menuRect
             // 
@@ -153,19 +170,17 @@
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
-            // menuRectSizeOnly
+            // menuSaveImage
             // 
-            this.menuRectSizeOnly.Name = "menuRectSizeOnly";
-            this.menuRectSizeOnly.Size = new System.Drawing.Size(216, 26);
-            this.menuRectSizeOnly.Text = "矩形(仅大小)";
-            this.menuRectSizeOnly.Click += new System.EventHandler(this.menuRectSizeOnly_Click);
+            this.menuSaveImage.Name = "menuSaveImage";
+            this.menuSaveImage.Size = new System.Drawing.Size(216, 26);
+            this.menuSaveImage.Text = "图片";
+            this.menuSaveImage.Click += new System.EventHandler(this.menuSaveImage_Click);
             // 
-            // menuThreshold
+            // saveFileDialog1
             // 
-            this.menuThreshold.Name = "menuThreshold";
-            this.menuThreshold.Size = new System.Drawing.Size(216, 26);
-            this.menuThreshold.Text = "阈值";
-            this.menuThreshold.Click += new System.EventHandler(this.menuThreshold_Click);
+            this.saveFileDialog1.DefaultExt = "png";
+            this.saveFileDialog1.Filter = "*.png|png文件";
             // 
             // Form1
             // 
@@ -207,6 +222,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuSetRect;
         private System.Windows.Forms.ToolStripMenuItem menuRectSizeOnly;
         private System.Windows.Forms.ToolStripMenuItem menuThreshold;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveImage;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

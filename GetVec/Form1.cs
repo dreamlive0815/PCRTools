@@ -32,8 +32,6 @@ namespace GetVec
             //InitFrmInfo();
             InitEmulator();
             RegisterEvents();
-
-            var keys = Unit.GetAllIds();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -406,6 +404,18 @@ namespace GetVec
                     MessageBox.Show("解析失败");
                 }
             });
+        }
+
+        private void menuSaveImage_Click(object sender, EventArgs e)
+        {
+            if (!IsRect())
+                throw new Exception("请先选择矩形区域");
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                var img = new Img(pictureBox1.Image);
+                var partial = img.GetPartial(GetRect());
+                partial.Save(saveFileDialog1.FileName);
+            }
         }
 
         private void menuOpenAdbDir_Click(object sender, EventArgs e)

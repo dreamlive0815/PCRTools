@@ -7,6 +7,7 @@ using Core.Emulators;
 
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using CvPoint = OpenCvSharp.Point;
 using CvSize = OpenCvSharp.Size;
 
 
@@ -26,6 +27,10 @@ namespace Core.Common
         public Img(Mat mat)
         {
             MT = mat;
+        }
+
+        public Img(string filePath) : this(new Mat(filePath))
+        {
         }
 
         private Mat MT { get; set; }
@@ -69,6 +74,29 @@ namespace Core.Common
             return new Img(scaled);
         }
 
+        public ImgMatchResult Match(Img search, double threshold)
+        {
+            var source = MT;
+            var res = new Mat();
+            Cv2.MatchTemplate(source, search.MT, res, TemplateMatchModes.CCoeffNormed);
+            double minVal, maxVal;
+            CvPoint minLoc, maxLoc;
+            Cv2.MinMaxLoc(res, out minVal, out maxVal, out minLoc, out maxLoc);
+            var r = new ImgMatchResult()
+            {
+                Threshold = threshold,
+                Maxval = maxVal,
+                Success = maxVal >= threshold,
+                MatchedRect = new Rectangle(maxLoc.X, maxLoc.Y, search.Width, search.Height),
+            };
+            if (r.Success && ConfigMgr.GetConfig().Debug)
+            {
+                //Cv2.Circle(source, maxLoc.X + search.Width / 2, maxLoc.Y + search.Height / 2, 25, Scalar.Red);
+                //Cv2.ImShow("ImgMatch", source);
+            }
+            return r;
+        }
+
         public void Save(string filePath)
         {
             MT.SaveImage(filePath);
@@ -89,5 +117,16 @@ namespace Core.Common
             MT?.Dispose();
             MT = null;
         }
+    }
+
+    public class ImgMatchResult
+    {
+        public double Threshold { get; set; }
+
+        public double Maxval { get; set; }
+
+        public bool Success { get; set; }
+
+        public Rectangle MatchedRect { get; set; }
     }
 }
