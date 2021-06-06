@@ -2,12 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
-
 
 using Core.Common;
 using Core.PCR;
 
+using OpenCvSharp;
+using CvSize = OpenCvSharp.Size;
+using CvPoint = OpenCvSharp.Point;
 
 namespace PCRTools
 {
@@ -20,9 +23,8 @@ namespace PCRTools
 
         private void FrmPCRArena_Load(object sender, EventArgs e)
         {
-            LoadUnits(null);
+            LoadUnits(new string[0]);
         }
-
 
         static readonly string UNKNOWN_UNIT_ID = "1000";
 
@@ -56,6 +58,12 @@ namespace PCRTools
             }
         }
 
+        void LoadUnits(IEnumerable<string> unitIds)
+        {
+            var units = unitIds?.Select(x => new Unit() { Id = x }).ToList() ?? new List<Unit>();
+            LoadUnits(units);
+        }
+
         void LoadUnits(IEnumerable<Unit> units)
         {
             ResetUnits();
@@ -69,14 +77,30 @@ namespace PCRTools
                         break;
                 }
             }
+            var names = new List<string>();
             for (var i = 0; i < 5; i++)
             {
                 var unitId = unitIds[i];
-                var icon = Controls["icon" + i] as PictureBox;
-                var name = Controls["name" + i] as Label;
-                icon.Image = GetUnitIconImage(unitId);
-                name.Text = GetUnitName(unitId);
+                var picIcon = Controls["icon" + i] as PictureBox;
+                var lblName = Controls["name" + i] as Label;
+                picIcon.Image = GetUnitIconImage(unitId);
+                var name = GetUnitName(unitId);
+                lblName.Text = name;
+                if (!string.IsNullOrWhiteSpace(name))
+                    names.Add(name);
             }
+            txtUnitNames.Text = string.Join(" ", names);
+        }
+
+        List<string> GetUnitIds()
+        {
+            var r = new List<string>();
+            foreach (var unitId in unitIds)
+            {
+                if (unitId != UNKNOWN_UNIT_ID)
+                    r.Add(unitId);
+            }
+            return r;
         }
 
         private void btnFromClipboard_Click(object sender, EventArgs e)
@@ -91,6 +115,83 @@ namespace PCRTools
             var img = new Img(image);
             var units = Arena.FindUnits(img);
             LoadUnits(units);
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            var ids = GetUnitIds();
+            if (ids.Count == 0)
+            {
+                MessageBox.Show("至少选择一名角色");
+                return;
+            }
+            if (ids.Count < 5 && MessageBox.Show("队伍角色不足5名，继续吗？", "提示", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            var numIds = ids.Select(x => int.Parse(x)).ToList();
+            var teams = Arena.AttackTeamQuery(new ArenaAttackTeamQueryParams().SetDefenceTeamIds(numIds));
+            RenderAttackTeamQuery(teams);
+        }
+
+        void RenderAttackTeamQuery(List<ArenaAttackTeam> teams)
+        {
+            if (teams.Count == 0)
+            {
+                MessageBox.Show("没有查到对应的进攻队伍");
+                return;
+            }
+
+            var iconSize = 64;
+            var width = iconSize * 7;
+            var height = iconSize * (teams.Count + 3);
+            var mat = new Mat(new CvSize(width, height), MatType.CV_8UC3, Scalar.White);
+
+            var getIcon = new Func<ArenaUnit, Mat>((unit) =>
+            {
+                var icon = new Mat(GetUnitIconFilePath(unit.ID.ToString()));
+                icon = icon.Resize(new CvSize(64, 64));
+                return icon;
+            });
+            var drawIcon = new Action<Mat, int, int>((icon, rowIndex, colIndex) =>
+            {
+                var xRange = new Range(colIndex * iconSize, (colIndex + 1) * iconSize);
+                var yRange = new Range(rowIndex * iconSize, (rowIndex + 1) * iconSize);
+                icon.CopyTo(mat[yRange, xRange]);
+            });
+            var drawIcons = new Action<List<ArenaUnit>, int>((arenaUnits, rowIndex) =>
+            {
+                for (var i = 0; i < arenaUnits.Count; i++)
+                {
+                    var defUnit = arenaUnits[i];
+                    var icon = getIcon(defUnit);
+                    drawIcon(icon, rowIndex, i);
+                }
+            });
+
+            var first = teams[0];
+            drawIcons(first.DefenceUnits, 1);
+
+            for (var i = 0; i < teams.Count; i++)
+            {
+                var team = teams[i];
+                drawIcons(team.AttackUnits, i + 3);
+            }
+
+            Cv2.ImShow("QueryResult", mat);
+        }
+
+        private void btnFromText_Click(object sender, EventArgs e)
+        {
+            var nameStr = txtUnitNames.Text;
+            var names = nameStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var ids = new List<string>();
+            foreach (var name in names)
+            {
+                var id = Unit.GetIdByName(name);
+                if (id != null)
+                    ids.Add(id);
+            }
+            LoadUnits(ids);
         }
     }
 }

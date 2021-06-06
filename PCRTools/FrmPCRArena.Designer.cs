@@ -42,6 +42,7 @@
             this.name4 = new System.Windows.Forms.Label();
             this.btnFromFile = new System.Windows.Forms.Button();
             this.btnFromClipboard = new System.Windows.Forms.Button();
+            this.btnFromText = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.icon0)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.icon1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.icon2)).BeginInit();
@@ -116,6 +117,7 @@
             this.btnSearch.TabIndex = 6;
             this.btnSearch.Text = "查询";
             this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // name0
             // 
@@ -164,28 +166,39 @@
             // 
             // btnFromFile
             // 
-            this.btnFromFile.Location = new System.Drawing.Point(20, 171);
+            this.btnFromFile.Location = new System.Drawing.Point(20, 199);
             this.btnFromFile.Name = "btnFromFile";
             this.btnFromFile.Size = new System.Drawing.Size(194, 47);
             this.btnFromFile.TabIndex = 12;
-            this.btnFromFile.Text = "从文件识别";
+            this.btnFromFile.Text = "从图片文件识别";
             this.btnFromFile.UseVisualStyleBackColor = true;
             // 
             // btnFromClipboard
             // 
-            this.btnFromClipboard.Location = new System.Drawing.Point(244, 171);
+            this.btnFromClipboard.Location = new System.Drawing.Point(244, 199);
             this.btnFromClipboard.Name = "btnFromClipboard";
             this.btnFromClipboard.Size = new System.Drawing.Size(194, 47);
             this.btnFromClipboard.TabIndex = 13;
-            this.btnFromClipboard.Text = "从剪切板识别";
+            this.btnFromClipboard.Text = "从剪切板图片识别";
             this.btnFromClipboard.UseVisualStyleBackColor = true;
             this.btnFromClipboard.Click += new System.EventHandler(this.btnFromClipboard_Click);
+            // 
+            // btnFromText
+            // 
+            this.btnFromText.Location = new System.Drawing.Point(20, 150);
+            this.btnFromText.Name = "btnFromText";
+            this.btnFromText.Size = new System.Drawing.Size(418, 32);
+            this.btnFromText.TabIndex = 14;
+            this.btnFromText.Text = "从文本中识别";
+            this.btnFromText.UseVisualStyleBackColor = true;
+            this.btnFromText.Click += new System.EventHandler(this.btnFromText_Click);
             // 
             // FrmPCRArena
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(458, 523);
+            this.Controls.Add(this.btnFromText);
             this.Controls.Add(this.btnFromClipboard);
             this.Controls.Add(this.btnFromFile);
             this.Controls.Add(this.name4);
@@ -235,5 +248,6 @@
         private System.Windows.Forms.Label name4;
         private System.Windows.Forms.Button btnFromFile;
         private System.Windows.Forms.Button btnFromClipboard;
+        private System.Windows.Forms.Button btnFromText;
     }
 }

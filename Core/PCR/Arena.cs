@@ -317,7 +317,13 @@ namespace Core.PCR
     public class ArenaUnit
     {
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public int LongID { get; set; }
+
+        [JsonIgnore]
+        public int ID
+        {
+            get { return LongID / 100; }
+        }
 
         [JsonProperty("star")]
         public int Star { get; set; }

@@ -15,6 +15,11 @@ namespace Core.PCR
     public class Unit
     {
 
+        static Unit()
+        {
+            InitNameToIdDic();
+        }
+
         public static readonly int DEFAULT_ICON_SIZE = 128;
 
         public static Csv GetCsv()
@@ -40,9 +45,36 @@ namespace Core.PCR
         {
             var csv = GetCsv();
             var row = csv[id];
-            var cell = row["Nicknames"];
-            var name = cell.SplitAndGet(';', 0);
+            var nicknames = row["Nicknames"];
+            var name = nicknames.SplitAndGet(';', 0);
             return name;
+        }
+
+        private static Dictionary<string, string> nameToIdDic;
+
+        private static void InitNameToIdDic()
+        {
+            nameToIdDic = new Dictionary<string, string>();
+            var csv = GetCsv();
+            foreach (var row in csv)
+            {
+                var id = row["ID"];
+                var nicknameStr = row["Nicknames"];
+                var nicknames = nicknameStr.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var nickname in nicknames)
+                {
+                    if (!string.IsNullOrWhiteSpace(nickname))
+                        nameToIdDic[nickname] = id;
+                }
+            }
+        }
+
+        public static string GetIdByName(string name)
+        {
+            if (nameToIdDic.ContainsKey(name))
+                return nameToIdDic[name];
+            else
+                return null;
         }
 
         public static string GetIconFileName(string id, int star)

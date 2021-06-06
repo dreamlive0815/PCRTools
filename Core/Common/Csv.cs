@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Core.Common
 {
-    public class Csv
+    public class Csv : IEnumerable<CsvRow>
     {
 
 
@@ -123,6 +124,15 @@ namespace Core.Common
             return r;
         }
 
+        public IEnumerator<CsvRow> GetEnumerator()
+        {
+            return rows.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 
     public class CsvHeader
