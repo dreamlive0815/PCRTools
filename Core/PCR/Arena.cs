@@ -82,9 +82,10 @@ namespace Core.PCR
             public int Index;
             public double BorderLength;
             public CvPoint[] Points;
+            public CvPoint CenterPoint;
         }
 
-        public static List<string> FindUnits(Img img)
+        public static List<Unit> FindUnits(Img img)
         {
             var src = img.ToMat().Clone();
             var blurred = src.GaussianBlur(new OpenCvSharp.Size(3, 3), 0);
@@ -110,6 +111,7 @@ namespace Core.PCR
                             Index = i,
                             BorderLength = borderLen,
                             Points = approx,
+                            CenterPoint = GetCenterPoint(approx),
                         });
                     }
                 } 
@@ -134,17 +136,43 @@ namespace Core.PCR
             listList.Add(tempList);
             var maxCount = listList.Max(x => x.Count);
             var maxCountList = listList.Where(x => x.Count == maxCount).FirstOrDefault();
+            //根据FindContours的索引重新排序
             maxCountList.Sort((a, b) =>
             {
                 return a.Index.CompareTo(b.Index);
             });
+
+            //过滤掉重复的
+            var centerPointList = new List<CvPoint>();
+            tempList = new List<FindUnitIconMatTempInfo>();
+            var hasSame = new Func<CvPoint, bool>((point) =>
+            {
+                foreach (var pt in centerPointList)
+                {
+                    if (Math.Abs(point.X - pt.X) < 10 && Math.Abs(point.Y - pt.Y) < 10)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            foreach (var item in maxCountList)
+            {
+                var center = item.CenterPoint;
+                if (!hasSame(center))
+                {
+                    tempList.Add(item);
+                    centerPointList.Add(center);
+                }
+            }
+            maxCountList = tempList;
 
             var iconSources = new List<Img>();
             for (var i = 0; i < maxCountList.Count; i++)
             {
                 var item = maxCountList[i];
                 var wid = item.BorderLength * 0.25 * 1.1;
-                var center = GetCenterPoint(item.Points);
+                var center = item.CenterPoint;
                 var rect = new Rect(center - new CvPoint(wid / 2, wid / 2), new CsSize(wid, wid));
                 var mat = new Mat(src, rect);
                 iconSources.Add(new Img(mat));
@@ -152,12 +180,15 @@ namespace Core.PCR
             }
 
             var averBorderLen = maxCountList.Average(x => x.BorderLength);
-            return FindUnits(iconSources, averBorderLen * 0.25);
+            var r = FindUnits(iconSources, averBorderLen * 0.25);
+            r.Reverse();
+            return r;
         }
 
-        private static double findUnitThreshold = 0.6;
+        private static double findUnitThreshold = 0.64;
+        private static double templateFixScale = 0.98;
 
-        public static List<string> FindUnits(List<Img> iconSources, double iconSize)
+        public static List<Unit> FindUnits(List<Img> iconSources, double iconSize)
         {
             var unitIds = Unit.GetAllIds();
 
@@ -171,7 +202,7 @@ namespace Core.PCR
                 if (!res.Exists)
                     return null;
                 var icon = res.ToImg();
-                icon = icon.GetScaled(iconSize / Unit.DEFAULT_ICON_SIZE * 0.94);
+                icon = icon.GetScaled(iconSize / Unit.DEFAULT_ICON_SIZE * templateFixScale);
                 icon = icon.GetPartial(new RVec4f(0, 0.2, 1, 0.6));
                 iconCache[key] = icon;
                 return icon;
@@ -179,7 +210,7 @@ namespace Core.PCR
 
 
             var stars = new int[] { 6, 3, 1 };
-            var findUnit = new Func<Img, string>((iconSource) =>
+            var findUnit = new Func<Img, Unit>((iconSource) =>
             {
                 foreach (var star in stars)
                 {
@@ -190,25 +221,22 @@ namespace Core.PCR
                             continue;
                         var matchRes = iconSource.Match(icon, findUnitThreshold);
                         if (matchRes.Success)
-                            return id;
+                            return new Unit() { Id = id, Star = star };
                     }
                 }
                 return null;
             });
 
-            
+            var r = new List<Unit>();
             foreach (var iconSource in iconSources)
             {
-                var id = findUnit(iconSource);
-                if (id == null)
-                {
+                var unit = findUnit(iconSource);
+                if (unit == null)
                     continue;
-                }
-                var name = Unit.GetName(id);
-                Console.WriteLine($"{id} {name}");
+                r.Add(unit);
             }
 
-            return null;
+            return r;
         }
     }
 

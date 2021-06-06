@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\DisableAttribute.cs" />
     <Compile Include="Common\Config.cs" />
     <Compile Include="Common\Csv.cs" />
     <Compile Include="Common\FrequencyLimitor.cs" />

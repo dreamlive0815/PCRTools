@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Security.Principal;
 using System.Text;
 
+using Core.Attributes;
+
 namespace Core.Common
 {
     public class Utils
@@ -34,6 +36,8 @@ namespace Core.Common
             var types = assembly.GetExportedTypes();
             foreach (var type in types)
             {
+                if (Attribute.IsDefined(type, typeof(DisableAttribute)))
+                    continue;
                 if (type.IsSubclassOf(typeof(T)))
                 {
                     list.Add(type);

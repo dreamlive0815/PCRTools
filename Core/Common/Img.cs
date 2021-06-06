@@ -74,11 +74,12 @@ namespace Core.Common
             return new Img(scaled);
         }
 
-        public ImgMatchResult Match(Img search, double threshold)
+        public ImgMatchResult Match(Img searchImg, double threshold)
         {
             var source = MT;
+            var search = searchImg.MT;
             var res = new Mat();
-            Cv2.MatchTemplate(source, search.MT, res, TemplateMatchModes.CCoeffNormed);
+            Cv2.MatchTemplate(source, search, res, TemplateMatchModes.CCoeffNormed);
             double minVal, maxVal;
             CvPoint minLoc, maxLoc;
             Cv2.MinMaxLoc(res, out minVal, out maxVal, out minLoc, out maxLoc);
@@ -91,6 +92,16 @@ namespace Core.Common
             };
             if (r.Success && ConfigMgr.GetConfig().Debug)
             {
+                source.SaveImage("source.png");
+                search.SaveImage("search.png");
+                Console.WriteLine(maxVal);
+
+                //var combine = new Mat(new CvSize(source.Width, source.Height + search.Height), MatType.MakeType(source.Depth(), source.Channels()));
+                //source.CopyTo(combine[new Range(0, source.Height), new Range(0, source.Width)]);
+                //var xOff = (source.Width - search.Width) / 2;
+                //search.CopyTo(combine[new Range(source.Height, source.Height + search.Height), new Range(xOff, search.Width + xOff)]);
+                //Cv2.ImShow("combine", combine);
+
                 //Cv2.Circle(source, maxLoc.X + search.Width / 2, maxLoc.Y + search.Height / 2, 25, Scalar.Red);
                 //Cv2.ImShow("ImgMatch", source);
             }

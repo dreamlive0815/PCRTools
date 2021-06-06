@@ -16,6 +16,7 @@ using Core.PCR;
 
 using EventSystem;
 
+using CvSize = OpenCvSharp.Size;
 using OpenCvSharp;
 
 namespace PCRTools
@@ -40,7 +41,12 @@ namespace PCRTools
                 }));
             });
 
-            Arena.FindUnits(new Img("33.png"));
+            var list = Arena.FindUnits(new Img("11.png"));
+            foreach (var unit in list)
+            {
+                Console.WriteLine(unit.Name);
+            }
+
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

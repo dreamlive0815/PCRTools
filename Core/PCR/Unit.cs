@@ -17,16 +17,15 @@ namespace Core.PCR
 
         public static readonly int DEFAULT_ICON_SIZE = 128;
 
-
-        private static Csv csvCache;
-
         public static Csv GetCsv()
         {
-            if (csvCache != null)
-                return csvCache;
-            var path = ResourceManager.Default.GetResource("${G}/Csv/Unit.csv").AssertExists().Fullpath;
-            var csv = Csv.FromFile(path);
-            csvCache = csv;
+            var res = ResourceManager.Default.GetResource("${G}/Csv/Unit.csv");
+            var csv = res.ParseObjWithCache<Csv>(int.MaxValue, (filePath) =>
+            {
+                res.AssertExists();
+                return Csv.FromFile(filePath);
+            });
+            //Console.WriteLine(csv.GetHashCode());
             return csv;
         }
 
@@ -80,6 +79,15 @@ namespace Core.PCR
             var url = $"https://redive.estertion.win/icon/unit/{id}{star}1.webp";
             Logger.GetInstance().Debug("PCRUnit", $"Downloading PCR Unit Icon From {url}");
             //Logger.GetInstance().Debug("PCRUnit", $"Succeeded To Save PCR Unit Icon id = {id} star = {star} To {savePath}");
+        }
+
+        public string Id { get; set; }
+
+        public int Star { get; set; }
+
+        public string Name
+        {
+            get { return GetName(Id); }
         }
     }
 }

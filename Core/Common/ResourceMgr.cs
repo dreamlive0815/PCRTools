@@ -31,6 +31,55 @@ namespace Core.Common
             }
         }
 
+
+        class ObjCacheInfo
+        {
+            public object Obj { get; set; }
+
+            public int LifeTimeMS { get; set; }
+
+            public DateTime lastHitTime { get; set; } = DateTime.Now;
+
+            public bool Expired
+            {
+                get
+                {
+                    var span = DateTime.Now - lastHitTime;
+                    return span.TotalMilliseconds > LifeTimeMS;
+                }
+            }
+        }
+
+        private static Dictionary<string, ObjCacheInfo> objCacheContainer = new Dictionary<string, ObjCacheInfo>();
+
+        public static T ParseObjWithCache<T>(string filePath, int liftTimeMS, Func<string, T> parsor)
+        {
+            if (objCacheContainer.ContainsKey(filePath))
+            {
+                var info = objCacheContainer[filePath];
+                if (!info.Expired)
+                    return (T)info.Obj;
+            }
+            var obj = parsor(filePath);
+            var newInfo = new ObjCacheInfo()
+            {
+                Obj = obj,
+                LifeTimeMS = liftTimeMS,
+            };
+            objCacheContainer[filePath] = newInfo;
+            return obj;
+        }
+
+        public static void ClearObjCache(string filePath)
+        {
+            objCacheContainer.Remove(filePath);
+        }
+
+        public static void ClearAllObjCache()
+        {
+            objCacheContainer.Clear();
+        }
+
         public ResourceManager(string rootDirectory)
         {
 #if !DEBUG
@@ -134,6 +183,11 @@ namespace Core.Common
             if (!Exists)
                 throw new Exception($"资源不存在 {Fullpath}");
             return this;
+        }
+
+        public T ParseObjWithCache<T>(int liftTimeMS, Func<string, T> parsor)
+        {
+            return ResourceManager.ParseObjWithCache<T>(Fullpath, liftTimeMS, parsor);
         }
     }
 

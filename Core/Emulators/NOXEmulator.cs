@@ -2,11 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 
+using Core.Attributes;
 using Core.Common;
 using Core.Extensions;
 
 namespace Core.Emulators
 {
+    [Disable]
     public class NOXEmulator : Emulator
     {
         public override string Name { get { return "夜神模拟器"; } }
