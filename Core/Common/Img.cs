@@ -26,6 +26,10 @@ namespace Core.Common
 
         public Img(Mat mat)
         {
+            if (mat.Channels() > 3)
+            {
+                mat = mat.CvtColor(ColorConversionCodes.RGBA2RGB);
+            }
             MT = mat;
         }
 

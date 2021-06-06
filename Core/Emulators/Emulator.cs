@@ -13,6 +13,22 @@ namespace Core.Emulators
     public abstract class Emulator
     {
 
+        public static Emulator Default { get; set; }
+
+        public static bool IsDefaultAlive()
+        {
+            return Default != null && Default.IsAlive;
+        }
+
+        public static void AssertDefaultAlive()
+        {
+            if (Default == null)
+                throw new Exception("未选择模拟器");
+            Default.AssertAlive();
+            if (!Default.IsConnected) Default.ConnectToAdbServer();
+            ResourceManager.Default.SetAspectRatioByResolution(Default.GetResolution());
+        }
+
         public static List<Type> GetEmulatorTypes()
         {
             return GetEmulatorTypes(Assembly.GetAssembly(typeof(Emulator)));

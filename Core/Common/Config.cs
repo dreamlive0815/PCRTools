@@ -32,6 +32,7 @@ namespace Core.Common
                 if (value != null && !value.IsSubclassOf(typeof(Emulator)))
                     throw new Exception("给定类型不属于Emulator子类");
                 emulatorType = value;
+                Emulator.Default = Emulator.GetInstanceByType(value);
             }
         }
 
@@ -119,7 +120,7 @@ namespace Core.Common
             menuStrip.Items.Add(settingItems);
 
             var emulatorItems = new ToolStripMenuItem();
-            emulatorItems.Text = "模拟器";
+            emulatorItems.Text = "模拟器: 未选择";
             settingItems.DropDownItems.Add(emulatorItems);
             var emulatorMap = new Dictionary<string, Type>();
             var refreshEmulatorCheckStatus = new Action(() =>

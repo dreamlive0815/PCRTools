@@ -35,6 +35,13 @@ namespace Core.Model
 
         public ImageSamplingDataContainer<RVec4f> RVec4fs { get; set; } = new ImageSamplingDataContainer<RVec4f>();
 
+        public double GetThreshold(string key)
+        {
+            if (!MatchThresholds.ContainsKey(key))
+                throw new Exception($"找不到MatchThreshold: {key}");
+            return 0.01 * MatchThresholds[key];
+        }
+
         public void Save(string filePath)
         {
             var s = JsonUtils.SerializeObject(this);

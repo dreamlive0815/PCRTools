@@ -12,19 +12,16 @@ using System.Windows.Forms;
 using Core.Common;
 using Core.Emulators;
 using Core.Extensions;
+using Core.Model;
 using Core.PCR;
 
 using EventSystem;
 
-using CvSize = OpenCvSharp.Size;
-using OpenCvSharp;
 
 namespace PCRTools
 {
     public partial class Form1 : Form
     {
-
-        Emulator emulator;
 
         public Form1()
         {
@@ -32,21 +29,11 @@ namespace PCRTools
             ConfigUITool.AddConfigItemsToMenuStrip(menuStrip1);
         }
 
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            EventMgr.RegisterListener(EventKeys.ConfigRegionChanged, (args) =>
-            {
-                Invoke(new Action(() => {
-                    Text = ConfigMgr.GetConfig().Region.ToString();
-                }));
-            });
-
-            var list = Arena.FindUnits(new Img("11.png"));
-            foreach (var unit in list)
-            {
-                Console.WriteLine(unit.Name);
-            }
-
+            RefreshText();
+            RegisterEvents();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -54,5 +41,42 @@ namespace PCRTools
             ConfigMgr.GetInstance().SaveConfig();
         }
 
+        string GetEmulatorInfo()
+        {
+            var emulator = Emulator.Default;
+            if (emulator == null)
+                return "未选择模拟器";
+            return emulator.Name + (emulator.IsAlive ? ": 在线ON" : ": 离线OFF");
+        }
+
+        string GetRegionInfo()
+        {
+            return "区域: " + ConfigMgr.GetConfig().Region.ToString();
+        }
+
+        void RefreshText()
+        {
+            Invoke(new Action(() =>
+            {
+                var s = $"[{GetEmulatorInfo()}][{GetRegionInfo()}]";
+                Text = s;
+            }));
+        }
+
+        void RegisterEvents()
+        {
+            EventMgr.RegisterListener(EventKeys.ConfigEmulatorTypeChanged, (args) => { RefreshText(); });
+            EventMgr.RegisterListener(EventKeys.ConfigRegionChanged, (args) => { RefreshText(); });
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            RefreshText();
+        }
+
+        private void menuPCRArena_Click(object sender, EventArgs e)
+        {
+            new FrmPCRArena().Show();
+        }
     }
 }

@@ -9,12 +9,14 @@ using Newtonsoft.Json;
 using Core.Common;
 using Core.Emulators;
 using Core.Extensions;
+using Core.Model;
 
 using SimpleHTTPClient;
 
 using CvPoint = OpenCvSharp.Point;
 using CsSize = OpenCvSharp.Size;
 using OpenCvSharp;
+
 
 namespace Core.PCR
 {
@@ -116,6 +118,8 @@ namespace Core.PCR
                     }
                 } 
             }
+            if (list.Count == 0)
+                return new List<Unit>();
 
             list.Sort((a, b) =>
             {
@@ -185,8 +189,19 @@ namespace Core.PCR
             return r;
         }
 
-        private static double findUnitThreshold = 0.64;
         private static double templateFixScale = 0.98;
+
+        private static double GetFindUnitThreshold()
+        {
+            var res = ResourceManager.Default.GetResource("${G}/Json/" + ImageSamplingData.DefaultFileName);
+            res.AssertExists();
+            var data = res.ParseObjWithCache(int.MaxValue, (filePath) =>
+            {
+                return ImageSamplingData.FromFile(filePath);
+            });
+            var r = data.GetThreshold("ArenaFindUnit");
+            return r;
+        }
 
         public static List<Unit> FindUnits(List<Img> iconSources, double iconSize)
         {
@@ -208,7 +223,7 @@ namespace Core.PCR
                 return icon;
             });
 
-
+            var threshold = GetFindUnitThreshold();
             var stars = new int[] { 6, 3, 1 };
             var findUnit = new Func<Img, Unit>((iconSource) =>
             {
@@ -219,7 +234,7 @@ namespace Core.PCR
                         var icon = getIcon(id, star);
                         if (icon == null)
                             continue;
-                        var matchRes = iconSource.Match(icon, findUnitThreshold);
+                        var matchRes = iconSource.Match(icon, threshold);
                         if (matchRes.Success)
                             return new Unit() { Id = id, Star = star };
                     }

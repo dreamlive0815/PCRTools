@@ -20,7 +20,7 @@ namespace Core.PCR
         public static Csv GetCsv()
         {
             var res = ResourceManager.Default.GetResource("${G}/Csv/Unit.csv");
-            var csv = res.ParseObjWithCache<Csv>(int.MaxValue, (filePath) =>
+            var csv = res.ParseObjWithCache(int.MaxValue, (filePath) =>
             {
                 res.AssertExists();
                 return Csv.FromFile(filePath);
