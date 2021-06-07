@@ -148,5 +148,25 @@ namespace Core.Common
             if (!IsAdministrator())
                 throw new Exception("需要管理员权限");
         }
+
+        public static T BinSearch<T>(IList<T> list, T search, Func<T, T, int> comparer)
+        {
+            var left = 0;
+            var right = list.Count - 1;
+            var middle = 0;
+            while (left <= right)
+            {
+                middle = (left + right) / 2;
+                var middleItem = list[middle];
+                var cmp = comparer(middleItem, search);
+                if (cmp > 0) //middleItem > search
+                    right = middle - 1;
+                else if (cmp < 0) //middleItem < search
+                    left = middle + 1;
+                else
+                    return middleItem;
+            }
+            return default(T);
+        }
     }
 }

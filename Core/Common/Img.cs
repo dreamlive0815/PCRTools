@@ -4,6 +4,7 @@ using System.Drawing;
 using SysSize = System.Drawing.Size;
 
 using Core.Emulators;
+using Core.Extensions;
 
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
@@ -76,6 +77,12 @@ namespace Core.Common
             var size = GetScaledCvSize(GetCvSize(), scale);
             var scaled = MT.Resize(size);
             return new Img(scaled);
+        }
+
+        public Img GetResized(SysSize size)
+        {
+            var resized = MT.Resize(size.ToCvSize());
+            return new Img(resized);
         }
 
         public ImgMatchResult Match(Img searchImg, double threshold)

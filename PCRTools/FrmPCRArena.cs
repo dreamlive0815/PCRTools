@@ -23,21 +23,21 @@ namespace PCRTools
 
         private void FrmPCRArena_Load(object sender, EventArgs e)
         {
-            LoadUnits(new string[0]);
+            LoadUnits(new int[0]);
         }
 
-        static readonly string UNKNOWN_UNIT_ID = "1000";
+        static readonly int UNKNOWN_UNIT_ID = 1000;
 
-        string[] unitIds = new string[] { UNKNOWN_UNIT_ID, UNKNOWN_UNIT_ID, UNKNOWN_UNIT_ID, UNKNOWN_UNIT_ID, UNKNOWN_UNIT_ID };
+        int[] unitIds = new int[] { UNKNOWN_UNIT_ID, UNKNOWN_UNIT_ID, UNKNOWN_UNIT_ID, UNKNOWN_UNIT_ID, UNKNOWN_UNIT_ID };
 
-        string GetUnitName(string unitId)
+        string GetUnitName(int unitId)
         {
             if (unitId == UNKNOWN_UNIT_ID)
                 return "";
             return Unit.GetName(unitId);
         }
 
-        string GetUnitIconFilePath(string unitId)
+        string GetUnitIconFilePath(int unitId)
         {
             var iconStar6 = Unit.GetIconResource(unitId, 6);
             if (iconStar6.Exists)
@@ -45,7 +45,7 @@ namespace PCRTools
             return Unit.GetIconResource(unitId, 3).AssertExists().Fullpath;
         }
 
-        Image GetUnitIconImage(string unitId)
+        Image GetUnitIconImage(int unitId)
         {
             return Image.FromFile(GetUnitIconFilePath(unitId));
         }
@@ -58,9 +58,9 @@ namespace PCRTools
             }
         }
 
-        void LoadUnits(IEnumerable<string> unitIds)
+        void LoadUnits(IEnumerable<int> unitIds)
         {
-            var units = unitIds?.Select(x => new Unit() { Id = x }).ToList() ?? new List<Unit>();
+            var units = unitIds?.Select(x => Unit.GetUnitById(x)).ToList() ?? new List<Unit>();
             LoadUnits(units);
         }
 
@@ -92,9 +92,9 @@ namespace PCRTools
             txtUnitNames.Text = string.Join(" ", names);
         }
 
-        List<string> GetUnitIds()
+        List<int> GetUnitIds()
         {
-            var r = new List<string>();
+            var r = new List<int>();
             foreach (var unitId in unitIds)
             {
                 if (unitId != UNKNOWN_UNIT_ID)
@@ -128,7 +128,7 @@ namespace PCRTools
             if (ids.Count < 5 && MessageBox.Show("队伍角色不足5名，继续吗？", "提示", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
-            var numIds = ids.Select(x => int.Parse(x)).ToList();
+            var numIds = ids.ToList();
             var teams = Arena.AttackTeamQuery(new ArenaAttackTeamQueryParams().SetDefenceTeamIds(numIds));
             RenderAttackTeamQuery(teams);
         }
@@ -148,7 +148,7 @@ namespace PCRTools
 
             var getIcon = new Func<ArenaUnit, Mat>((unit) =>
             {
-                var icon = new Mat(GetUnitIconFilePath(unit.ID.ToString()));
+                var icon = new Mat(GetUnitIconFilePath(unit.ID));
                 icon = icon.Resize(new CvSize(64, 64));
                 return icon;
             });
@@ -184,12 +184,12 @@ namespace PCRTools
         {
             var nameStr = txtUnitNames.Text;
             var names = nameStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var ids = new List<string>();
+            var ids = new List<int>();
             foreach (var name in names)
             {
-                var id = Unit.GetIdByName(name);
-                if (id != null)
-                    ids.Add(id);
+                var unit = Unit.GetUnitByName(name);
+                if (unit != null)
+                    ids.Add(unit.Id);
             }
             LoadUnits(ids);
         }

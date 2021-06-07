@@ -14,7 +14,7 @@ using Core.Model;
 using SimpleHTTPClient;
 
 using CvPoint = OpenCvSharp.Point;
-using CsSize = OpenCvSharp.Size;
+using CvSize = OpenCvSharp.Size;
 using OpenCvSharp;
 
 
@@ -49,6 +49,49 @@ namespace Core.PCR
             arenaApiResult.AssertSuccessCode();
             var teams = arenaApiResult.Data.Teams;
             return teams;
+        }
+
+        public static Mat Render(List<ArenaAttackTeam> teams)
+        {
+            //var iconSize = 64;
+            //var width = iconSize * 7;
+            //var height = iconSize * (teams.Count + 3);
+            //var mat = new Mat(new CvSize(width, height), MatType.CV_8UC3, Scalar.White);
+
+            //var getIcon = new Func<ArenaUnit, Mat>((unit) =>
+            //{
+            //    var icon = new Mat(GetUnitIconFilePath(unit.ID.ToString()));
+            //    icon = icon.Resize(new CvSize(64, 64));
+            //    return icon;
+            //});
+            //var drawIcon = new Action<Mat, int, int>((icon, rowIndex, colIndex) =>
+            //{
+            //    var xRange = new Range(colIndex * iconSize, (colIndex + 1) * iconSize);
+            //    var yRange = new Range(rowIndex * iconSize, (rowIndex + 1) * iconSize);
+            //    icon.CopyTo(mat[yRange, xRange]);
+            //});
+            //var drawIcons = new Action<List<ArenaUnit>, int>((arenaUnits, rowIndex) =>
+            //{
+            //    for (var i = 0; i < arenaUnits.Count; i++)
+            //    {
+            //        var defUnit = arenaUnits[i];
+            //        var icon = getIcon(defUnit);
+            //        drawIcon(icon, rowIndex, i);
+            //    }
+            //});
+
+            //var first = teams[0];
+            //drawIcons(first.DefenceUnits, 1);
+
+            //for (var i = 0; i < teams.Count; i++)
+            //{
+            //    var team = teams[i];
+            //    drawIcons(team.AttackUnits, i + 3);
+            //}
+
+            //Cv2.ImShow("QueryResult", mat);
+
+            return null;
         }
 
         private static int GetSquareSize(CvPoint p1, CvPoint p0)
@@ -177,7 +220,7 @@ namespace Core.PCR
                 var item = maxCountList[i];
                 var wid = item.BorderLength * 0.25 * 1.1;
                 var center = item.CenterPoint;
-                var rect = new Rect(center - new CvPoint(wid / 2, wid / 2), new CsSize(wid, wid));
+                var rect = new Rect(center - new CvPoint(wid / 2, wid / 2), new CvSize(wid, wid));
                 var mat = new Mat(src, rect);
                 iconSources.Add(new Img(mat));
                 //Cv2.ImShow(i.ToString(), mat);
@@ -194,7 +237,6 @@ namespace Core.PCR
         private static double GetFindUnitThreshold()
         {
             var res = ResourceManager.Default.GetResource("${G}/Json/" + ImageSamplingData.DefaultFileName);
-            res.AssertExists();
             var data = res.ParseObjWithCache(int.MaxValue, (filePath) =>
             {
                 return ImageSamplingData.FromFile(filePath);
@@ -207,10 +249,10 @@ namespace Core.PCR
         {
             var unitIds = Unit.GetAllIds();
 
-            var iconCache = new Dictionary<Tuple<string, int>,Img>();
-            var getIcon = new Func<string, int, Img>((id, star) =>
+            var iconCache = new Dictionary<Tuple<int, int>,Img>();
+            var getIcon = new Func<int, int, Img>((id, star) =>
             {
-                var key = new Tuple<string, int>(id, star);
+                var key = new Tuple<int, int>(id, star);
                 if (iconCache.ContainsKey(key))
                     return iconCache[key];
                 var res = Unit.GetIconResource(id, star);

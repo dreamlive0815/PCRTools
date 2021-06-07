@@ -187,7 +187,9 @@ namespace Core.Common
 
         public T ParseObjWithCache<T>(int liftTimeMS, Func<string, T> parsor)
         {
-            return ResourceManager.ParseObjWithCache<T>(Fullpath, liftTimeMS, parsor);
+            AssertExists();
+            var r = ResourceManager.ParseObjWithCache<T>(Fullpath, liftTimeMS, parsor);
+            return r;
         }
     }
 
