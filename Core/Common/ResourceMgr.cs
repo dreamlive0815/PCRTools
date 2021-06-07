@@ -202,6 +202,7 @@ namespace Core.Common
 
         public Img ToImg()
         {
+            AssertExists();
             return new Img(OpenCvSharp.Cv2.ImRead(Fullpath));
         }
     }

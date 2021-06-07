@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 using Core.Common;
@@ -16,6 +10,7 @@ using Core.Model;
 using Core.PCR;
 
 using EventSystem;
+using OpenCvSharp;
 
 
 namespace PCRTools
@@ -29,11 +24,14 @@ namespace PCRTools
             ConfigUITool.AddConfigItemsToMenuStrip(menuStrip1);
         }
 
-
         private void Form1_Load(object sender, EventArgs e)
         {
             RefreshText();
             RegisterEvents();
+
+            //var list = JsonUtils.DeserializeObject<List<ArenaAttackTeam>>(File.ReadAllText("AttackTeamQueryResult.txt"));
+            //var mat = Arena.RenderAttackTeams(list);
+            //Cv2.ImShow("mat", mat.ToMat());
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SysSize = System.Drawing.Size;
 
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ using SimpleHTTPClient;
 using CvPoint = OpenCvSharp.Point;
 using CvSize = OpenCvSharp.Size;
 using OpenCvSharp;
-
+using OpenCvSharp.Extensions;
 
 namespace Core.PCR
 {
@@ -48,50 +49,71 @@ namespace Core.PCR
             var arenaApiResult = ArenaAPIResult.Parse<ArenaAttackTeamQueryResult>(rawData);
             arenaApiResult.AssertSuccessCode();
             var teams = arenaApiResult.Data.Teams;
+            if (ConfigMgr.GetConfig().Debug)
+            {
+                File.WriteAllText("AttackTeamQueryResult.txt", JsonUtils.SerializeObject(teams));
+            }
             return teams;
         }
 
-        public static Mat Render(List<ArenaAttackTeam> teams)
+        public static Img RenderAttackTeams(List<ArenaAttackTeam> teams)
         {
-            //var iconSize = 64;
-            //var width = iconSize * 7;
-            //var height = iconSize * (teams.Count + 3);
-            //var mat = new Mat(new CvSize(width, height), MatType.CV_8UC3, Scalar.White);
+            var iconSize = 64;
+            var width = iconSize * 7;
+            var height = iconSize * (teams.Count + 3);
+            var mat = new Mat(new CvSize(width, height), MatType.CV_8UC3, Scalar.White);
 
-            //var getIcon = new Func<ArenaUnit, Mat>((unit) =>
-            //{
-            //    var icon = new Mat(GetUnitIconFilePath(unit.ID.ToString()));
-            //    icon = icon.Resize(new CvSize(64, 64));
-            //    return icon;
-            //});
-            //var drawIcon = new Action<Mat, int, int>((icon, rowIndex, colIndex) =>
-            //{
-            //    var xRange = new Range(colIndex * iconSize, (colIndex + 1) * iconSize);
-            //    var yRange = new Range(rowIndex * iconSize, (rowIndex + 1) * iconSize);
-            //    icon.CopyTo(mat[yRange, xRange]);
-            //});
-            //var drawIcons = new Action<List<ArenaUnit>, int>((arenaUnits, rowIndex) =>
-            //{
-            //    for (var i = 0; i < arenaUnits.Count; i++)
-            //    {
-            //        var defUnit = arenaUnits[i];
-            //        var icon = getIcon(defUnit);
-            //        drawIcon(icon, rowIndex, i);
-            //    }
-            //});
+            var getIcon = new Func<ArenaUnit, Mat>((arenaUnit) =>
+            {
+                //var unit = arenaUnit.ToUnit();
+                var unit = Unit.GetUnitById(arenaUnit.ID);
+                var img = unit.GetIconResource().ToImg();
+                return img.GetResized(new SysSize(64, 64)).ToMat();
+            });
+            var drawIcon = new Action<Mat, int, int>((icon, rowIndex, colIndex) =>
+            {
+                var xRange = new Range(colIndex * iconSize, (colIndex + 1) * iconSize);
+                var yRange = new Range(rowIndex * iconSize, (rowIndex + 1) * iconSize);
+                icon.CopyTo(mat[yRange, xRange]);
+            });
+            var drawIcons = new Action<List<ArenaUnit>, int>((arenaUnits, rowIndex) =>
+            {
+                for (var i = 0; i < arenaUnits.Count; i++)
+                {
+                    var defUnit = arenaUnits[i];
+                    var icon = getIcon(defUnit);
+                    drawIcon(icon, rowIndex, i);
+                }
+            });
 
-            //var first = teams[0];
-            //drawIcons(first.DefenceUnits, 1);
+            var first = teams[0];
+            drawIcons(first.DefenceUnits, 1);
 
-            //for (var i = 0; i < teams.Count; i++)
-            //{
-            //    var team = teams[i];
-            //    drawIcons(team.AttackUnits, i + 3);
-            //}
+            for (var i = 0; i < teams.Count; i++)
+            {
+                var team = teams[i];
+                drawIcons(team.AttackUnits, i + 3);
+            }
 
-            //Cv2.ImShow("QueryResult", mat);
+            var bitmap = mat.ToBitmap();
+            var g = Graphics.FromImage(bitmap);
 
-            return null;
+            var font = new Font("Consolas", 12F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+
+            g.DrawString("防守队", font, Brushes.Blue, new PointF(0, iconSize * 0.5f));
+
+            g.DrawString("进攻队", font, Brushes.Blue, new PointF(0, iconSize * 2.5f));
+
+            for (var i = 0; i < teams.Count; i++)
+            {
+                var team = teams[i];
+                g.DrawString($"赞 {team.Like}", font, Brushes.Red, new PointF(iconSize * 5, iconSize * (i + 3.2f)));
+                g.DrawString($"踩 {team.Dislike}", font, Brushes.Green, new PointF(iconSize * 5, iconSize * (i + 3.6f)));
+            }
+
+            g.Dispose();
+
+            return new Img(bitmap);
         }
 
         private static int GetSquareSize(CvPoint p1, CvPoint p0)
@@ -297,7 +319,6 @@ namespace Core.PCR
         }
     }
 
-
     public class ArenaAPIResult
     {
         public static ArenaAPIResult<T> Parse<T>(string s)
@@ -372,6 +393,12 @@ namespace Core.PCR
 
         [JsonProperty("equip")]
         public bool HasSpecialEquip { get; set; }
+
+        public Unit ToUnit()
+        {
+            return new Unit() { Id = ID, Star = Star };
+        }
+
     }
 
     public class ArenaAttackTeamQueryParams

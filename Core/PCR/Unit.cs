@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 using Core.Common;
 using Core.Extensions;
-using SimpleHTTPClient;
 
 namespace Core.PCR
 {
@@ -84,7 +83,7 @@ namespace Core.PCR
         public static string GetName(int unitId)
         {
             var unit = GetUnitById(unitId);
-            return unit?.Name ?? "不存在的角色";
+            return unit?.Nicknames[0] ?? "不存在的角色";
         }
 
         private static void InitNameToUnitDic(List<Unit> units)
@@ -147,9 +146,9 @@ namespace Core.PCR
 
         public List<string> Nicknames { get; set; } = new List<string>();
 
-        public string Name
+        public string GetName()
         {
-            get { return Nicknames[0]; }
+            return GetName(Id);
         }
 
         public ImageResource GetIconResource()

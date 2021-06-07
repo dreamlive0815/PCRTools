@@ -107,7 +107,7 @@ namespace PCRTools
         {
             if (!Clipboard.ContainsImage())
             {
-                MessageBox.Show("剪切板中没用图片数据");
+                MessageBox.Show("剪切板中没有可用的图片数据");
                 return;
             }
 
@@ -141,43 +141,9 @@ namespace PCRTools
                 return;
             }
 
-            var iconSize = 64;
-            var width = iconSize * 7;
-            var height = iconSize * (teams.Count + 3);
-            var mat = new Mat(new CvSize(width, height), MatType.CV_8UC3, Scalar.White);
+            var img = Arena.RenderAttackTeams(teams);
 
-            var getIcon = new Func<ArenaUnit, Mat>((unit) =>
-            {
-                var icon = new Mat(GetUnitIconFilePath(unit.ID));
-                icon = icon.Resize(new CvSize(64, 64));
-                return icon;
-            });
-            var drawIcon = new Action<Mat, int, int>((icon, rowIndex, colIndex) =>
-            {
-                var xRange = new Range(colIndex * iconSize, (colIndex + 1) * iconSize);
-                var yRange = new Range(rowIndex * iconSize, (rowIndex + 1) * iconSize);
-                icon.CopyTo(mat[yRange, xRange]);
-            });
-            var drawIcons = new Action<List<ArenaUnit>, int>((arenaUnits, rowIndex) =>
-            {
-                for (var i = 0; i < arenaUnits.Count; i++)
-                {
-                    var defUnit = arenaUnits[i];
-                    var icon = getIcon(defUnit);
-                    drawIcon(icon, rowIndex, i);
-                }
-            });
-
-            var first = teams[0];
-            drawIcons(first.DefenceUnits, 1);
-
-            for (var i = 0; i < teams.Count; i++)
-            {
-                var team = teams[i];
-                drawIcons(team.AttackUnits, i + 3);
-            }
-
-            Cv2.ImShow("QueryResult", mat);
+            Cv2.ImShow("QueryResult" + DateTime.Now.ToString(), img.ToMat());
         }
 
         private void btnFromText_Click(object sender, EventArgs e)
