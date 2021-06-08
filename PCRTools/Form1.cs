@@ -28,10 +28,6 @@ namespace PCRTools
         {
             RefreshText();
             RegisterEvents();
-
-            //var list = JsonUtils.DeserializeObject<List<ArenaAttackTeam>>(File.ReadAllText("AttackTeamQueryResult.txt"));
-            //var mat = Arena.RenderAttackTeams(list);
-            //Cv2.ImShow("mat", mat.ToMat());
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

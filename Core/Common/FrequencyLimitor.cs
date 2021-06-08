@@ -1,62 +1,57 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Core.Common
 {
     public class FrequencyLimitor
     {
 
-        private DateTime lastHitTime;
-
-        public FrequencyLimitor(int milliseconds)
+        class ObjCacheInfo
         {
-            CD = milliseconds;
-        }
+            public object Obj { get; set; }
 
-        /// <summary>
-        /// 单位: 毫秒
-        /// </summary>
-        public int CD { get; private set; }
+            public int LifeTimeMS { get; set; }
 
-        public bool CanHit
-        {
-            get
+            public DateTime lastHitTime { get; set; } = DateTime.Now;
+
+            public bool Expired
             {
-                var span = DateTime.Now - lastHitTime;
-                return span.TotalMilliseconds >= CD;
+                get
+                {
+                    var span = DateTime.Now - lastHitTime;
+                    return span.TotalMilliseconds > LifeTimeMS;
+                }
             }
         }
 
-        public void Hit()
+        private static Dictionary<string, ObjCacheInfo> objCacheContainer = new Dictionary<string, ObjCacheInfo>();
+
+        public static T ParseObjWithCache<T>(string key, int liftTimeMS, Func<string, T> parsor)
         {
-            lastHitTime = DateTime.Now;
+            if (objCacheContainer.ContainsKey(key))
+            {
+                var info = objCacheContainer[key];
+                if (!info.Expired)
+                    return (T)info.Obj;
+            }
+            var obj = parsor(key);
+            var newInfo = new ObjCacheInfo()
+            {
+                Obj = obj,
+                LifeTimeMS = liftTimeMS,
+            };
+            objCacheContainer[key] = newInfo;
+            return obj;
         }
-    }
 
-    public class FrequencyLimitGetter<T>
-    {
-        private FrequencyLimitor limitor;
-        private Func<T> getter;
-        private T val;
-        private bool vis;
-
-        public FrequencyLimitGetter(int milliseconds, Func<T> rawGetter)
+        public static void ClearObjCache(string key)
         {
-            limitor = new FrequencyLimitor(milliseconds);
-            CD = milliseconds;
-            getter = rawGetter;
-            vis = false;
+            objCacheContainer.Remove(key);
         }
 
-        public int CD { get; private set; }
-
-        public T Get()
+        public static void ClearAllObjCache()
         {
-            if (vis && !limitor.CanHit)
-                return val;
-            val = getter();
-            limitor.Hit();
-            vis = true;
-            return val;
+            objCacheContainer.Clear();
         }
     }
 }

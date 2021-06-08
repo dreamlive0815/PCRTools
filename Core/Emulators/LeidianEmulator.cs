@@ -26,14 +26,18 @@ namespace Core.Emulators
             return hWnd;
         }
 
-        protected override string GetSpecificIdentity()
+        public override string GetSpecificIdentity()
         {
-            var device = GetFirstOnlineDevice();
-            if (device != null)
+            var identity = FrequencyLimitor.ParseObjWithCache(AheadWithName("SpecificIdentity"), 60 * 60 * 1000, (key) =>
             {
-                return device.SpecificIdentity;
-            }
-            return base.GetSpecificIdentity();
+                var device = GetFirstOnlineDevice();
+                if (device != null)
+                {
+                    return device.SpecificIdentity;
+                }
+                return base.GetSpecificIdentity();
+            });
+            return identity;
         }
 
         public override string GetAdbExePath()

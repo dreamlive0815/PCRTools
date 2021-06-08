@@ -52,7 +52,6 @@ namespace Core.Emulators
 
         public Emulator()
         {
-            resolutionGetter = new FrequencyLimitGetter<EmulatorSize>(refreshResolutionCD, GetResolutionDirectly);
             //ConnectToAdbServer();
         }
 
@@ -184,7 +183,7 @@ namespace Core.Emulators
             return output;
         }
 
-        protected virtual string GetSpecificIdentity()
+        public virtual string GetSpecificIdentity()
         {
             return $"127.0.0.1:{AdbPort}";
         }
@@ -241,12 +240,13 @@ namespace Core.Emulators
             return size;
         }
 
-        private int refreshResolutionCD = 60 * 1000; //ms
-        private FrequencyLimitGetter<EmulatorSize> resolutionGetter;
-
         public EmulatorSize GetResolution()
         {
-            return resolutionGetter.Get();
+            var resolution = FrequencyLimitor.ParseObjWithCache(AheadWithName("Resolution"), 60 * 1000, (key) =>
+            {
+                return GetResolutionDirectly();
+            });
+            return resolution;
         }
 
         public void DoTap(PVec2f pf)
