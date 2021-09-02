@@ -79,6 +79,7 @@
     <Compile Include="Common\SimpleEncryptor.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\Win32API.cs" />
+    <Compile Include="Emulators\BluestacksEmulator.cs" />
     <Compile Include="Emulators\Emulator.cs" />
     <Compile Include="Emulators\LeidianEmulator.cs" />
     <Compile Include="Emulators\MumuEmulator.cs" />
