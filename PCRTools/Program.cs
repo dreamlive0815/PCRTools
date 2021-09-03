@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
+using System;
 using System.Windows.Forms;
+
+using Core.Common;
 
 namespace PCRTools
 {
@@ -23,7 +23,7 @@ namespace PCRTools
 
         private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            MessageBox.Show(e.Exception?.Message ?? "未知错误", "发生错误");
+            Utils.HandleError(e.Exception);
         }
     }
 }

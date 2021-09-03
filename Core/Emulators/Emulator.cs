@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 
 using Core.Common;
 using Core.Extensions;
+using Core.Exceptions;
 
 namespace Core.Emulators
 {
@@ -21,6 +22,13 @@ namespace Core.Emulators
         }
 
         public static void AssertDefaultAlive()
+        {
+            if (Default == null)
+                throw new Exception("未选择模拟器");
+            Default.AssertAlive();
+        }
+
+        public static void AssertDefaultAliveAndInit()
         {
             if (Default == null)
                 throw new Exception("未选择模拟器");
@@ -168,7 +176,7 @@ namespace Core.Emulators
             });
         }
 
-        private string AdbCmd(string arguments)
+        public string AdbCmd(string arguments)
         {
             var result = ShellUtils.DoShell(new ShellArgs()
             {
@@ -177,10 +185,21 @@ namespace Core.Emulators
                 IgnoreOutput = false,
             });
             Logger.GetInstance().Info("AdbCmd", AheadWithName($"arguments = {arguments}"));
-            var output = result.GetOutput();
-            Logger.GetInstance().Info("AdbCmd", AheadWithName($"output = {output.LimitLength(40)}"));
-            result.Dispose();
-            return output;
+            try
+            {
+                var output = result.GetOutput();
+                Logger.GetInstance().Info("AdbCmd", AheadWithName($"output = {output.LimitLength(40)}"));
+                return output;
+            }
+            catch (Exception e)
+            {
+                Logger.GetInstance().Error("AdbShell", e.Message);
+                throw new HandledException(e.Message);
+            }
+            finally
+            {
+                result.Dispose();
+            }
         }
 
         public virtual string GetSpecificIdentity()
@@ -188,7 +207,7 @@ namespace Core.Emulators
             return $"127.0.0.1:{AdbPort}";
         }
 
-        private string AdbShell(string args)
+        public string AdbShell(string args)
         {
             var fullArguments = $"-s {GetSpecificIdentity()} shell {args}";
             var output = AdbCmd(fullArguments);
@@ -228,6 +247,13 @@ namespace Core.Emulators
         {
             AdbCmd($"connect 127.0.0.1:{AdbPort}");
             IsConnected = true;
+        }
+
+        public void RestartAdbServer()
+        {
+            AdbCmd("kill-server");
+            AdbCmd("start-server");
+            IsConnected = false;
         }
 
         private EmulatorSize GetResolutionDirectly()

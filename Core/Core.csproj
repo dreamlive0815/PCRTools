@@ -85,11 +85,13 @@
     <Compile Include="Emulators\MumuEmulator.cs" />
     <Compile Include="Emulators\NOXEmulator.cs" />
     <Compile Include="EventSystem.cs" />
+    <Compile Include="Exceptions\HandledException.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\OpenCvExtension.cs" />
     <Compile Include="Extensions\ProcessExtension.cs" />
     <Compile Include="Extensions\RectangleExtension.cs" />
+    <Compile Include="Extensions\RichTextBoxExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Model\ImageSamplingData.cs" />
     <Compile Include="PCR\Arena.cs" />

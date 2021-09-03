@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 using Core.Common;
@@ -40,20 +41,34 @@ namespace PCRTools
             var emulator = Emulator.Default;
             if (emulator == null)
                 return "未选择模拟器";
-            return emulator.Name + (emulator.IsAlive ? ": 在线ON" : ": 离线OFF");
+            return emulator.Name + ":" + (emulator.IsAlive ? "在线ON" : "离线OFF");
         }
+
+        string GetTitle()
+        {
+            var sb = new StringBuilder();
+            try
+            {
+                sb.Append(GetEmulatorInfo());
+                sb.Append("  ");
+                sb.Append(GetRegionInfo());
+
+            }
+            catch (Exception e) { }
+            return sb.ToString();
+        }
+
 
         string GetRegionInfo()
         {
-            return "区域: " + ConfigMgr.GetConfig().Region.ToString();
+            return "区域:" + ConfigMgr.GetConfig().Region.ToString();
         }
 
         void RefreshText()
         {
             Invoke(new Action(() =>
             {
-                var s = $"[{GetEmulatorInfo()}][{GetRegionInfo()}]";
-                Text = s;
+                Text = GetTitle();
             }));
         }
 
@@ -61,6 +76,25 @@ namespace PCRTools
         {
             EventMgr.RegisterListener(EventKeys.ConfigEmulatorTypeChanged, (args) => { RefreshText(); });
             EventMgr.RegisterListener(EventKeys.ConfigRegionChanged, (args) => { RefreshText(); });
+
+            Logger.GetInstance().OnDebug += OnLoggerDebug;
+            Logger.GetInstance().OnInfo += OnLoggerInfo;
+            Logger.GetInstance().OnError += OnLoggerError;
+        }
+
+        private void OnLoggerDebug(string tag, string msg)
+        {
+            txtOutput.AppendLineThreadSafe($"[DEBUG][{tag}]{msg}");
+        }
+
+        private void OnLoggerInfo(string tag, string msg)
+        {
+            txtOutput.AppendLineThreadSafe($"[INFO][{tag}]{msg}");
+        }
+
+        private void OnLoggerError(string tag, string msg)
+        {
+            txtOutput.AppendLineThreadSafe($"[ERROR][{tag}]{msg}", System.Drawing.Color.Red);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -71,6 +105,38 @@ namespace PCRTools
         private void menuPCRArena_Click(object sender, EventArgs e)
         {
             new FrmPCRArena().Show();
+        }
+
+        private void menuClearOutput_Click(object sender, EventArgs e)
+        {
+            txtOutput.Clear();
+        }
+
+        private void menuConnectAdbServer_Click(object sender, EventArgs e)
+        {
+            Emulator.AssertDefaultAlive();
+            Emulator.Default.ConnectToAdbServer();
+        }
+
+        private void menuRestartAdbServer_Click(object sender, EventArgs e)
+        {
+            Emulator.AssertDefaultAlive();
+            Emulator.Default.RestartAdbServer();
+        }
+
+        private void menuTestTap_Click(object sender, EventArgs e)
+        {
+            Emulator.AssertDefaultAliveAndInit();
+            Emulator.Default.DoTap(new PVec2f(0.5f, 0.5f));
+        }
+
+        private void menuScreenshot_Click(object sender, EventArgs e)
+        {
+            Emulator.AssertDefaultAlive();
+            using (var screenshot = Emulator.Default.GetScreenCapture())
+            {
+                screenshot.Save("screenshot.png");
+            }
         }
     }
 }

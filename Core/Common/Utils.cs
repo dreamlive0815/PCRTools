@@ -8,13 +8,21 @@ using System.Management;
 using System.Reflection;
 using System.Security.Principal;
 using System.Text;
-
+using System.Windows.Forms;
 using Core.Attributes;
+using Core.Exceptions;
 
 namespace Core.Common
 {
     public class Utils
     {
+
+        public static void HandleError(Exception e)
+        {
+            if (e == null || e is HandledException) return;
+            MessageBox.Show(e.Message ?? "未知错误", "发生错误");
+        }
+
         public static Bitmap CaptureScreen(Rectangle rect)
         {
 

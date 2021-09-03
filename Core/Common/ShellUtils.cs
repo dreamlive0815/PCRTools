@@ -63,16 +63,11 @@ namespace Core.Common
             return err;
         }
 
-        private void AssertNoError()
+        public string GetOutput()
         {
             var err = GetError();
             if (!string.IsNullOrWhiteSpace(err))
                 throw new Exception(err);
-        }
-
-        public string GetOutput()
-        {
-            AssertNoError();
             var stream = Process.StandardOutput;
             var output = stream.ReadToEnd();
             return output;
