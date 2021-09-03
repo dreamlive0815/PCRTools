@@ -37,7 +37,7 @@ class PCRUnit:
 
 
     @staticmethod
-    def downloadIcon(id, star):
+    def downloadIcon(id, star): 
         fileName = PCRUnit.getIconFileName(id, star)
         savePath = res.getResPath(f'PCR/Image/Unit/{fileName}')
         if os.path.exists(savePath):
@@ -53,3 +53,4 @@ class PCRUnit:
 
 if __name__ == "__main__":
     PCRUnit.downloadIcons()
+    print('finish')
