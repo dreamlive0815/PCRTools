@@ -135,8 +135,15 @@ namespace PCRTools
             Emulator.AssertDefaultAlive();
             using (var screenshot = Emulator.Default.GetScreenCapture())
             {
-                screenshot.Save("screenshot.png");
+                var filePath = "screenshot.png";
+                screenshot.Save(filePath);
+                Utils.SelectFileInExplorer(filePath);
             }
+        }
+
+        private void menuPCRArenaTimer_Click(object sender, EventArgs e)
+        {
+            new FrmPCRArenaTimer().Show();
         }
     }
 }
