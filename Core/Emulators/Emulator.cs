@@ -193,7 +193,7 @@ namespace Core.Emulators
             }
             catch (Exception e)
             {
-                Logger.GetInstance().Error("AdbShell", e.Message);
+                Logger.GetInstance().Error("AdbCmd", e.Message);
                 throw new HandledException(e.Message);
             }
             finally

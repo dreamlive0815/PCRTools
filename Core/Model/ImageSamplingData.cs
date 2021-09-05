@@ -5,11 +5,34 @@ using System.IO;
 
 using Core.Common;
 using Core.Emulators;
+using Newtonsoft.Json;
 
 namespace Core.Model
 {
     public class ImageSamplingData
     {
+
+
+        public static ImageSamplingData GetByPath(string path)
+        {
+            var res = ResourceManager.Default.GetResource($"{path}/Json/" + DefaultFileName);
+            var data = res.ParseObjWithCache(int.MaxValue, (filePath) =>
+            {
+                return FromFile(filePath);
+            });
+            data.Path = path;
+            return data;
+        }
+
+        public static ImageSamplingData GetCommon()
+        {
+            return GetByPath("${G}");
+        }
+
+        public static ImageSamplingData GetWithAspectRatio()
+        {
+            return GetByPath("${G}/${R}/${A}");
+        }
 
         public static string DefaultFileName { get { return "image_sampling_data.json"; } }
 
@@ -21,6 +44,9 @@ namespace Core.Model
             var r = JsonUtils.DeserializeObject<ImageSamplingData>(s);
             return r;
         }
+
+        [JsonIgnore]
+        public string Path { get; set; }
 
         public ImageSamplingDataContainer<Size> ContainerSizes { get; set; } = new ImageSamplingDataContainer<Size>();
 
@@ -42,10 +68,27 @@ namespace Core.Model
             return 0.01 * MatchThresholds[key];
         }
 
+        public Size GetContainerSize(string key)
+        {
+            if (!ContainerSizes.ContainsKey(key))
+                throw new Exception($"找不到ContainerSize: {key}");
+            return ContainerSizes[key];
+        }
+
         public void Save(string filePath)
         {
             var s = JsonUtils.SerializeObject(this);
             File.WriteAllText(filePath, s);
+        }
+
+        public Img GetResizedImg(string key, Size emulatorRectSize)
+        {
+            var containerSize = GetContainerSize(key);
+            var fullPath = ResourceManager.Default.GetFullPath($"{Path}/Image/" + key);
+            var img = new Img(fullPath);
+            var scale = 1.0 * emulatorRectSize.Width / containerSize.Width;
+            img = img.GetScaled(scale);
+            return img;
         }
     }
 

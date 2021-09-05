@@ -1,0 +1,13 @@
+{
+  "ContainerSizes": {
+    "tab_adventure.png": "1600,900"
+  },
+  "MatchThresholds": {
+    "tab_adventure.png": 70
+  },
+  "PVec2fs": {},
+  "RVec2fs": {},
+  "RVec4fs": {
+    "tab_adventure.png": "0.4531,0.8678,0.0931,0.1211"
+  }
+}
