@@ -33,6 +33,7 @@
             this.menuClearOutput = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.menuPCRArena = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuPCRArenaTimer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCmds = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRestartAdbServer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuConnectAdbServer = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,7 +41,7 @@
             this.menuScreenshot = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.txtOutput = new System.Windows.Forms.RichTextBox();
-            this.menuPCRArenaTimer = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuEmulatorInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,6 +69,7 @@
             // menuTools
             // 
             this.menuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuEmulatorInfo,
             this.menuPCRArena,
             this.menuPCRArenaTimer});
             this.menuTools.Name = "menuTools";
@@ -80,6 +82,13 @@
             this.menuPCRArena.Size = new System.Drawing.Size(216, 26);
             this.menuPCRArena.Text = "PCR竞技场";
             this.menuPCRArena.Click += new System.EventHandler(this.menuPCRArena_Click);
+            // 
+            // menuPCRArenaTimer
+            // 
+            this.menuPCRArenaTimer.Name = "menuPCRArenaTimer";
+            this.menuPCRArenaTimer.Size = new System.Drawing.Size(216, 26);
+            this.menuPCRArenaTimer.Text = "PCR竞技场计时器";
+            this.menuPCRArenaTimer.Click += new System.EventHandler(this.menuPCRArenaTimer_Click);
             // 
             // menuCmds
             // 
@@ -137,12 +146,12 @@
             this.txtOutput.TabIndex = 3;
             this.txtOutput.Text = "";
             // 
-            // menuPCRArenaTimer
+            // menuEmulatorInfo
             // 
-            this.menuPCRArenaTimer.Name = "menuPCRArenaTimer";
-            this.menuPCRArenaTimer.Size = new System.Drawing.Size(216, 26);
-            this.menuPCRArenaTimer.Text = "PCR竞技场计时器";
-            this.menuPCRArenaTimer.Click += new System.EventHandler(this.menuPCRArenaTimer_Click);
+            this.menuEmulatorInfo.Name = "menuEmulatorInfo";
+            this.menuEmulatorInfo.Size = new System.Drawing.Size(216, 26);
+            this.menuEmulatorInfo.Text = "模拟器实时信息";
+            this.menuEmulatorInfo.Click += new System.EventHandler(this.menuEmulatorInfo_Click);
             // 
             // Form1
             // 
@@ -179,6 +188,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuTestTap;
         private System.Windows.Forms.ToolStripMenuItem menuScreenshot;
         private System.Windows.Forms.ToolStripMenuItem menuPCRArenaTimer;
+        private System.Windows.Forms.ToolStripMenuItem menuEmulatorInfo;
     }
 }
 

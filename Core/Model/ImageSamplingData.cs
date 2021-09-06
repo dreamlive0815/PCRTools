@@ -90,8 +90,10 @@ namespace Core.Model
 
         public Img GetResizedImg(string key, Size emulatorRectSize)
         {
+            if (!key.EndsWith(".png"))
+                key = key + ".png";
             var containerSize = GetContainerSize(key);
-            var fullPath = ResourceManager.Default.GetFullPath($"{Path}/Image/" + key);
+            var fullPath = ResourceManager.Default.GetImageResource($"{Path}/Image/" + key).AssertExists().Fullpath;
             var img = new Img(fullPath);
             var scale = 1.0 * emulatorRectSize.Width / containerSize.Width;
             img = img.GetScaled(scale);

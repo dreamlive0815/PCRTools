@@ -101,11 +101,11 @@ namespace Core.Common
                 Success = maxVal >= threshold,
                 MatchedRect = new Rectangle(maxLoc.X, maxLoc.Y, search.Width, search.Height),
             };
-            if (r.Success && ConfigMgr.GetConfig().Debug)
+            if (ConfigMgr.GetConfig().Debug)
             {
                 source.SaveImage("source.png");
                 search.SaveImage("search.png");
-                Console.WriteLine(maxVal);
+                Logger.GetInstance().Debug("ImgMatch", "ImgMatch: maxval=" + maxVal);
 
                 //var combine = new Mat(new CvSize(source.Width, source.Height + search.Height), MatType.MakeType(source.Depth(), source.Channels()));
                 //source.CopyTo(combine[new Range(0, source.Height), new Range(0, source.Width)]);

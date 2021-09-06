@@ -31,9 +31,15 @@ namespace PCRTools
             RegisterEvents();
 
 
+            //TestScript();
+            
+        }
+
+        void TestScript()
+        {
+            Emulator.AssertDefaultAliveAndInit();
             var script = new Script()
             {
-
                 Identity = "Test",
                 Name = "测试脚本",
 
@@ -45,13 +51,14 @@ namespace PCRTools
                         {
                             new Condition()
                             {
-                                MatchKey = "",
+                                MatchKey = "tab_adventure",
                             },
                         },
                     },
                 },
             };
-            
+            script.SetEmulator(Emulator.Default);
+            ScriptMgr.GetInstance().RunScript(script);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -76,7 +83,7 @@ namespace PCRTools
                 sb.Append("  ");
                 sb.Append(GetRegionInfo());
             }
-            catch (Exception e) { }
+            catch { }
             return sb.ToString();
         }
 
@@ -166,6 +173,37 @@ namespace PCRTools
         private void menuPCRArenaTimer_Click(object sender, EventArgs e)
         {
             new FrmPCRArenaTimer().Show();
+        }
+
+        string GetEmulatorDetail()
+        {
+            if (Emulator.Default == null)
+                return "未设置模拟器";
+            var emulator = Emulator.Default;
+            var sb = new StringBuilder();
+            sb.Append("名称: ");
+            sb.Append(emulator.Name);
+            sb.Append(Environment.NewLine);
+            sb.Append("状态: ");
+            sb.Append(emulator.IsAlive ? "在线" : "离线");
+            sb.Append(Environment.NewLine);
+            if (!emulator.IsAlive)
+                return sb.ToString();
+            sb.Append("分辨率: ");
+            sb.Append(emulator.GetResolution());
+            sb.Append(Environment.NewLine);
+            sb.Append("实际窗口大小: ");
+            if (emulator.IsAreaValid())
+                sb.Append(emulator.Area);
+            else
+                sb.Append("区域不合法");
+            sb.Append(Environment.NewLine);
+            return sb.ToString();
+        }
+
+        private void menuEmulatorInfo_Click(object sender, EventArgs e)
+        {
+            new FrmRuntimeInfo() { GetRuntimeInfoFunc = GetEmulatorDetail }.Show();
         }
     }
 }

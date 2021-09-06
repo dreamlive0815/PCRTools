@@ -8,6 +8,7 @@
   "PVec2fs": {},
   "RVec2fs": {},
   "RVec4fs": {
-    "tab_adventure.png": "0.4531,0.8678,0.0931,0.1211"
+    "tab_adventure.png": "0.4625,0.9189,0.0762,0.0689",
+    "tab_adventure_source": "0.405,0.8567,0.1856,0.14"
   }
 }

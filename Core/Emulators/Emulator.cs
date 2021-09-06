@@ -33,8 +33,7 @@ namespace Core.Emulators
             if (Default == null)
                 throw new Exception("未选择模拟器");
             Default.AssertAlive();
-            if (!Default.IsConnected) Default.ConnectToAdbServer();
-            ResourceManager.Default.SetAspectRatioByResolution(Default.GetResolution());
+            Default.Init();
         }
 
         public static List<Type> GetEmulatorTypes()
@@ -61,6 +60,12 @@ namespace Core.Emulators
         public Emulator()
         {
             //ConnectToAdbServer();
+        }
+
+        public void Init()
+        {
+            if (!IsConnected) ConnectToAdbServer();
+            ResourceManager.Default.SetAspectRatioByResolution(GetResolution());
         }
 
         public abstract string Name { get; }

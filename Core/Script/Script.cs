@@ -34,7 +34,28 @@ namespace Core.Script
 
         public string Name { get; set; }
 
-        public List<Segment> Segments { get; set; } = new List<Segment>(); 
+        public List<Segment> Segments { get; set; } = new List<Segment>();
+
+        [JsonIgnore]
+        private IDictionary<string, List<Segment>> _segGroups;
+
+        public IDictionary<string, List<Segment>> GetSegmentGroups()
+        {
+            if (_segGroups != null)
+                return _segGroups;
+            _segGroups = new SortedDictionary<string, List<Segment>>();
+            foreach (var seg in Segments)
+            {
+                var groupKey = seg.Group;
+                if (!_segGroups.ContainsKey(groupKey)) _segGroups.Add(groupKey, new List<Segment>());
+                _segGroups[groupKey].Add(seg);
+            }
+            foreach (var pair in _segGroups)
+            {
+                pair.Value.Sort((x, y) => -x.Priority.CompareTo(y.Priority));
+            }
+            return _segGroups;
+        }
 
         public int MaxExecuteCount { get; set; } = int.MaxValue;
 
@@ -46,13 +67,20 @@ namespace Core.Script
         [JsonIgnore]
         private Stack stack = new Stack(STACK_CAPACITY);
 
-        public void StackPush(object obj)
-        {
-            stack.Push(obj);
-        }
+        [JsonIgnore]
+        public Stack Stack => stack;
+
+        [JsonIgnore]
+        public object AX { get; set; }
+
+        [JsonIgnore]
+        public object BX { get; set; }
 
         public void Reset()
         {
+            _segGroups = null;
+            _emulator = null;
+            _screenshot = null;
             stack.Reset();
         }
 
@@ -72,7 +100,7 @@ namespace Core.Script
             }
         }
 
-        public object Invoke(string funcName, params object[] args)
+        private object Invoke(string funcName, params object[] args)
         {
             if (Array.IndexOf(METHOD_WHITE_LIST, funcName) == -1)
                 throw new Exception("funcName not in white list");
@@ -91,13 +119,13 @@ namespace Core.Script
         }
 
         [JsonIgnore]
-        private Img _img;
+        private Img _screenshot;
 
         public Img GetScreenShot()
         {
-            if (_img == null)
-                _img = new Img(_emulator.GetScreenCapture());
-            return _img;
+            if (_screenshot == null)
+                _screenshot = new Img(_emulator.GetScreenCapture());
+            return _screenshot;
         }
 
         public void TickStart()
@@ -107,7 +135,7 @@ namespace Core.Script
 
         public void TickEnd()
         {
-            _img = null;
+            _screenshot = null;
         }
 
         public ImgMatchResult TemplateMatch(string matchKey)
@@ -116,12 +144,14 @@ namespace Core.Script
 
             var screenShot = GetScreenShot();
 
-            var rectVec4f = data.RVec4fs.ContainsKey(matchKey) ? data.RVec4fs[matchKey] : new RVec4f(0, 0, 1, 1);
-            var rect = screenShot.GetPartial(rectVec4f);
-            var template = data.GetResizedImg(matchKey, screenShot.Size);
-            var threshold = data.GetThreshold(matchKey);
+            var sourceRectKey = matchKey + "_source";
+            var rectVec4f = data.RVec4fs.ContainsKey(sourceRectKey) ? data.RVec4fs[sourceRectKey] : new RVec4f(0, 0, 1, 1);
+            var sourceRect = screenShot.GetPartial(rectVec4f);
+            var templateKey = matchKey + ".png";
+            var template = data.GetResizedImg(templateKey, screenShot.Size);
+            var threshold = data.GetThreshold(templateKey);
 
-            var result = TemplateMatch(rect, template, threshold);
+            var result = TemplateMatch(sourceRect, template, threshold);
             return result;
         }
 
@@ -206,7 +236,7 @@ namespace Core.Script
 
         public virtual bool UseOpCodes { get; set; } = false;
 
-        public List<string> OpCodes { get; set; } = new List<string>();
+        public List<string> OpCodes { get; set; }
     }
 
     public class Action

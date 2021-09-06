@@ -20,7 +20,17 @@ namespace Core.Common
         public static void HandleError(Exception e)
         {
             if (e == null || e is HandledException) return;
-            MessageBox.Show(e.Message ?? "未知错误", "发生错误");
+            MessageBox.Show(GetErrorDescription(e), "Error");
+        }
+
+        public static string GetErrorDescription(Exception e)
+        {
+            var desc = e.Message;
+            if (ConfigMgr.GetConfig().Debug)
+            {
+                desc += "\n" + e.StackTrace;
+            }
+            return desc;
         }
 
         public static Bitmap CaptureScreen(Rectangle rect)
