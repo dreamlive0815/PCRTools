@@ -75,6 +75,13 @@ namespace Core.Model
             return ContainerSizes[key];
         }
 
+        public RVec4f GetRectVec4f(string key)
+        {
+            if (!RVec4fs.ContainsKey(key))
+                throw new Exception($"找不到RectVec4f: {key}");
+            return RVec4fs[key];
+        }
+
         public void Save(string filePath)
         {
             var s = JsonUtils.SerializeObject(this);

@@ -19,5 +19,11 @@ namespace Core.Script
             }
             return instance;
         }
+
+
+        public void RunScript(Script script)
+        {
+
+        }
     }
 }

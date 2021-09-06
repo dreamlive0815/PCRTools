@@ -9,10 +9,10 @@ using Core.Emulators;
 using Core.Extensions;
 using Core.Model;
 using Core.PCR;
+using Core.Script;
 
 using EventSystem;
 using OpenCvSharp;
-
 
 namespace PCRTools
 {
@@ -29,6 +29,29 @@ namespace PCRTools
         {
             RefreshText();
             RegisterEvents();
+
+
+            var script = new Script()
+            {
+
+                Identity = "Test",
+                Name = "测试脚本",
+
+                Segments = new List<Segment>()
+                {
+                    new Segment()
+                    {
+                        Conditions = new List<Condition>()
+                        {
+                            new Condition()
+                            {
+                                MatchKey = "",
+                            },
+                        },
+                    },
+                },
+            };
+            
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -52,7 +75,6 @@ namespace PCRTools
                 sb.Append(GetEmulatorInfo());
                 sb.Append("  ");
                 sb.Append(GetRegionInfo());
-
             }
             catch (Exception e) { }
             return sb.ToString();
@@ -66,7 +88,7 @@ namespace PCRTools
 
         void RefreshText()
         {
-            Invoke(new Action(() =>
+            Invoke(new System.Action(() =>
             {
                 Text = GetTitle();
             }));
