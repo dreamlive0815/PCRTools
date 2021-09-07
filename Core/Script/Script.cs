@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 using Newtonsoft.Json;
 
@@ -16,9 +17,10 @@ namespace Core.Script
     public static class ScriptOps
     {
 
-
         public static readonly string TEMPLATE_MATCH = "TEMPLATE_MATCH";
 
+
+        public static readonly string CLICK_TEMPLATE = "CLICK_TEMPLATE";
 
     }
 
@@ -29,6 +31,7 @@ namespace Core.Script
         private static readonly string[] METHOD_WHITE_LIST = new string[]
         {
             "TemplateMatch",
+            "ClickMatchedTemplate",
         };
 
 
@@ -86,6 +89,21 @@ namespace Core.Script
             stack.Reset();
         }
 
+        private bool CheckStackValueType<T>(int offset)
+        {
+            var value = stack[offset];
+            return value is T;
+        }
+
+        private void AssertStackValueType<T>(int offset)
+        {
+            var value = stack[offset];
+            if (!(value is T))
+            {
+                throw new Exception($"stack value of offset:{offset} is not type of" + typeof(T).Name);
+            }
+        }
+
         public void DoOpCodes(IList<string> opCodes)
         {
             for (var i = 0; i < opCodes.Count; i++)
@@ -99,6 +117,16 @@ namespace Core.Script
                     var result = Invoke("TemplateMatch", arg1, arg2, arg3);
                     stack.Push(result);
                 }
+                else if (opCode == ScriptOps.CLICK_TEMPLATE)
+                {
+                    var arg1 = AX;
+                    object arg2;
+                    if (CheckStackValueType<PVec2f>(-1))
+                        arg2 = stack.Pop();
+                    else
+                        arg2 = new PVec2f(0, 0);
+                    Invoke("ClickMatchedTemplate", arg1, arg2);
+                }
             }
         }
 
@@ -107,7 +135,7 @@ namespace Core.Script
             if (Array.IndexOf(METHOD_WHITE_LIST, funcName) == -1)
                 throw new Exception("funcName not in white list");
             var type = GetType();
-            var method = type.GetMethod(funcName);
+            var method = type.GetMethod(funcName, BindingFlags.NonPublic | BindingFlags.Instance);
             var ret = method.Invoke(this, args);
             return ret;
         }
@@ -148,7 +176,6 @@ namespace Core.Script
 
             var sourceRectKey = matchKey + "_source";
             var rectVec4f = data.RVec4fs.ContainsKey(sourceRectKey) ? data.RVec4fs[sourceRectKey] : new RVec4f(0, 0, 1, 1);
-            //rectVec4f = new RVec4f(0, 0, 1, 1);
             var sourceRect = screenShot.GetPartial(rectVec4f);
             var templateKey = matchKey + ".png";
             var template = data.GetResizedImg(templateKey, screenShot.Size);
@@ -158,18 +185,20 @@ namespace Core.Script
             return result;
         }
 
-
         private ImgMatchResult TemplateMatch(Img source, Img template, double threshold)
         {
             var result = source.Match(template, threshold);
             return result;
         }
 
-        private void ClickMatchedTemplate()
+        private void ClickMatchedTemplate(ImgMatchResult result, PVec2f offset)
         {
-
+            if (!result.Success)
+                return;
+            var pVec2f = result.GetMatchedRectCenterVec2f();
+            pVec2f += offset;
+            _emulator.DoTap(pVec2f);
         }
-
 
         public void Save(string filePath)
         {
@@ -196,6 +225,8 @@ namespace Core.Script
             topIndex = -1;
         }
 
+        //public int TopIndex => topIndex;
+
         public bool Empty => topIndex <= -1;
 
         public bool Full => topIndex + 1 >= _capacity;
@@ -221,6 +252,26 @@ namespace Core.Script
                 return null;
             var obj = container[topIndex--];
             return obj;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offset">-1栈顶向下减小 1栈底向上增加</param>
+        /// <returns></returns>
+        public object this[int offset]
+        {
+            get
+            {
+                var index = -1;
+                if (offset < 0)
+                    index = topIndex + offset + 1;
+                else if (offset > 0)
+                    index = offset - 1;
+                if (index < 0 || index >= _capacity)
+                    return null;
+                return container[index];
+            }
         }
     }
 

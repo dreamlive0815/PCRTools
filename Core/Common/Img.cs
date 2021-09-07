@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using SysPoint = System.Drawing.Point;
 using SysSize = System.Drawing.Size;
 
 using Core.Emulators;
@@ -46,6 +47,10 @@ namespace Core.Common
 
         public SysSize Size { get { return new SysSize(Width, Height); } }
 
+        public SysPoint PositionInRoot { get; set; }
+
+        public SysSize SizeOfRoot { get; set; }
+
         private CvSize GetCvSize()
         {
             return new CvSize(Width, Height);
@@ -63,7 +68,10 @@ namespace Core.Common
             var xRange = new Range(Math.Max(rect.Left, 0), Math.Min(rect.Right, Width));
             var yRange = new Range(Math.Max(rect.Top, 0), Math.Min(rect.Bottom, Height));
             var partial = MT[yRange, xRange];
-            return new Img(partial);
+            return new Img(partial) {
+                PositionInRoot = new SysPoint(PositionInRoot.X + rect.X, PositionInRoot.Y + rect.Y),
+                SizeOfRoot = SizeOfRoot.IsEmpty ? Size : SizeOfRoot,
+            };
         }
 
         public Img GetPartial(RVec4f rf)
@@ -99,8 +107,14 @@ namespace Core.Common
                 Threshold = threshold,
                 Maxval = maxVal,
                 Success = maxVal >= threshold,
-                MatchedRect = new Rectangle(maxLoc.X, maxLoc.Y, search.Width, search.Height),
+                
             };
+            if (r.Success)
+            {
+                r.MatchedRect = new Rectangle(maxLoc.X, maxLoc.Y, search.Width, search.Height);
+                r.MatchedRectInRoot = new Rectangle(maxLoc.X + PositionInRoot.X, maxLoc.Y + PositionInRoot.Y, search.Width, search.Height);
+                r.SizeOfRoot = SizeOfRoot;
+            }
             if (ConfigMgr.GetConfig().Debug)
             {
                 source.SaveImage("source.png");
@@ -150,5 +164,18 @@ namespace Core.Common
         public bool Success { get; set; }
 
         public Rectangle MatchedRect { get; set; }
+
+        public Rectangle MatchedRectInRoot { get; set; }
+
+        public SysSize SizeOfRoot { get; set; }
+
+        public PVec2f GetMatchedRectCenterVec2f()
+        {
+            if (SizeOfRoot.Width == 0 || SizeOfRoot.Height == 0)
+                throw new Exception("SizeOfRoot is not set");
+            var center = MatchedRectInRoot.GetCenterPoint();
+            var vec2f = PVec2f.Div(SizeOfRoot, center);
+            return vec2f;
+        }
     }
 }

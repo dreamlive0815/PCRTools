@@ -379,6 +379,11 @@ namespace Core.Emulators
         {
             return Div(size, rect.GetCenterPoint());
         }
+
+        public static PVec2f operator + (PVec2f a, PVec2f b)
+        {
+            return new PVec2f(a.X + b.X, a.Y + b.Y);
+        }
     }
 
     public class RVec2f

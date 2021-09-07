@@ -31,8 +31,7 @@ namespace PCRTools
             RegisterEvents();
 
 
-            //TestScript();
-            
+            TestScript();
         }
 
         void TestScript()
@@ -54,6 +53,13 @@ namespace PCRTools
                                 MatchKey = "tab_adventure",
                             },
                         },
+                        Actions = new List<Core.Script.Action>()
+                        {
+                            new Core.Script.Action()
+                            {
+                                OpCodes = { "CLICK_TEMPLATE" },
+                            },
+                        }
                     },
                 },
             };
