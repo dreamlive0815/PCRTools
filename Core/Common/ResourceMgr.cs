@@ -83,7 +83,6 @@ namespace Core.Common
         public ResourceManager(string rootDirectory)
         {
 #if !DEBUG
-
             if (!Directory.Exists(rootDirectory))
                 throw new Exception($"资源目录不存在: {rootDirectory}");
 #endif

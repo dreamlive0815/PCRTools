@@ -17,14 +17,25 @@ namespace Core.Common
     public class Utils
     {
 
+        public static Exception GetInnermostException(Exception e)
+        {
+            while (e.InnerException != null)
+            {
+                e = e.InnerException;
+            }
+            return e;
+        }
+
         public static void HandleError(Exception e)
         {
-            if (e == null || e is HandledException) return;
+            e = GetInnermostException(e);
+            if (e is HandledException) return;
             MessageBox.Show(GetErrorDescription(e), "Error");
         }
 
         public static string GetErrorDescription(Exception e)
         {
+            e = GetInnermostException(e);
             var desc = e.Message;
             if (ConfigMgr.GetConfig().Debug)
             {

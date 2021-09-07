@@ -189,6 +189,7 @@ namespace PCRTools
             sb.Append(Environment.NewLine);
             if (!emulator.IsAlive)
                 return sb.ToString();
+            emulator.Init();
             sb.Append("分辨率: ");
             sb.Append(emulator.GetResolution());
             sb.Append(Environment.NewLine);

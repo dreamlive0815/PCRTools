@@ -15,6 +15,8 @@ namespace Core.Script
 
     public static class ScriptOps
     {
+
+
         public static readonly string TEMPLATE_MATCH = "TEMPLATE_MATCH";
 
 
@@ -146,6 +148,7 @@ namespace Core.Script
 
             var sourceRectKey = matchKey + "_source";
             var rectVec4f = data.RVec4fs.ContainsKey(sourceRectKey) ? data.RVec4fs[sourceRectKey] : new RVec4f(0, 0, 1, 1);
+            //rectVec4f = new RVec4f(0, 0, 1, 1);
             var sourceRect = screenShot.GetPartial(rectVec4f);
             var templateKey = matchKey + ".png";
             var template = data.GetResizedImg(templateKey, screenShot.Size);
@@ -160,6 +163,11 @@ namespace Core.Script
         {
             var result = source.Match(template, threshold);
             return result;
+        }
+
+        private void ClickMatchedTemplate()
+        {
+
         }
 
 
@@ -234,13 +242,11 @@ namespace Core.Script
     {
         public string MatchKey { get; set; }
 
-        public virtual bool UseOpCodes { get; set; } = false;
-
         public List<string> OpCodes { get; set; }
     }
 
     public class Action
     {
-
+        public List<string> OpCodes { get; set; } = new List<string>();
     }
 }
