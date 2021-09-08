@@ -50,7 +50,16 @@ namespace Core.Script
                 while (true)
                 {
                     var tickStartTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                    ScriptTick(script);
+                    try
+                    {
+                        script.Tick();
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.GetInstance().Error("ScriptTick", Utils.GetErrorDescription(e));
+                        if (script.StopWhenException)
+                            break;
+                    }
                     if (script.CurExecuteCount >= script.MaxExecuteCount)
                         break;
                     var tickEndTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -67,61 +76,6 @@ namespace Core.Script
                 }
             });
             return task;
-        }
-
-        private void ScriptTick(Script script)
-        {
-            script.TickStart();
-            var segGroups = script.GetSegmentGroups();
-            foreach (var group in segGroups)
-            {
-                ScriptTickSegments(script, group.Value);
-            }
-            script.CurExecuteCount++;
-            script.TickEnd();
-        }
-
-        /// <summary>
-        /// 同组互斥
-        /// </summary>
-        /// <param name="script"></param>
-        /// <param name="segments"></param>
-        /// <returns></returns>
-        private bool ScriptTickSegments(Script script, List<Segment> segments)
-        {
-            foreach (var seg in segments)
-            {
-                foreach (var condition in seg.Conditions)
-                {
-                    if (!string.IsNullOrWhiteSpace(condition.MatchKey))
-                    {
-                        var result = script.TemplateMatch(condition.MatchKey);
-                        script.Stack.Push(result.Success);
-                        script.AX = result;
-                    }
-                    if (condition.OpCodes != null)
-                    {
-                        script.DoOpCodes(condition.OpCodes);
-                    }
-                }
-                if (!(script.Stack.Top() is bool))
-                    throw new Exception("the top value of stack is not bool value");
-                var b = true;
-                while (!script.Stack.Empty && script.Stack.Top() is bool)
-                {
-                    var top = (bool)script.Stack.Pop();
-                    b = b && top;
-                }
-                if (b)
-                {
-                    foreach (var action in seg.Actions)
-                    {
-                        script.DoOpCodes(action.OpCodes);
-                    }
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

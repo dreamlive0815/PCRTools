@@ -56,7 +56,7 @@
             // btnSubSecond
             // 
             this.btnSubSecond.Location = new System.Drawing.Point(405, 46);
-            this.btnSubSecond.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSubSecond.Margin = new System.Windows.Forms.Padding(2);
             this.btnSubSecond.Name = "btnSubSecond";
             this.btnSubSecond.Size = new System.Drawing.Size(56, 19);
             this.btnSubSecond.TabIndex = 24;
@@ -67,7 +67,7 @@
             // btnAddSecond
             // 
             this.btnAddSecond.Location = new System.Drawing.Point(405, 4);
-            this.btnAddSecond.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAddSecond.Margin = new System.Windows.Forms.Padding(2);
             this.btnAddSecond.Name = "btnAddSecond";
             this.btnAddSecond.Size = new System.Drawing.Size(56, 19);
             this.btnAddSecond.TabIndex = 23;
@@ -78,7 +78,7 @@
             // btnSubMinute
             // 
             this.btnSubMinute.Location = new System.Drawing.Point(255, 46);
-            this.btnSubMinute.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSubMinute.Margin = new System.Windows.Forms.Padding(2);
             this.btnSubMinute.Name = "btnSubMinute";
             this.btnSubMinute.Size = new System.Drawing.Size(56, 19);
             this.btnSubMinute.TabIndex = 22;
@@ -89,7 +89,7 @@
             // btnAddMinute
             // 
             this.btnAddMinute.Location = new System.Drawing.Point(255, 4);
-            this.btnAddMinute.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAddMinute.Margin = new System.Windows.Forms.Padding(2);
             this.btnAddMinute.Name = "btnAddMinute";
             this.btnAddMinute.Size = new System.Drawing.Size(56, 19);
             this.btnAddMinute.TabIndex = 21;
@@ -144,7 +144,7 @@
             // 
             this.txtSecond.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSecond.Location = new System.Drawing.Point(315, 18);
-            this.txtSecond.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtSecond.Margin = new System.Windows.Forms.Padding(2);
             this.txtSecond.Multiline = true;
             this.txtSecond.Name = "txtSecond";
             this.txtSecond.Size = new System.Drawing.Size(87, 39);
@@ -156,7 +156,7 @@
             // 
             this.txtMinute.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtMinute.Location = new System.Drawing.Point(165, 17);
-            this.txtMinute.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMinute.Margin = new System.Windows.Forms.Padding(2);
             this.txtMinute.Multiline = true;
             this.txtMinute.Name = "txtMinute";
             this.txtMinute.Size = new System.Drawing.Size(87, 39);
@@ -168,7 +168,7 @@
             // 
             this.txtHour.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtHour.Location = new System.Drawing.Point(15, 17);
-            this.txtHour.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtHour.Margin = new System.Windows.Forms.Padding(2);
             this.txtHour.Multiline = true;
             this.txtHour.Name = "txtHour";
             this.txtHour.Size = new System.Drawing.Size(87, 39);
@@ -202,7 +202,7 @@
             // 
             this.txtOffset.Font = new System.Drawing.Font("Consolas", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtOffset.Location = new System.Drawing.Point(100, 104);
-            this.txtOffset.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtOffset.Margin = new System.Windows.Forms.Padding(2);
             this.txtOffset.Multiline = true;
             this.txtOffset.Name = "txtOffset";
             this.txtOffset.Size = new System.Drawing.Size(115, 39);
@@ -214,7 +214,7 @@
             // 
             this.btnStop.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStop.Location = new System.Drawing.Point(15, 226);
-            this.btnStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(121, 46);
             this.btnStop.TabIndex = 29;
@@ -226,7 +226,7 @@
             // 
             this.btnStart.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStart.Location = new System.Drawing.Point(15, 160);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(2);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(121, 46);
             this.btnStart.TabIndex = 28;
@@ -238,7 +238,7 @@
             // 
             this.btnAdd5Minutes.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdd5Minutes.Location = new System.Drawing.Point(315, 226);
-            this.btnAdd5Minutes.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAdd5Minutes.Margin = new System.Windows.Forms.Padding(2);
             this.btnAdd5Minutes.Name = "btnAdd5Minutes";
             this.btnAdd5Minutes.Size = new System.Drawing.Size(146, 46);
             this.btnAdd5Minutes.TabIndex = 31;
@@ -250,7 +250,7 @@
             // 
             this.btnTestTap.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTestTap.Location = new System.Drawing.Point(340, 160);
-            this.btnTestTap.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnTestTap.Margin = new System.Windows.Forms.Padding(2);
             this.btnTestTap.Name = "btnTestTap";
             this.btnTestTap.Size = new System.Drawing.Size(121, 46);
             this.btnTestTap.TabIndex = 30;
@@ -282,12 +282,13 @@
             // 
             this.btnTapBack.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTapBack.Location = new System.Drawing.Point(194, 160);
-            this.btnTapBack.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnTapBack.Margin = new System.Windows.Forms.Padding(2);
             this.btnTapBack.Name = "btnTapBack";
             this.btnTapBack.Size = new System.Drawing.Size(142, 46);
             this.btnTapBack.TabIndex = 33;
             this.btnTapBack.Text = "点击返回键";
             this.btnTapBack.UseVisualStyleBackColor = true;
+            this.btnTapBack.Visible = false;
             this.btnTapBack.Click += new System.EventHandler(this.btnTapBack_Click);
             // 
             // FrmPCRArenaTimer
@@ -316,7 +317,7 @@
             this.Controls.Add(this.txtMinute);
             this.Controls.Add(this.txtHour);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "FrmPCRArenaTimer";
             this.Text = "FrmPCRArenaTimer";

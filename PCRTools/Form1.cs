@@ -30,23 +30,7 @@ namespace PCRTools
             RefreshText();
             RegisterEvents();
 
-            Emulator.AssertDefaultAliveAndInit();
-            var cap = Emulator.Default.GetScreenCapture();
-            var img = new Img(cap);
-            
-            var part = img.GetPartial(new RVec4f(0, 0, 0.5, 0.5));
-            
-            for (var r = 0; r < part.Height; r++)
-            {
-                for (var c = 0; c < part.Width; c++)
-                {
-                    part.SetColor(r, c, System.Drawing.Color.Black);
-                }
-            }
-            part.Show("111");
-            img.Show("222");
-
-            //TestScript();
+            TestScript();
         }
 
         void TestScript()
@@ -57,6 +41,8 @@ namespace PCRTools
                 Identity = "Test",
                 Name = "测试脚本",
 
+                StopWhenException = false,
+
                 Segments = new List<Segment>()
                 {
                     new Segment()
@@ -65,17 +51,30 @@ namespace PCRTools
                         {
                             new Condition()
                             {
-                                MatchKey = "tab_adventure",
+                                MatchKey = "download_without_voice",
                             },
                         },
                         Actions = new List<Core.Script.Action>()
                         {
                             new Core.Script.Action()
                             {
-                                OpCodes = { "CLICK_TEMPLATE" },
+                                //OpCodes = { ScriptOps.CLICK_TEMPLATE },
                             },
                         }
                     },
+
+                    new Segment()
+                    {
+                        Priority = 100,
+                        Conditions = new List<Condition>()
+                        {
+                            new Condition()
+                            {
+                                MatchKey = "reliability_title",
+                            },
+                        },
+                      
+                    }
                 },
             };
             script.SetEmulator(Emulator.Default);

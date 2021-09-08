@@ -17,10 +17,13 @@ namespace Core.Script
     public static class ScriptOps
     {
 
-        public static readonly string TEMPLATE_MATCH = "TEMPLATE_MATCH";
-
+        
 
         public static readonly string CLICK_TEMPLATE = "CLICK_TEMPLATE";
+
+        public static readonly string ASSERT_TRUE = "ASSERT_TRUE";
+
+        public static readonly string TEMPLATE_MATCH = "TEMPLATE_MATCH";
 
     }
 
@@ -64,6 +67,8 @@ namespace Core.Script
 
         public int MaxExecuteCount { get; set; } = int.MaxValue;
 
+        public bool StopWhenException { get; set; } = true;
+
         [JsonIgnore]
         public int CurExecuteCount { get; set; } = 0;
 
@@ -72,8 +77,8 @@ namespace Core.Script
         [JsonIgnore]
         private Stack stack = new Stack(STACK_CAPACITY);
 
-        [JsonIgnore]
-        public Stack Stack => stack;
+        //[JsonIgnore]
+        //public Stack Stack => stack;
 
         [JsonIgnore]
         public object AX { get; set; }
@@ -105,18 +110,20 @@ namespace Core.Script
             }
         }
 
+        private void Assert(bool b, string prompt)
+        {
+            if (!b)
+                throw new Exception(prompt);
+        }
+
         public void DoOpCodes(IList<string> opCodes)
         {
             for (var i = 0; i < opCodes.Count; i++)
             {
                 var opCode = opCodes[i];
-                if (opCode == ScriptOps.TEMPLATE_MATCH)
+                if (false)
                 {
-                    var arg3 = stack.Pop();
-                    var arg2 = stack.Pop();
-                    var arg1 = stack.Pop();
-                    var result = Invoke("TemplateMatch", arg1, arg2, arg3);
-                    stack.Push(result);
+
                 }
                 else if (opCode == ScriptOps.CLICK_TEMPLATE)
                 {
@@ -127,6 +134,19 @@ namespace Core.Script
                     else
                         arg2 = new PVec2f(0, 0);
                     Invoke("ClickMatchedTemplate", arg1, arg2);
+                }
+                else if (opCode == ScriptOps.ASSERT_TRUE)
+                {
+                    var top = stack.Top();
+                    Assert(top is bool && (bool)top, "assert stack top value true failed");
+                }
+                else if (opCode == ScriptOps.TEMPLATE_MATCH)
+                {
+                    var arg3 = stack.Pop();
+                    var arg2 = stack.Pop();
+                    var arg1 = stack.Pop();
+                    var result = Invoke("TemplateMatch", arg1, arg2, arg3);
+                    stack.Push(result);
                 }
             }
         }
@@ -152,24 +172,102 @@ namespace Core.Script
         [JsonIgnore]
         private Img _screenshot;
 
-        public Img GetScreenShot()
+        private Img GetScreenShot()
         {
             if (_screenshot == null)
                 _screenshot = new Img(_emulator.GetScreenCapture());
             return _screenshot;
         }
 
-        public void TickStart()
-        {
+        [JsonIgnore]
+        private IDictionary<string, bool> _templateMatchResults;
 
+        private void RecordTemplateMatchResult(string matchKey, bool success)
+        {
+            _templateMatchResults[matchKey] = success;
         }
 
-        public void TickEnd()
+        private bool IsTemplateMatchSuccess(string matchKey)
+        {
+            if (!_templateMatchResults.ContainsKey(matchKey))
+                return false;
+            return _templateMatchResults[matchKey];
+        }
+
+        private void TickStart()
+        {
+            _templateMatchResults = new Dictionary<string, bool>();
+        }
+
+        public void Tick()
+        {
+            TickStart();
+            var segGroups = GetSegmentGroups();
+            foreach (var group in segGroups)
+            {
+                ScriptTickSegments(group.Value);
+            }
+            CurExecuteCount++;
+            TickEnd();
+        }
+
+        [JsonIgnore]
+        private bool _breakSegment;
+
+        /// <summary>
+        /// 同组互斥
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="segments"></param>
+        /// <returns></returns>
+        private bool ScriptTickSegments(List<Segment> segments)
+        {
+            foreach (var seg in segments)
+            {
+                _breakSegment = false;
+                foreach (var condition in seg.Conditions)
+                {
+                    if (!string.IsNullOrWhiteSpace(condition.MatchKey))
+                    {
+                        var result = TemplateMatchByKey(condition.MatchKey);
+                        stack.Push(result.Success);
+                        AX = result;
+                    }
+                    if (condition.OpCodes != null)
+                    {
+                        DoOpCodes(condition.OpCodes);
+                    }
+                    if (_breakSegment)
+                        break;
+                }
+                if (!(stack.Top() is bool))
+                    throw new Exception("the top value of stack is not bool value");
+                var b = true;
+                while (!stack.Empty && stack.Top() is bool)
+                {
+                    var top = (bool)stack.Pop();
+                    b = b && top;
+                }
+                if (_breakSegment)
+                    continue;
+                if (b)
+                {
+                    foreach (var action in seg.Actions)
+                    {
+                        DoOpCodes(action.OpCodes);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void TickEnd()
         {
             _screenshot = null;
         }
 
-        public ImgMatchResult TemplateMatch(string matchKey)
+        private ImgMatchResult TemplateMatchByKey(string matchKey)
         {
             Logger.GetInstance().Debug("TemplateMatch", $"matchKey={matchKey}");
             var data = ImageSamplingData.GetWithAspectRatio();
@@ -184,6 +282,7 @@ namespace Core.Script
             var threshold = data.GetThreshold(templateKey);
 
             var result = TemplateMatch(sourceRect, template, threshold);
+            RecordTemplateMatchResult(matchKey, result.Success);
             return result;
         }
 
