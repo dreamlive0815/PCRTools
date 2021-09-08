@@ -148,6 +148,49 @@ namespace Core.Common
             return MT;
         }
 
+        public Color GetColor(int r, int c)
+        {
+            Color clr;
+            if (MT.Channels() == 1)
+            {
+                var v = MT.Get<byte>(r, c);
+                clr = Color.FromArgb(v, v, v);
+            }
+            else
+            {
+                var vec3b = MT.Get<Vec3b>(r, c);
+                clr = Color.FromArgb(vec3b.Item0, vec3b.Item1, vec3b.Item2);
+            }
+            return clr;
+        }
+
+        public void SetColor(int r, int c, Color color)
+        {
+            if (MT.Channels() == 1)
+            {
+                MT.Set(r, c, color.G);
+            }
+            else
+            {
+                var vec3b = new Vec3b(color.R, color.G, color.B);
+                MT.Set(r, c, vec3b);
+            }
+        }
+
+        public void Show(string key)
+        {
+            Cv2.ImShow(key, MT);
+        }
+
+        public Img Clone()
+        {
+            return new Img(MT.Clone())
+            {
+                PositionInRoot = PositionInRoot,
+                SizeOfRoot = SizeOfRoot,
+            };
+        }
+
         public void Dispose()
         {
             MT?.Dispose();

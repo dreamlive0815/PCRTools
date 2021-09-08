@@ -83,6 +83,7 @@ namespace Core.Script
 
         public void Reset()
         {
+            _screenshot?.Dispose();
             _segGroups = null;
             _emulator = null;
             _screenshot = null;
@@ -170,6 +171,7 @@ namespace Core.Script
 
         public ImgMatchResult TemplateMatch(string matchKey)
         {
+            Logger.GetInstance().Debug("TemplateMatch", $"matchKey={matchKey}");
             var data = ImageSamplingData.GetWithAspectRatio();
 
             var screenShot = GetScreenShot();
