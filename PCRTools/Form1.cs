@@ -30,55 +30,6 @@ namespace PCRTools
             RefreshText();
             RegisterEvents();
 
-            TestScript();
-        }
-
-        void TestScript()
-        {
-            Emulator.AssertDefaultAliveAndInit();
-            var script = new Script()
-            {
-                Identity = "Test",
-                Name = "测试脚本",
-
-                StopWhenException = false,
-
-                Segments = new List<Segment>()
-                {
-                    new Segment()
-                    {
-                        Conditions = new List<Condition>()
-                        {
-                            new Condition()
-                            {
-                                MatchKey = "download_without_voice",
-                            },
-                        },
-                        Actions = new List<Core.Script.Action>()
-                        {
-                            new Core.Script.Action()
-                            {
-                                //OpCodes = { ScriptOps.CLICK_TEMPLATE },
-                            },
-                        }
-                    },
-
-                    new Segment()
-                    {
-                        Priority = 100,
-                        Conditions = new List<Condition>()
-                        {
-                            new Condition()
-                            {
-                                MatchKey = "reliability_title",
-                            },
-                        },
-                      
-                    }
-                },
-            };
-            script.SetEmulator(Emulator.Default);
-            ScriptMgr.GetInstance().RunScript(script);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -225,6 +176,78 @@ namespace PCRTools
         private void menuEmulatorInfo_Click(object sender, EventArgs e)
         {
             new FrmRuntimeInfo() { GetRuntimeInfoFunc = GetEmulatorDetail }.Show();
+        }
+
+        private void menuStopScript_Click(object sender, EventArgs e)
+        {
+            ScriptMgr.GetInstance().StopDefaultScript();
+        }
+
+        private void menuTestScript_Click(object sender, EventArgs e)
+        {
+            Emulator.AssertDefaultAliveAndInit();
+            var script = new Script()
+            {
+                Identity = "Test",
+                Name = "测试脚本",
+
+                StopWhenException = false,
+
+                Segments = new List<Segment>()
+                {
+                    new Segment()
+                    {
+                        Conditions = new List<Condition>()
+                        {
+                            new Condition()
+                            {
+                                MatchKey = "download_without_voice",
+                            },
+                        },
+                        Actions = new List<Core.Script.Action>()
+                        {
+                            new Core.Script.Action()
+                            {
+                                //OpCodes = { ScriptOps.CLICK_TEMPLATE },
+                            },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 100,
+                        Conditions = new List<Condition>()
+                        {
+
+                            new Condition()
+                            {
+                                MatchKey = "reliability_title",
+                            },
+
+
+                            new Condition()
+                            {
+                                MatchKey = "reliability_new_tag",
+                            },
+
+                        },
+                        Actions = new List<Core.Script.Action>()
+                        {
+                            new Core.Script.Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.PARSE_PVEC2F, "0,0.38", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.CLICK_TEMPLATE },
+                            },
+                        }
+
+                    },
+
+                },
+            };
+            script.SetEmulator(Emulator.Default);
+            //ScriptMgr.GetInstance().RunDefaultScript(script);
+            script.Save("script.json");
         }
     }
 }

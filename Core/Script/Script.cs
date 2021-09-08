@@ -17,9 +17,11 @@ namespace Core.Script
     public static class ScriptOps
     {
 
-        
+        public static readonly string MOVE_TO_BX = "MOVE_TO_BX";
 
         public static readonly string CLICK_TEMPLATE = "CLICK_TEMPLATE";
+
+        public static readonly string PARSE_PVEC2F = "PARSE_PVEC2F";
 
         public static readonly string ASSERT_TRUE = "ASSERT_TRUE";
 
@@ -81,10 +83,16 @@ namespace Core.Script
         //public Stack Stack => stack;
 
         [JsonIgnore]
-        public object AX { get; set; }
+        private object AX { get; set; }
 
         [JsonIgnore]
-        public object BX { get; set; }
+        private object BX { get; set; }
+
+        [JsonIgnore]
+        private object CX { get; set; }
+
+        [JsonIgnore]
+        private object DX { get; set; }
 
         public void Reset()
         {
@@ -105,9 +113,7 @@ namespace Core.Script
         {
             var value = stack[offset];
             if (!(value is T))
-            {
                 throw new Exception($"stack value of offset:{offset} is not type of" + typeof(T).Name);
-            }
         }
 
         private void Assert(bool b, string prompt)
@@ -125,15 +131,21 @@ namespace Core.Script
                 {
 
                 }
+                else if (opCode == ScriptOps.MOVE_TO_BX)
+                {
+                    var top = stack.Pop();
+                    BX = top;
+                }
                 else if (opCode == ScriptOps.CLICK_TEMPLATE)
                 {
                     var arg1 = AX;
-                    object arg2;
-                    if (CheckStackValueType<PVec2f>(-1))
-                        arg2 = stack.Pop();
-                    else
-                        arg2 = new PVec2f(0, 0);
+                    object arg2 = BX is PVec2f ? BX : new PVec2f(0, 0);
                     Invoke("ClickMatchedTemplate", arg1, arg2);
+                }
+                else if (opCode == ScriptOps.PARSE_PVEC2F)
+                {
+                    var pVec2f = PVec2f.Parse(opCodes[++i]);
+                    stack.Push(pVec2f);
                 }
                 else if (opCode == ScriptOps.ASSERT_TRUE)
                 {
@@ -180,23 +192,13 @@ namespace Core.Script
         }
 
         [JsonIgnore]
-        private IDictionary<string, bool> _templateMatchResults;
-
-        private void RecordTemplateMatchResult(string matchKey, bool success)
-        {
-            _templateMatchResults[matchKey] = success;
-        }
-
-        private bool IsTemplateMatchSuccess(string matchKey)
-        {
-            if (!_templateMatchResults.ContainsKey(matchKey))
-                return false;
-            return _templateMatchResults[matchKey];
-        }
+        private IDictionary<string, ImgMatchResult> _templateMatchResults;
 
         private void TickStart()
         {
-            _templateMatchResults = new Dictionary<string, bool>();
+            AX = BX = CX = DX = null;
+            _screenshot = null;
+            _templateMatchResults = new Dictionary<string, ImgMatchResult>();
         }
 
         public void Tick()
@@ -264,12 +266,17 @@ namespace Core.Script
 
         private void TickEnd()
         {
-            _screenshot = null;
         }
 
         private ImgMatchResult TemplateMatchByKey(string matchKey)
         {
             Logger.GetInstance().Debug("TemplateMatch", $"matchKey={matchKey}");
+
+            if (_templateMatchResults.ContainsKey(matchKey))
+            {
+                return _templateMatchResults[matchKey];
+            }
+
             var data = ImageSamplingData.GetWithAspectRatio();
 
             var screenShot = GetScreenShot();
@@ -282,7 +289,7 @@ namespace Core.Script
             var threshold = data.GetThreshold(templateKey);
 
             var result = TemplateMatch(sourceRect, template, threshold);
-            RecordTemplateMatchResult(matchKey, result.Success);
+            _templateMatchResults[matchKey] = result;
             return result;
         }
 

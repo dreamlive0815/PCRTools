@@ -1,22 +1,22 @@
 {
   "ContainerSizes": {
     "download_without_voice.png": "1600,900",
-    "reliability_title.png": "1600,900",
-    "tab_adventure.png": "1600,900"
+    "reliability_new_tag.png": "1600,900",
+    "reliability_title.png": "1600,900"
   },
   "MatchThresholds": {
     "download_without_voice.png": 70,
-    "reliability_title.png": 70,
-    "tab_adventure.png": 70
+    "reliability_new_tag.png": 70,
+    "reliability_title.png": 70
   },
   "PVec2fs": {},
   "RVec2fs": {},
   "RVec4fs": {
     "download_without_voice.png": "0.4431,0.6511,0.1156,0.0378",
     "download_without_voice_source": "0.425,0.6267,0.15,0.12",
+    "reliability_new_tag.png": "0.5062,0.1422,0.0431,0.0278",
+    "reliability_new_tag_source": "0.4719,0.0778,0.1181,0.8211",
     "reliability_title.png": "0.0712,0.0389,0.0725,0.0367",
-    "reliability_title_source": "0.0569,0.0189,0.1106,0.0744",
-    "tab_adventure.png": "0.4625,0.9189,0.0762,0.0689",
-    "tab_adventure_source": "0.405,0.8567,0.1856,0.14"
+    "reliability_title_source": "0.0569,0.0189,0.1106,0.0744"
   }
 }

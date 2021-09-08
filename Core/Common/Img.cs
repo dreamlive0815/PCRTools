@@ -117,18 +117,18 @@ namespace Core.Common
             }
             if (ConfigMgr.GetConfig().Debug)
             {
+                Cv2.Circle(source, maxLoc.X + search.Width / 2, maxLoc.Y + search.Height / 2, 25, Scalar.Red);
+
                 source.SaveImage("source.png");
                 search.SaveImage("search.png");
-                Logger.GetInstance().Debug("ImgMatch", "ImgMatch: maxval=" + maxVal);
+
+                Logger.GetInstance().Debug("ImgMatch", "ImgMatch: MaxVal=" + maxVal);
 
                 //var combine = new Mat(new CvSize(source.Width, source.Height + search.Height), MatType.MakeType(source.Depth(), source.Channels()));
                 //source.CopyTo(combine[new Range(0, source.Height), new Range(0, source.Width)]);
                 //var xOff = (source.Width - search.Width) / 2;
                 //search.CopyTo(combine[new Range(source.Height, source.Height + search.Height), new Range(xOff, search.Width + xOff)]);
                 //Cv2.ImShow("combine", combine);
-
-                //Cv2.Circle(source, maxLoc.X + search.Width / 2, maxLoc.Y + search.Height / 2, 25, Scalar.Red);
-                //Cv2.ImShow("ImgMatch", source);
             }
             return r;
         }

@@ -24,31 +24,37 @@ namespace Core.Script
             return instance;
         }
 
-        private Task defaultTask;
+        private ScriptController defaultScriptController;
 
+        public bool IsDefaultRunning => defaultScriptController != null && defaultScriptController.IsRunning;
 
-        public bool IsDefaultRunning => defaultTask != null && defaultTask.Status == TaskStatus.Running;
-
-        public Task RunDefaultScript(Script script)
+        public ScriptController RunDefaultScript(Script script)
         {
             if (IsDefaultRunning)
                 throw new Exception("another task is running");
-            defaultTask = RunScript(script);
-            return defaultTask;
+            defaultScriptController = RunScript(script);
+            return defaultScriptController;
         }
 
         public void StopDefaultScript()
         {
-            defaultTask?.Dispose();
-            defaultTask = null;
+            if (!IsDefaultRunning)
+                return;
+            defaultScriptController.Stop();
         }
 
-        public Task RunScript(Script script)
+        public ScriptController RunScript(Script script)
         {
+            var tokenSource = new CancellationTokenSource();
             var task = Task.Run(() =>
             {
                 while (true)
                 {
+                    if (tokenSource.Token.IsCancellationRequested)
+                    {
+                        Logger.GetInstance().Info("RunScript", $"script: {script.Name} is terminated");
+                        return;
+                    }
                     var tickStartTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                     try
                     {
@@ -75,7 +81,29 @@ namespace Core.Script
                     Logger.GetInstance().Error("RunScript", Utils.GetErrorDescription(t.Exception));
                 }
             });
-            return task;
+            return new ScriptController(script, task, tokenSource);
+        }
+    }
+
+    public class ScriptController
+    {
+        private Task _scriptTask;
+        private CancellationTokenSource _scriptTaskTokenSource;
+
+        public ScriptController(Script script, Task task, CancellationTokenSource tokenSource)
+        {
+            Script = script;
+            _scriptTask = task;
+            _scriptTaskTokenSource = tokenSource;
+        }
+
+        public Script Script { get; }
+
+        public bool IsRunning => _scriptTask != null && _scriptTask.Status == TaskStatus.Running;
+
+        public void Stop()
+        {
+            _scriptTaskTokenSource.Cancel();
         }
     }
 }

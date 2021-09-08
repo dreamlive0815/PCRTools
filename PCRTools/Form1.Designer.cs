@@ -32,6 +32,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuClearOutput = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuEmulatorInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuPCRArena = new System.Windows.Forms.ToolStripMenuItem();
             this.menuPCRArenaTimer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCmds = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,7 +42,9 @@
             this.menuScreenshot = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.txtOutput = new System.Windows.Forms.RichTextBox();
-            this.menuEmulatorInfo = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuScripts = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStopScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTestScript = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,6 +53,7 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuClearOutput,
+            this.menuScripts,
             this.menuTools,
             this.menuCmds});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -75,6 +79,13 @@
             this.menuTools.Name = "menuTools";
             this.menuTools.Size = new System.Drawing.Size(51, 24);
             this.menuTools.Text = "工具";
+            // 
+            // menuEmulatorInfo
+            // 
+            this.menuEmulatorInfo.Name = "menuEmulatorInfo";
+            this.menuEmulatorInfo.Size = new System.Drawing.Size(216, 26);
+            this.menuEmulatorInfo.Text = "模拟器实时信息";
+            this.menuEmulatorInfo.Click += new System.EventHandler(this.menuEmulatorInfo_Click);
             // 
             // menuPCRArena
             // 
@@ -146,12 +157,28 @@
             this.txtOutput.TabIndex = 3;
             this.txtOutput.Text = "";
             // 
-            // menuEmulatorInfo
+            // menuScripts
             // 
-            this.menuEmulatorInfo.Name = "menuEmulatorInfo";
-            this.menuEmulatorInfo.Size = new System.Drawing.Size(216, 26);
-            this.menuEmulatorInfo.Text = "模拟器实时信息";
-            this.menuEmulatorInfo.Click += new System.EventHandler(this.menuEmulatorInfo_Click);
+            this.menuScripts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStopScript,
+            this.menuTestScript});
+            this.menuScripts.Name = "menuScripts";
+            this.menuScripts.Size = new System.Drawing.Size(51, 24);
+            this.menuScripts.Text = "脚本";
+            // 
+            // menuStopScript
+            // 
+            this.menuStopScript.Name = "menuStopScript";
+            this.menuStopScript.Size = new System.Drawing.Size(216, 26);
+            this.menuStopScript.Text = "停止脚本";
+            this.menuStopScript.Click += new System.EventHandler(this.menuStopScript_Click);
+            // 
+            // menuTestScript
+            // 
+            this.menuTestScript.Name = "menuTestScript";
+            this.menuTestScript.Size = new System.Drawing.Size(216, 26);
+            this.menuTestScript.Text = "脚本测试";
+            this.menuTestScript.Click += new System.EventHandler(this.menuTestScript_Click);
             // 
             // Form1
             // 
@@ -189,6 +216,9 @@
         private System.Windows.Forms.ToolStripMenuItem menuScreenshot;
         private System.Windows.Forms.ToolStripMenuItem menuPCRArenaTimer;
         private System.Windows.Forms.ToolStripMenuItem menuEmulatorInfo;
+        private System.Windows.Forms.ToolStripMenuItem menuScripts;
+        private System.Windows.Forms.ToolStripMenuItem menuStopScript;
+        private System.Windows.Forms.ToolStripMenuItem menuTestScript;
     }
 }
 
