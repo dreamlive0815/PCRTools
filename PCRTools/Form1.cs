@@ -224,11 +224,10 @@ namespace PCRTools
                                 MatchKey = "reliability_title",
                             },
 
-
-                            new Condition()
-                            {
-                                MatchKey = "reliability_new_tag",
-                            },
+                            //new Condition()
+                            //{
+                            //    MatchKey = "reliability_new_tag",
+                            //},
 
                         },
                         Actions = new List<Core.Script.Action>()
@@ -236,8 +235,13 @@ namespace PCRTools
                             new Core.Script.Action()
                             {
                                 OpCodes = {
-                                    ScriptOps.PARSE_PVEC2F, "0,0.38", ScriptOps.MOVE_TO_BX,
-                                    ScriptOps.CLICK_TEMPLATE },
+                                    //ScriptOps.PARSE_PVEC2F, "0,0.38", ScriptOps.MOVE_TO_BX,
+                                    //ScriptOps.CLICK_TEMPLATE
+                                    ScriptOps.PARSE_PVEC2F, "0.77,0.70", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_PVEC2F, "0.77,0.23", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.PARSE_INT, "1200", ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.DO_DRAG,
+                                },
                             },
                         }
 
@@ -246,7 +250,7 @@ namespace PCRTools
                 },
             };
             script.SetEmulator(Emulator.Default);
-            //ScriptMgr.GetInstance().RunDefaultScript(script);
+            ScriptMgr.GetInstance().RunDefaultScript(script);
             script.Save("script.json");
         }
     }

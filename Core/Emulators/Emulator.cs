@@ -287,7 +287,18 @@ namespace Core.Emulators
 
         public void DoTap(EmulatorPoint point)
         {
-            var output = AdbShell($"input tap {point.X} {point.Y}");
+            AdbShell($"input tap {point.X} {point.Y}");
+        }
+
+        public void DoDrag(PVec2f start, PVec2f end, int milliSeconds)
+        {
+            var resolution = GetResolution();
+            DoDrag(resolution * start, resolution * end, milliSeconds);
+        }
+
+        public void DoDrag(EmulatorPoint start, EmulatorPoint end, int milliSeconds)
+        {
+            AdbShell($"input swipe {start.X} {start.Y} {end.X} {end.Y} {milliSeconds}");
         }
     }
 

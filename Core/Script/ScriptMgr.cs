@@ -59,6 +59,7 @@ namespace Core.Script
                     try
                     {
                         script.Tick();
+                        Logger.GetInstance().Info("ScriptTick", $"Tick{script.CurExecuteCount}");
                     }
                     catch (Exception e)
                     {

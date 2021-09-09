@@ -14,6 +14,7 @@ namespace Core.Common
         private static JsonSerializerSettings setting = new JsonSerializerSettings()
         {
             Formatting = Formatting.Indented,
+            NullValueHandling = NullValueHandling.Ignore,
             Converters = new List<JsonConverter>()
                 {
                     new PVec2fConverter(), new RVec2fConverter(), new RVec4fConverter(),

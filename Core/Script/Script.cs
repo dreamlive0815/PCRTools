@@ -17,13 +17,25 @@ namespace Core.Script
     public static class ScriptOps
     {
 
+        public static readonly string NOT = "NOT";
+
+        public static readonly string MOVE_TO_AX = "MOVE_TO_AX";
+
         public static readonly string MOVE_TO_BX = "MOVE_TO_BX";
 
-        public static readonly string CLICK_TEMPLATE = "CLICK_TEMPLATE";
+        public static readonly string MOVE_TO_CX = "MOVE_TO_CX";
+
+        public static readonly string MOVE_TO_DX = "MOVE_TO_DX";
+
+        public static readonly string PARSE_INT = "PARSE_INT";
 
         public static readonly string PARSE_PVEC2F = "PARSE_PVEC2F";
 
-        public static readonly string ASSERT_TRUE = "ASSERT_TRUE";
+        public static readonly string CLICK_TEMPLATE = "CLICK_TEMPLATE";
+
+        public static readonly string DO_DRAG = "DO_DRAG";
+
+        //public static readonly string ASSERT_TRUE = "ASSERT_TRUE";
 
         public static readonly string TEMPLATE_MATCH = "TEMPLATE_MATCH";
 
@@ -37,6 +49,7 @@ namespace Core.Script
         {
             "TemplateMatch",
             "ClickMatchedTemplate",
+            "DoDrag",
         };
 
 
@@ -122,6 +135,11 @@ namespace Core.Script
                 throw new Exception(prompt);
         }
 
+        private void AssertType<T>(object value)
+        {
+            Assert(value is T, $"value:{value} is not type of" + typeof(T).Name);
+        }
+
         public void DoOpCodes(IList<string> opCodes)
         {
             for (var i = 0; i < opCodes.Count; i++)
@@ -131,27 +149,64 @@ namespace Core.Script
                 {
 
                 }
+                else if (opCode == ScriptOps.NOT)
+                {
+                    var top = stack.Pop();
+                    AssertType<bool>(top);
+                    stack.Push(!(bool)top);
+                }
+                else if (opCode == ScriptOps.MOVE_TO_AX)
+                {
+                    var top = stack.Pop();
+                    AX = top;
+                }
                 else if (opCode == ScriptOps.MOVE_TO_BX)
                 {
                     var top = stack.Pop();
                     BX = top;
                 }
-                else if (opCode == ScriptOps.CLICK_TEMPLATE)
+                else if (opCode == ScriptOps.MOVE_TO_CX)
                 {
-                    var arg1 = AX;
-                    object arg2 = BX is PVec2f ? BX : new PVec2f(0, 0);
-                    Invoke("ClickMatchedTemplate", arg1, arg2);
+                    var top = stack.Pop();
+                    CX = top;
+                }
+                else if (opCode == ScriptOps.MOVE_TO_DX)
+                {
+                    var top = stack.Pop();
+                    DX = top;
+                }
+                else if (opCode == ScriptOps.PARSE_INT)
+                {
+                    var n = int.Parse(opCodes[++i]);
+                    stack.Push(n);
                 }
                 else if (opCode == ScriptOps.PARSE_PVEC2F)
                 {
                     var pVec2f = PVec2f.Parse(opCodes[++i]);
                     stack.Push(pVec2f);
                 }
-                else if (opCode == ScriptOps.ASSERT_TRUE)
+                else if (opCode == ScriptOps.CLICK_TEMPLATE)
                 {
-                    var top = stack.Top();
-                    Assert(top is bool && (bool)top, "assert stack top value true failed");
+                    var arg1 = AX;
+                    AssertType<ImgMatchResult>(arg1);
+                    object arg2 = BX is PVec2f ? BX : new PVec2f(0, 0);
+                    Invoke("ClickMatchedTemplate", arg1, arg2);
                 }
+                else if (opCode == ScriptOps.DO_DRAG)
+                {
+                    var arg1 = AX;
+                    AssertType<PVec2f>(arg1);
+                    var arg2 = BX;
+                    AssertType<PVec2f>(arg2);
+                    var arg3 = CX;
+                    AssertType<int>(arg3);
+                    Invoke("DoDrag", arg1, arg2, arg3);
+                }
+                //else if (opCode == ScriptOps.ASSERT_TRUE)
+                //{
+                //    var top = stack.Top();
+                //    Assert(top is bool && (bool)top, "assert stack top value true failed");
+                //}
                 else if (opCode == ScriptOps.TEMPLATE_MATCH)
                 {
                     var arg3 = stack.Pop();
@@ -308,6 +363,11 @@ namespace Core.Script
             _emulator.DoTap(pVec2f);
         }
 
+        private void DoDrag(PVec2f start, PVec2f end, int milliSeconds)
+        {
+            _emulator.DoDrag(start, end, milliSeconds);
+        }
+
         public void Save(string filePath)
         {
             var jsonStr = JsonUtils.SerializeObject(this);
@@ -394,6 +454,8 @@ namespace Core.Script
         public List<Condition> Conditions { get; set; } = new List<Condition>();
 
         public List<Action> Actions { get; set; } = new List<Action>();
+
+        public string Comment { get; set; }
 
     }
 
