@@ -27,11 +27,15 @@ namespace Core.Script
 
         public static readonly string MOVE_TO_DX = "MOVE_TO_DX";
 
+        public static readonly string PARSE_BOOL = "PARSE_BOOL";
+
         public static readonly string PARSE_INT = "PARSE_INT";
 
         public static readonly string PARSE_PVEC2F = "PARSE_PVEC2F";
 
         public static readonly string CLICK_TEMPLATE = "CLICK_TEMPLATE";
+
+        public static readonly string DO_CLICK = "DO_CLICK";
 
         public static readonly string DO_DRAG = "DO_DRAG";
 
@@ -43,6 +47,15 @@ namespace Core.Script
 
     public class Script
     {
+
+        public static Script LoadFromFile(string filePath)
+        {
+            var content = File.ReadAllText(filePath);
+            var script = JsonUtils.DeserializeObject<Script>(content);
+            return script;
+        }
+
+
         private static readonly int STACK_CAPACITY = 32;
 
         private static readonly string[] METHOD_WHITE_LIST = new string[]
@@ -50,8 +63,8 @@ namespace Core.Script
             "TemplateMatch",
             "ClickMatchedTemplate",
             "DoDrag",
+            "DoClick",
         };
-
 
         public string Identity { get; set; }
 
@@ -175,6 +188,11 @@ namespace Core.Script
                     var top = stack.Pop();
                     DX = top;
                 }
+                else if (opCode == ScriptOps.PARSE_BOOL)
+                {
+                    var b = bool.Parse(opCodes[++i]);
+                    stack.Push(b);
+                }
                 else if (opCode == ScriptOps.PARSE_INT)
                 {
                     var n = int.Parse(opCodes[++i]);
@@ -191,6 +209,12 @@ namespace Core.Script
                     AssertType<ImgMatchResult>(arg1);
                     object arg2 = BX is PVec2f ? BX : new PVec2f(0, 0);
                     Invoke("ClickMatchedTemplate", arg1, arg2);
+                }
+                else if (opCode == ScriptOps.DO_CLICK)
+                {
+                    var arg1 = AX;
+                    AssertType<PVec2f>(arg1);
+                    Invoke("DoClick", arg1);
                 }
                 else if (opCode == ScriptOps.DO_DRAG)
                 {
@@ -337,6 +361,8 @@ namespace Core.Script
             var screenShot = GetScreenShot();
 
             var sourceRectKey = matchKey + "_source";
+            if (!data.RVec4fs.ContainsKey(sourceRectKey))
+                Logger.GetInstance().Debug("TemplateMatchByKey", $"SourceRect RVec4f of key:${sourceRectKey} is missing");
             var rectVec4f = data.RVec4fs.ContainsKey(sourceRectKey) ? data.RVec4fs[sourceRectKey] : new RVec4f(0, 0, 1, 1);
             var sourceRect = screenShot.GetPartial(rectVec4f);
             var templateKey = matchKey + ".png";
@@ -366,6 +392,11 @@ namespace Core.Script
         private void DoDrag(PVec2f start, PVec2f end, int milliSeconds)
         {
             _emulator.DoDrag(start, end, milliSeconds);
+        }
+
+        private void DoClick(PVec2f point)
+        {
+            _emulator.DoTap(point);
         }
 
         public void Save(string filePath)

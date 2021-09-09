@@ -1,12 +1,18 @@
 {
   "ContainerSizes": {
     "download_without_voice.png": "1600,900",
+    "reliability_entry_text.png": "1600,900",
+    "reliability_item_new_tag.png": "1600,900",
     "reliability_new_tag.png": "1600,900",
+    "reliability_present_preview.png": "1600,900",
     "reliability_title.png": "1600,900"
   },
   "MatchThresholds": {
     "download_without_voice.png": 70,
-    "reliability_new_tag.png": 70,
+    "reliability_entry_text.png": 70,
+    "reliability_item_new_tag.png": 60,
+    "reliability_new_tag.png": 60,
+    "reliability_present_preview.png": 70,
     "reliability_title.png": 70
   },
   "PVec2fs": {},
@@ -14,8 +20,14 @@
   "RVec4fs": {
     "download_without_voice.png": "0.4431,0.6511,0.1156,0.0378",
     "download_without_voice_source": "0.425,0.6267,0.15,0.12",
+    "reliability_entry_text.png": "0.5969,0.4844,0.06,0.04",
+    "reliability_entry_text_source": "0.4575,0.3911,0.2444,0.2211",
+    "reliability_item_new_tag.png": "0.5812,0.3467,0.0438,0.0256",
+    "reliability_item_new_tag_source": "0.0175,0.0233,0.9638,0.7733",
     "reliability_new_tag.png": "0.5062,0.1422,0.0431,0.0278",
     "reliability_new_tag_source": "0.4719,0.0778,0.1181,0.8211",
+    "reliability_present_preview.png": "0.0769,0.8156,0.1144,0.0344",
+    "reliability_present_preview_source": "0.0619,0.7856,0.1412,0.0933",
     "reliability_title.png": "0.0712,0.0389,0.0725,0.0367",
     "reliability_title_source": "0.0569,0.0189,0.1106,0.0744"
   }

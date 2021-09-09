@@ -185,73 +185,15 @@ namespace PCRTools
 
         private void menuTestScript_Click(object sender, EventArgs e)
         {
+
+            var script = ScriptGenerator.GenReliabilityScript();
+            script.Save("script.json");
+            //var script = Script.LoadFromFile("script.json");
+
             Emulator.AssertDefaultAliveAndInit();
-            var script = new Script()
-            {
-                Identity = "Test",
-                Name = "测试脚本",
-
-                StopWhenException = false,
-
-                Segments = new List<Segment>()
-                {
-                    new Segment()
-                    {
-                        Conditions = new List<Condition>()
-                        {
-                            new Condition()
-                            {
-                                MatchKey = "download_without_voice",
-                            },
-                        },
-                        Actions = new List<Core.Script.Action>()
-                        {
-                            new Core.Script.Action()
-                            {
-                                //OpCodes = { ScriptOps.CLICK_TEMPLATE },
-                            },
-                        }
-                    },
-
-                    new Segment()
-                    {
-                        Priority = 100,
-                        Conditions = new List<Condition>()
-                        {
-
-                            new Condition()
-                            {
-                                MatchKey = "reliability_title",
-                            },
-
-                            //new Condition()
-                            //{
-                            //    MatchKey = "reliability_new_tag",
-                            //},
-
-                        },
-                        Actions = new List<Core.Script.Action>()
-                        {
-                            new Core.Script.Action()
-                            {
-                                OpCodes = {
-                                    //ScriptOps.PARSE_PVEC2F, "0,0.38", ScriptOps.MOVE_TO_BX,
-                                    //ScriptOps.CLICK_TEMPLATE
-                                    ScriptOps.PARSE_PVEC2F, "0.77,0.70", ScriptOps.MOVE_TO_AX,
-                                    ScriptOps.PARSE_PVEC2F, "0.77,0.23", ScriptOps.MOVE_TO_BX,
-                                    ScriptOps.PARSE_INT, "1200", ScriptOps.MOVE_TO_CX,
-                                    ScriptOps.DO_DRAG,
-                                },
-                            },
-                        }
-
-                    },
-
-                },
-            };
             script.SetEmulator(Emulator.Default);
             ScriptMgr.GetInstance().RunDefaultScript(script);
-            script.Save("script.json");
+
         }
     }
 }
