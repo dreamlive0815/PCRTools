@@ -58,8 +58,8 @@ namespace Core.Script
                     var tickStartTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                     try
                     {
-                        script.Tick();
                         Logger.GetInstance().Info("ScriptTick", $"Tick{script.CurExecuteCount}");
+                        script.Tick();
                     }
                     catch (Exception e)
                     {

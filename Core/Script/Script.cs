@@ -95,7 +95,7 @@ namespace Core.Script
 
         public int MaxExecuteCount { get; set; } = int.MaxValue;
 
-        public bool StopWhenException { get; set; } = true;
+        public bool StopWhenException { get; set; } = false;
 
         [JsonIgnore]
         public int CurExecuteCount { get; set; } = 0;

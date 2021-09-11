@@ -186,7 +186,7 @@ namespace PCRTools
         private void menuTestScript_Click(object sender, EventArgs e)
         {
 
-            var script = ScriptGenerator.GenReliabilityScript();
+            var script = ScriptGenerator.GenStagelineAutoBattle();
             script.Save("script.json");
             //var script = Script.LoadFromFile("script.json");
 

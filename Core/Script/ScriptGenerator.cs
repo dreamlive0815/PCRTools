@@ -152,5 +152,115 @@ namespace Core.Script
             };
             return script;
         }
+
+        public static Script GenStagelineAutoBattle()
+        {
+            var script = new Script()
+            {
+                Identity = "Stageline",
+                Name = "关卡自动推图",
+
+                StopWhenException = false,
+
+                Segments =
+                {
+
+
+                    new Segment()
+                    {
+                        Priority = 100,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_close", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 90,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "stage_next_tag", },
+                        },
+                        Actions =
+                        {
+                            new Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.PARSE_PVEC2F, "0.00,0.14", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.CLICK_TEMPLATE,
+                                },
+                            },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 80,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "enter_battle", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 70,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "enter_battle_prepare", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 60,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "battle_next_step", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+
+                    new Segment()
+                    {
+                        Priority = 0,
+                        Comment = "default, click screen center",
+                        Conditions =
+                        {
+                            new Condition() { OpCodes = new List<string>() { ScriptOps.PARSE_BOOL, "true" } },
+                        },
+                        Actions =
+                        {
+                            new Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.PARSE_PVEC2F, "0.5,0.5", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.DO_CLICK,
+                                },
+                            },
+                        }
+                    },
+                }
+            };
+
+            return script;
+        }
     }
 }
