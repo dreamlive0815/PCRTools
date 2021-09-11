@@ -12,7 +12,9 @@
     "reliability_new_tag.png": "1600,900",
     "reliability_present_preview.png": "1600,900",
     "reliability_title.png": "1600,900",
-    "stage_next_tag.png": "1600,900"
+    "stage_next_tag.png": "1600,900",
+    "stage_normal_off.png": "1600,900",
+    "stage_normal_on.png": "1600,900"
   },
   "MatchThresholds": {
     "battle_auto_off.png": 70,
@@ -27,7 +29,9 @@
     "reliability_new_tag.png": 60,
     "reliability_present_preview.png": 70,
     "reliability_title.png": 70,
-    "stage_next_tag.png": 60
+    "stage_next_tag.png": 60,
+    "stage_normal_off.png": 70,
+    "stage_normal_on.png": 70
   },
   "PVec2fs": {},
   "RVec2fs": {},
@@ -57,6 +61,10 @@
     "reliability_title.png": "0.0712,0.0389,0.0725,0.0367",
     "reliability_title_source": "0.0569,0.0189,0.1106,0.0744",
     "stage_next_tag.png": "0.3944,0.1889,0.0406,0.03",
-    "stage_next_tag_source": "0.005,0.1311,0.9881,0.7356"
+    "stage_next_tag_source": "0.005,0.1311,0.9881,0.7356",
+    "stage_normal_off.png": "0.5688,0.14,0.075,0.0356",
+    "stage_normal_off_source": "0.5225,0.1011,0.47,0.1156",
+    "stage_normal_on.png": "0.5694,0.1411,0.0775,0.0367",
+    "stage_normal_on_source": "0.5225,0.1011,0.47,0.1156"
   }
 }

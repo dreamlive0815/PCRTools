@@ -122,7 +122,7 @@ namespace Core.Common
                 source.SaveImage("source.png");
                 search.SaveImage("search.png");
 
-                Logger.GetInstance().Debug("ImgMatch", "ImgMatch: MaxVal=" + maxVal);
+                Logger.GetInstance().Debug("ImgMatch", $"ImgMatch: MaxVal={maxVal} Threshold:{threshold} Result={r.Success}");
 
                 //var combine = new Mat(new CvSize(source.Width, source.Height + search.Height), MatType.MakeType(source.Depth(), source.Channels()));
                 //source.CopyTo(combine[new Range(0, source.Height), new Range(0, source.Width)]);

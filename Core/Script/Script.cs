@@ -17,7 +17,16 @@ namespace Core.Script
     public static class ScriptOps
     {
 
+        public static bool OpEquals(string op1, string op2)
+        {
+            return op1 == op2;
+        }
+
         public static readonly string NOT = "NOT";
+
+        public static readonly string STACK_AND = "STACK_AND";
+
+        public static readonly string STACK_OR = "STACK_OR";
 
         public static readonly string MOVE_TO_AX = "MOVE_TO_AX";
 
@@ -33,16 +42,42 @@ namespace Core.Script
 
         public static readonly string PARSE_PVEC2F = "PARSE_PVEC2F";
 
+        public static readonly string PUSH_STRING = "PUSH_STRING";
+
+        public static readonly string PRINT = "PRINT";
+
+        public static readonly string PRINT_STACK = "PRINT_STACK";
+
+        public static readonly string PRINT_X = "PRINT_X";
+
         public static readonly string CLICK_TEMPLATE = "CLICK_TEMPLATE";
 
         public static readonly string DO_CLICK = "DO_CLICK";
 
         public static readonly string DO_DRAG = "DO_DRAG";
 
-        //public static readonly string ASSERT_TRUE = "ASSERT_TRUE";
+        public static readonly string ADD_COUNTER = "ADD_COUNTER";
+
+        public static readonly string CMP_COUNTER = "CMP_COUNTER";
+
+        public static readonly string SET_COUNTER = "SET_COUNTER";
 
         public static readonly string TEMPLATE_MATCH = "TEMPLATE_MATCH";
 
+    }
+
+    public class CompareOps
+    {
+        public static bool OpEquals(string op1, string op2)
+        {
+            return op1 == op2;
+        }
+
+        public static readonly string GREATOR = "GREATOR";
+
+        public static readonly string EQUAL = "EQUAL";
+
+        public static readonly string SMALLER = "SMALLER";
     }
 
     public class Script
@@ -64,6 +99,9 @@ namespace Core.Script
             "ClickMatchedTemplate",
             "DoDrag",
             "DoClick",
+            "AddCounter",
+            "CompareCounter",
+            "SetCounter",
         };
 
         public string Identity { get; set; }
@@ -153,6 +191,19 @@ namespace Core.Script
             Assert(value is T, $"value:{value} is not type of" + typeof(T).Name);
         }
 
+        private object GetXValue(string key)
+        {
+            key = key.ToUpper();
+            switch (key)
+            {
+                case "AX": return AX;
+                case "BX": return BX;
+                case "CX": return CX;
+                case "DX": return DX;
+            }
+            throw new Exception($"unknown X key:${key}");
+        }
+
         public void DoOpCodes(IList<string> opCodes)
         {
             for (var i = 0; i < opCodes.Count; i++)
@@ -162,61 +213,20 @@ namespace Core.Script
                 {
 
                 }
-                else if (opCode == ScriptOps.NOT)
-                {
-                    var top = stack.Pop();
-                    AssertType<bool>(top);
-                    stack.Push(!(bool)top);
-                }
-                else if (opCode == ScriptOps.MOVE_TO_AX)
-                {
-                    var top = stack.Pop();
-                    AX = top;
-                }
-                else if (opCode == ScriptOps.MOVE_TO_BX)
-                {
-                    var top = stack.Pop();
-                    BX = top;
-                }
-                else if (opCode == ScriptOps.MOVE_TO_CX)
-                {
-                    var top = stack.Pop();
-                    CX = top;
-                }
-                else if (opCode == ScriptOps.MOVE_TO_DX)
-                {
-                    var top = stack.Pop();
-                    DX = top;
-                }
-                else if (opCode == ScriptOps.PARSE_BOOL)
-                {
-                    var b = bool.Parse(opCodes[++i]);
-                    stack.Push(b);
-                }
-                else if (opCode == ScriptOps.PARSE_INT)
-                {
-                    var n = int.Parse(opCodes[++i]);
-                    stack.Push(n);
-                }
-                else if (opCode == ScriptOps.PARSE_PVEC2F)
-                {
-                    var pVec2f = PVec2f.Parse(opCodes[++i]);
-                    stack.Push(pVec2f);
-                }
-                else if (opCode == ScriptOps.CLICK_TEMPLATE)
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.CLICK_TEMPLATE))
                 {
                     var arg1 = AX;
                     AssertType<ImgMatchResult>(arg1);
                     object arg2 = BX is PVec2f ? BX : new PVec2f(0, 0);
                     Invoke("ClickMatchedTemplate", arg1, arg2);
                 }
-                else if (opCode == ScriptOps.DO_CLICK)
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.DO_CLICK))
                 {
                     var arg1 = AX;
                     AssertType<PVec2f>(arg1);
                     Invoke("DoClick", arg1);
                 }
-                else if (opCode == ScriptOps.DO_DRAG)
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.DO_DRAG))
                 {
                     var arg1 = AX;
                     AssertType<PVec2f>(arg1);
@@ -226,18 +236,119 @@ namespace Core.Script
                     AssertType<int>(arg3);
                     Invoke("DoDrag", arg1, arg2, arg3);
                 }
-                //else if (opCode == ScriptOps.ASSERT_TRUE)
-                //{
-                //    var top = stack.Top();
-                //    Assert(top is bool && (bool)top, "assert stack top value true failed");
-                //}
-                else if (opCode == ScriptOps.TEMPLATE_MATCH)
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.ADD_COUNTER))
                 {
-                    var arg3 = stack.Pop();
-                    var arg2 = stack.Pop();
-                    var arg1 = stack.Pop();
-                    var result = Invoke("TemplateMatch", arg1, arg2, arg3);
+                    var arg1 = AX;
+                    AssertType<string>(arg1);
+                    var arg2 = BX;
+                    AssertType<int>(arg2);
+                    Invoke("AddCounter", arg1, arg2);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.SET_COUNTER))
+                {
+                    var arg1 = AX;
+                    AssertType<string>(arg1);
+                    var arg2 = BX;
+                    AssertType<int>(arg2);
+                    Invoke("SetCounter", arg1, arg2);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.CMP_COUNTER))
+                {
+                    var arg1 = BX;
+                    AssertType<string>(arg1);
+                    var arg2 = CX;
+                    AssertType<string>(arg2);
+                    var arg3 = DX;
+                    AssertType<int>(arg3);
+                    var result = Invoke("CompareCounter", arg1, arg2, arg3);
                     stack.Push(result);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.NOT))
+                {
+                    var top = stack.Pop();
+                    AssertType<bool>(top);
+                    stack.Push(!(bool)top);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.STACK_AND))
+                {
+                    AssertStackValueType<bool>(-1);
+                    AssertStackValueType<bool>(-2);
+                    var b1 = stack.Pop();
+                    var b2 = stack.Pop();
+                    stack.Push((bool)b1 && (bool)b2);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.STACK_OR))
+                {
+                    AssertStackValueType<bool>(-1);
+                    AssertStackValueType<bool>(-2);
+                    var b1 = stack.Pop();
+                    var b2 = stack.Pop();
+                    stack.Push((bool)b1 || (bool)b2);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.MOVE_TO_AX))
+                {
+                    var top = stack.Pop();
+                    AX = top;
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.MOVE_TO_BX))
+                {
+                    var top = stack.Pop();
+                    BX = top;
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.MOVE_TO_CX))
+                {
+                    var top = stack.Pop();
+                    CX = top;
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.MOVE_TO_DX))
+                {
+                    var top = stack.Pop();
+                    DX = top;
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.PARSE_BOOL))
+                {
+                    var b = bool.Parse(opCodes[++i]);
+                    stack.Push(b);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.PARSE_INT))
+                {
+                    var n = int.Parse(opCodes[++i]);
+                    stack.Push(n);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.PARSE_PVEC2F))
+                {
+                    var pVec2f = PVec2f.Parse(opCodes[++i]);
+                    stack.Push(pVec2f);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.PUSH_STRING))
+                {
+                    var str = opCodes[++i];
+                    stack.Push(str);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.PRINT))
+                {
+                    var val = opCodes[++i];
+                    Logger.GetInstance().Info("DoOpCodes", val);
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.PRINT_STACK))
+                {
+                    var offset = int.Parse(opCodes[++i]);
+                    var val = stack[offset];
+                    Logger.GetInstance().Info("DoOpCodes", $"the stack value of offset:{offset} is {val}");
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.PRINT_X))
+                {
+                    var key = opCodes[++i];
+                    var val = GetXValue(key);
+                    Logger.GetInstance().Info("DoOpCodes", $"the X value of key:{key} is {val}");
+                }
+                else if (ScriptOps.OpEquals(opCode, ScriptOps.TEMPLATE_MATCH))
+                {
+                    //var arg3 = stack.Pop();
+                    //var arg2 = stack.Pop();
+                    //var arg1 = stack.Pop();
+                    //var result = Invoke("TemplateMatch", arg1, arg2, arg3);
+                    //stack.Push(result);
                 }
             }
         }
@@ -272,6 +383,42 @@ namespace Core.Script
 
         [JsonIgnore]
         private IDictionary<string, ImgMatchResult> _templateMatchResults;
+
+        private IDictionary<string, int> _counters = new Dictionary<string, int>();
+
+        private void AddCounter(string key, int add)
+        {
+            if (_counters.ContainsKey(key))
+                _counters[key] += add;
+            else
+                _counters[key] = add;
+        }
+
+        private void SetCounter(string key, int val)
+        {
+            _counters[key] = val;
+        }
+
+        private bool CompareCounter(string key, string cmpOp, int compared)
+        {
+            var counterVal = _counters.ContainsKey(key) ? _counters[key] : 0;
+            if (CompareOps.OpEquals(cmpOp, CompareOps.GREATOR))
+            {
+                return counterVal > compared;
+            }
+            else if (CompareOps.OpEquals(cmpOp, CompareOps.EQUAL))
+            {
+                return counterVal == compared;
+            }
+            else if (CompareOps.OpEquals(cmpOp, CompareOps.SMALLER))
+            {
+                return counterVal < compared;
+            }
+            else
+            {
+                throw new Exception($"unknown CompareOp:{cmpOp}");
+            }
+        }
 
         private void TickStart()
         {
@@ -312,7 +459,7 @@ namespace Core.Script
                     {
                         var result = TemplateMatchByKey(condition.MatchKey);
                         stack.Push(result.Success);
-                        AX = result;
+                        if (result.Success) AX = result;
                     }
                     if (condition.OpCodes != null)
                     {
@@ -382,8 +529,7 @@ namespace Core.Script
 
         private void ClickMatchedTemplate(ImgMatchResult result, PVec2f offset)
         {
-            if (!result.Success)
-                return;
+            if (!result.Success) return;
             var pVec2f = result.GetMatchedRectCenterVec2f();
             pVec2f += offset;
             _emulator.DoTap(pVec2f);

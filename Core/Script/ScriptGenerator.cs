@@ -259,6 +259,75 @@ namespace Core.Script
                     },
                 }
             };
+            return script;
+        }
+
+
+        public static Script GenTestScript()
+        {
+            var script = new Script()
+            {
+                Identity = "Test",
+                Name = "测试脚本",
+
+                StopWhenException = false,
+
+                Segments =
+                {
+
+                    new Segment()
+                    {
+                        Priority = 90,
+                        Conditions =
+                        {
+                            new Condition() {
+                                OpCodes = new List<string>() {
+                                    ScriptOps.PUSH_STRING, "counter_key", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.PUSH_STRING, CompareOps.GREATOR, ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.PARSE_INT, "4", ScriptOps.MOVE_TO_DX,
+                                    ScriptOps.CMP_COUNTER,
+
+                                }
+                            },
+                        },
+                        Actions =
+                        {
+                            new Action()
+                            {
+                                OpCodes = {
+                                    //ScriptOps.CLICK_TEMPLATE
+                                    ScriptOps.PRINT, "OK",
+                                    ScriptOps.PUSH_STRING, "counter_key", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_INT, "0", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.SET_COUNTER,
+                                },
+                            },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 80,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "stage_normal_on", },
+                            new Condition() { MatchKey = "stage_normal_off", OpCodes = new List<string>() { ScriptOps.STACK_OR, ScriptOps.PRINT_X, "AX" } },
+                        },
+                        Actions =
+                        {
+                            new Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.CLICK_TEMPLATE,
+                                    ScriptOps.PUSH_STRING, "counter_key", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_INT, "1", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.ADD_COUNTER,
+                                },
+                            },
+                        }
+                    },
+                }
+            };
 
             return script;
         }
