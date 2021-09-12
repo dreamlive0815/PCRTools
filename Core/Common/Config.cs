@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using SysAction = System.Action;
 
 using Core.Emulators;
 using Core.Extensions;
+using Core.Script;
 using EventSystem;
 
 namespace Core.Common
@@ -45,7 +47,10 @@ namespace Core.Common
         public string GameKey { get; set; } = "PCR";
 
         public Region Region { get; set; } = Region.Taiwan;
-        
+
+        public List<ScriptMetaInfo> ScriptMetaInfos { get; set; } = new List<ScriptMetaInfo>();
+
+
     }
 
     public enum Region
@@ -123,7 +128,7 @@ namespace Core.Common
             emulatorItems.Text = "模拟器: 未选择";
             settingItems.DropDownItems.Add(emulatorItems);
             var emulatorMap = new Dictionary<string, Type>();
-            var refreshEmulatorCheckStatus = new Action(() =>
+            var refreshEmulatorCheckStatus = new SysAction(() =>
             {
                 foreach (ToolStripMenuItem item in emulatorItems.DropDownItems)
                 {
@@ -152,7 +157,7 @@ namespace Core.Common
             var regionItems = new ToolStripMenuItem();
             regionItems.Text = "区域";
             settingItems.DropDownItems.Add(regionItems);
-            var refreshRegionCheckStatus = new Action(() =>
+            var refreshRegionCheckStatus = new SysAction(() =>
             {
                 foreach (ToolStripMenuItem item in regionItems.DropDownItems)
                 {

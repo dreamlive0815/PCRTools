@@ -98,6 +98,12 @@
     <Compile Include="FrmRuntimeInfo.Designer.cs">
       <DependentUpon>FrmRuntimeInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmScriptManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmScriptManager.Designer.cs">
+      <DependentUpon>FrmScriptManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -111,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmRuntimeInfo.resx">
       <DependentUpon>FrmRuntimeInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmScriptManager.resx">
+      <DependentUpon>FrmScriptManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

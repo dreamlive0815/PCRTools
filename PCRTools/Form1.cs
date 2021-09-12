@@ -19,6 +19,8 @@ namespace PCRTools
     public partial class Form1 : Form
     {
 
+        private static readonly int MAX_SCRIPT_MENU_COUNT = 10;
+
         public Form1()
         {
             InitializeComponent();
@@ -27,9 +29,10 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            RefreshScriptMenuItems();
+
             RefreshText();
             RegisterEvents();
-
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -79,6 +82,7 @@ namespace PCRTools
 
             Logger.GetInstance().OnDebug += OnLoggerDebug;
             Logger.GetInstance().OnInfo += OnLoggerInfo;
+            Logger.GetInstance().OnWarn += OnLoggerWarn;
             Logger.GetInstance().OnError += OnLoggerError;
         }
 
@@ -90,6 +94,11 @@ namespace PCRTools
         private void OnLoggerInfo(string tag, string msg)
         {
             txtOutput.AppendLineThreadSafe($"[INFO][{tag}]{msg}");
+        }
+
+        private void OnLoggerWarn(string tag, string msg)
+        {
+            txtOutput.AppendLineThreadSafe($"[WARN][{tag}]{msg}", System.Drawing.Color.Orange);
         }
 
         private void OnLoggerError(string tag, string msg)
@@ -178,6 +187,35 @@ namespace PCRTools
             new FrmRuntimeInfo() { GetRuntimeInfoFunc = GetEmulatorDetail }.Show();
         }
 
+        void RefreshScriptMenuItems()
+        {
+            menuScripts.DropDownItems.Clear();
+
+            var items = menuScripts.DropDownItems;
+            var stopScriptMenu = new ToolStripMenuItem("停止脚本");
+            items.Add(stopScriptMenu);
+            items.Add(new ToolStripSeparator());
+
+            var count = 0;
+            var infos = ConfigMgr.GetConfig().ScriptMetaInfos;
+            foreach (var info in infos)
+            {
+                if (!info.Enabled)
+                    continue;
+                var script = ScriptMgr.GetInstance().GetScript(info.Identity);
+                var scriptItem = new ScriptMenuItem(script.Name);
+                scriptItem.ScriptMetaInfo = info;
+                items.Add(scriptItem);
+                count++;
+                if (count >= MAX_SCRIPT_MENU_COUNT)
+                    break;
+            }
+
+            items.Add(new ToolStripSeparator());
+            var scriptMgrMenu = new ToolStripMenuItem("脚本管理器");
+            items.Add(scriptMgrMenu);
+        }
+
         private void menuStopScript_Click(object sender, EventArgs e)
         {
             ScriptMgr.GetInstance().StopDefaultScript();
@@ -186,14 +224,30 @@ namespace PCRTools
         private void menuTestScript_Click(object sender, EventArgs e)
         {
 
+            ScriptGenerator.GenReliabilityScript().Save();
+            ScriptGenerator.GenStagelineAutoBattle().Save();
+
             var script = ScriptGenerator.GenTestScript();
-            script.Save("script.json");
             //var script = Script.LoadFromFile("script.json");
 
-            Emulator.AssertDefaultAliveAndInit();
-            script.SetEmulator(Emulator.Default);
-            ScriptMgr.GetInstance().RunDefaultScript(script);
+            //Emulator.AssertDefaultAliveAndInit();
+            //script.SetEmulator(Emulator.Default);
+            //ScriptMgr.GetInstance().RunDefaultScript(script);
 
         }
+
+        private void menuScriptMgr_Click(object sender, EventArgs e)
+        {
+            new FrmScriptManager().Show();
+        }
+    }
+
+    public class ScriptMenuItem : ToolStripMenuItem
+    {
+        public ScriptMenuItem(string text) : base(text)
+        {
+        }
+
+        public ScriptMetaInfo ScriptMetaInfo { get; set; }
     }
 }

@@ -17,6 +17,8 @@ namespace Core.Common
 
         public event Action<string, string> OnInfo;
 
+        public event Action<string, string> OnWarn;
+
         public event Action<string, string> OnError;
 
         private Logger()
@@ -36,6 +38,12 @@ namespace Core.Common
         {
             OnInfo?.Invoke(tag, msg);
             Console.WriteLine($"[INFO]{msg}");
+        }
+
+        public void Warn(string tag, string msg)
+        {
+            OnWarn?.Invoke(tag, msg);
+            Console.WriteLine($"[WARN]{msg}");
         }
 
         public void Error(string tag, string msg)

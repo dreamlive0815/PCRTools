@@ -34,6 +34,7 @@
             this.menuScripts = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStopScript = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTestScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuScriptMgr = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.menuEmulatorInfo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuPCRArena = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,6 +46,7 @@
             this.menuScreenshot = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.txtOutput = new System.Windows.Forms.RichTextBox();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,14 +60,15 @@
             this.menuCmds});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(795, 25);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1060, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // menuClearOutput
             // 
             this.menuClearOutput.Name = "menuClearOutput";
-            this.menuClearOutput.Size = new System.Drawing.Size(68, 21);
+            this.menuClearOutput.Size = new System.Drawing.Size(81, 24);
             this.menuClearOutput.Text = "清空输出";
             this.menuClearOutput.Click += new System.EventHandler(this.menuClearOutput_Click);
             // 
@@ -73,24 +76,33 @@
             // 
             this.menuScripts.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuStopScript,
-            this.menuTestScript});
+            this.menuTestScript,
+            this.menuScriptMgr,
+            this.toolStripSeparator1});
             this.menuScripts.Name = "menuScripts";
-            this.menuScripts.Size = new System.Drawing.Size(44, 21);
+            this.menuScripts.Size = new System.Drawing.Size(51, 24);
             this.menuScripts.Text = "脚本";
             // 
             // menuStopScript
             // 
             this.menuStopScript.Name = "menuStopScript";
-            this.menuStopScript.Size = new System.Drawing.Size(124, 22);
+            this.menuStopScript.Size = new System.Drawing.Size(216, 26);
             this.menuStopScript.Text = "停止脚本";
             this.menuStopScript.Click += new System.EventHandler(this.menuStopScript_Click);
             // 
             // menuTestScript
             // 
             this.menuTestScript.Name = "menuTestScript";
-            this.menuTestScript.Size = new System.Drawing.Size(124, 22);
+            this.menuTestScript.Size = new System.Drawing.Size(216, 26);
             this.menuTestScript.Text = "脚本测试";
             this.menuTestScript.Click += new System.EventHandler(this.menuTestScript_Click);
+            // 
+            // menuScriptMgr
+            // 
+            this.menuScriptMgr.Name = "menuScriptMgr";
+            this.menuScriptMgr.Size = new System.Drawing.Size(216, 26);
+            this.menuScriptMgr.Text = "脚本管理器";
+            this.menuScriptMgr.Click += new System.EventHandler(this.menuScriptMgr_Click);
             // 
             // menuTools
             // 
@@ -99,27 +111,27 @@
             this.menuPCRArena,
             this.menuPCRArenaTimer});
             this.menuTools.Name = "menuTools";
-            this.menuTools.Size = new System.Drawing.Size(44, 21);
+            this.menuTools.Size = new System.Drawing.Size(51, 24);
             this.menuTools.Text = "工具";
             // 
             // menuEmulatorInfo
             // 
             this.menuEmulatorInfo.Name = "menuEmulatorInfo";
-            this.menuEmulatorInfo.Size = new System.Drawing.Size(171, 22);
+            this.menuEmulatorInfo.Size = new System.Drawing.Size(203, 26);
             this.menuEmulatorInfo.Text = "模拟器实时信息";
             this.menuEmulatorInfo.Click += new System.EventHandler(this.menuEmulatorInfo_Click);
             // 
             // menuPCRArena
             // 
             this.menuPCRArena.Name = "menuPCRArena";
-            this.menuPCRArena.Size = new System.Drawing.Size(171, 22);
+            this.menuPCRArena.Size = new System.Drawing.Size(203, 26);
             this.menuPCRArena.Text = "PCR竞技场";
             this.menuPCRArena.Click += new System.EventHandler(this.menuPCRArena_Click);
             // 
             // menuPCRArenaTimer
             // 
             this.menuPCRArenaTimer.Name = "menuPCRArenaTimer";
-            this.menuPCRArenaTimer.Size = new System.Drawing.Size(171, 22);
+            this.menuPCRArenaTimer.Size = new System.Drawing.Size(203, 26);
             this.menuPCRArenaTimer.Text = "PCR竞技场计时器";
             this.menuPCRArenaTimer.Click += new System.EventHandler(this.menuPCRArenaTimer_Click);
             // 
@@ -131,34 +143,34 @@
             this.menuTestTap,
             this.menuScreenshot});
             this.menuCmds.Name = "menuCmds";
-            this.menuCmds.Size = new System.Drawing.Size(68, 21);
+            this.menuCmds.Size = new System.Drawing.Size(81, 24);
             this.menuCmds.Text = "常用命令";
             // 
             // menuRestartAdbServer
             // 
             this.menuRestartAdbServer.Name = "menuRestartAdbServer";
-            this.menuRestartAdbServer.Size = new System.Drawing.Size(161, 22);
+            this.menuRestartAdbServer.Size = new System.Drawing.Size(192, 26);
             this.menuRestartAdbServer.Text = "重启AdbServer";
             this.menuRestartAdbServer.Click += new System.EventHandler(this.menuRestartAdbServer_Click);
             // 
             // menuConnectAdbServer
             // 
             this.menuConnectAdbServer.Name = "menuConnectAdbServer";
-            this.menuConnectAdbServer.Size = new System.Drawing.Size(161, 22);
+            this.menuConnectAdbServer.Size = new System.Drawing.Size(192, 26);
             this.menuConnectAdbServer.Text = "连接AdbServer";
             this.menuConnectAdbServer.Click += new System.EventHandler(this.menuConnectAdbServer_Click);
             // 
             // menuTestTap
             // 
             this.menuTestTap.Name = "menuTestTap";
-            this.menuTestTap.Size = new System.Drawing.Size(161, 22);
+            this.menuTestTap.Size = new System.Drawing.Size(192, 26);
             this.menuTestTap.Text = "测试点击";
             this.menuTestTap.Click += new System.EventHandler(this.menuTestTap_Click);
             // 
             // menuScreenshot
             // 
             this.menuScreenshot.Name = "menuScreenshot";
-            this.menuScreenshot.Size = new System.Drawing.Size(161, 22);
+            this.menuScreenshot.Size = new System.Drawing.Size(192, 26);
             this.menuScreenshot.Text = "截取模拟器界面";
             this.menuScreenshot.Click += new System.EventHandler(this.menuScreenshot_Click);
             // 
@@ -172,22 +184,28 @@
             // 
             this.txtOutput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtOutput.Font = new System.Drawing.Font("Consolas", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOutput.Location = new System.Drawing.Point(0, 25);
-            this.txtOutput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtOutput.Location = new System.Drawing.Point(0, 28);
+            this.txtOutput.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.ReadOnly = true;
-            this.txtOutput.Size = new System.Drawing.Size(795, 457);
+            this.txtOutput.Size = new System.Drawing.Size(1060, 574);
             this.txtOutput.TabIndex = 3;
             this.txtOutput.Text = "";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(795, 482);
+            this.ClientSize = new System.Drawing.Size(1060, 602);
             this.Controls.Add(this.txtOutput);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
@@ -218,6 +236,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuScripts;
         private System.Windows.Forms.ToolStripMenuItem menuStopScript;
         private System.Windows.Forms.ToolStripMenuItem menuTestScript;
+        private System.Windows.Forms.ToolStripMenuItem menuScriptMgr;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 

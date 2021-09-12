@@ -83,13 +83,18 @@ namespace Core.Script
     public class Script
     {
 
-        public static Script LoadFromFile(string filePath)
+        public static string FileExt => ".script.json";
+
+        public static Script FromFile(string filePath)
         {
             var content = File.ReadAllText(filePath);
             var script = JsonUtils.DeserializeObject<Script>(content);
+            if (string.IsNullOrWhiteSpace(script.Identity))
+            {
+                throw new Exception("script identity cannot be empty, filePath=" + filePath);
+            }
             return script;
         }
-
 
         private static readonly int STACK_CAPACITY = 32;
 
@@ -509,7 +514,7 @@ namespace Core.Script
 
             var sourceRectKey = matchKey + "_source";
             if (!data.RVec4fs.ContainsKey(sourceRectKey))
-                Logger.GetInstance().Debug("TemplateMatchByKey", $"SourceRect RVec4f of key:${sourceRectKey} is missing");
+                Logger.GetInstance().Warn("TemplateMatchByKey", $"SourceRect RVec4f of key:${sourceRectKey} is missing");
             var rectVec4f = data.RVec4fs.ContainsKey(sourceRectKey) ? data.RVec4fs[sourceRectKey] : new RVec4f(0, 0, 1, 1);
             var sourceRect = screenShot.GetPartial(rectVec4f);
             var templateKey = matchKey + ".png";
@@ -545,8 +550,15 @@ namespace Core.Script
             _emulator.DoTap(point);
         }
 
+        public void Save()
+        {
+            Save($"{Identity}{FileExt}");
+        }
+
         public void Save(string filePath)
         {
+            if (!filePath.EndsWith(FileExt))
+                filePath = filePath + FileExt;
             var jsonStr = JsonUtils.SerializeObject(this);
             File.WriteAllText(filePath, jsonStr);
         }
@@ -646,5 +658,18 @@ namespace Core.Script
     public class Action
     {
         public List<string> OpCodes { get; set; } = new List<string>();
+    }
+
+
+    public class ScriptMetaInfo
+    {
+
+        public string FilePath { get; set; }
+
+        public string Identity { get; set; }
+
+        public bool Enabled { get; set; } = true;
+
+        //public int Priority { get; set; }
     }
 }

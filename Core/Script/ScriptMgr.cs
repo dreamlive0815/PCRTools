@@ -1,8 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,6 +21,95 @@ namespace Core.Script
                 instance = new ScriptMgr();
             }
             return instance;
+        }
+
+        public List<ScriptMetaInfo> ScriptMetaInfos
+        {
+            get { return ConfigMgr.GetConfig().ScriptMetaInfos; }
+            set { ConfigMgr.GetConfig().ScriptMetaInfos = value; }
+        }
+
+        private IDictionary<string, Script> _scripts = new Dictionary<string, Script>();
+
+
+        private ScriptMetaInfo GetScriptMetaInfoByIdentity(string identity)
+        {
+            foreach (var info in ScriptMetaInfos)
+            {
+                if (info.Identity == identity)
+                    return info;
+            }
+            return null;
+        }
+
+        private ScriptMetaInfo GetScriptMetaInfoByFilePath(string filePath)
+        {
+            foreach (var info in ScriptMetaInfos)
+            {
+                if (info.FilePath == filePath)
+                    return info;
+            }
+            return null;
+        }
+
+        public Script GetScript(string identity)
+        {
+            if (_scripts.ContainsKey(identity))
+                return _scripts[identity];
+            var info = GetScriptMetaInfoByIdentity(identity);
+            if (info != null)
+            {
+                var script = Script.FromFile(info.FilePath);
+                _scripts[script.Identity] = script;
+                return script;
+            }
+            return null;
+        }
+
+        private void AddScriptFunc(string filePath)
+        {
+            var sameFilePath = GetScriptMetaInfoByFilePath(filePath);
+            if (sameFilePath != null)
+            {
+                Logger.GetInstance().Warn("AddScript", $"script of filePath:${filePath} already loaded");
+                return;
+            }
+            var script = Script.FromFile(filePath);
+            var sameIdentity = GetScriptMetaInfoByIdentity(script.Identity);
+            if (sameIdentity != null)
+            {
+                Logger.GetInstance().Warn("AddScript", $"script of identity:${script.Identity} already loaded");
+                return;
+            }
+            var newMetaInfo = new ScriptMetaInfo()
+            {
+                FilePath = filePath,
+                Identity = script.Identity,
+            };
+            ScriptMetaInfos.Add(newMetaInfo);
+            _scripts[script.Identity] = script;
+        }
+
+        public void AddScript(string filePath)
+        {
+            AddScriptFunc(filePath);
+        }
+
+        public void AddScripts(IList<string> filePaths)
+        {
+            foreach (var filePath in filePaths)
+            {
+                AddScriptFunc(filePath);
+            }
+        }
+
+        public void AddScriptsFromDirectory(string dirPath)
+        {
+            var filePaths = Directory.GetFiles(dirPath, Script.FileExt);
+            foreach (var filePath in filePaths)
+            {
+                AddScriptFunc(filePath);
+            }
         }
 
         private ScriptController defaultScriptController;
