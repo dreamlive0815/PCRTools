@@ -355,6 +355,10 @@ namespace Core.Script
                     //var result = Invoke("TemplateMatch", arg1, arg2, arg3);
                     //stack.Push(result);
                 }
+                else
+                {
+                    Logger.GetInstance().Warn("DoOpCodes", $"unknown opCode:{opCode}");
+                }
             }
         }
 
@@ -483,6 +487,7 @@ namespace Core.Script
                 }
                 if (_breakSegment)
                     continue;
+                Logger.GetInstance().Debug("ScriptTickSegments", $"do actions which comments:{seg.Comment}");
                 if (b)
                 {
                     foreach (var action in seg.Actions)
@@ -522,6 +527,7 @@ namespace Core.Script
             var threshold = data.GetThreshold(templateKey);
 
             var result = TemplateMatch(sourceRect, template, threshold);
+            result.MatchKey = matchKey;
             _templateMatchResults[matchKey] = result;
             return result;
         }

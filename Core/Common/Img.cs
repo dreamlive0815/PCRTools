@@ -212,6 +212,8 @@ namespace Core.Common
 
         public SysSize SizeOfRoot { get; set; }
 
+        public string MatchKey { get; set; }
+
         public PVec2f GetMatchedRectCenterVec2f()
         {
             if (SizeOfRoot.Width == 0 || SizeOfRoot.Height == 0)
