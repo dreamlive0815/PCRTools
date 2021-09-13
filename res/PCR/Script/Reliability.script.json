@@ -1,0 +1,168 @@
+{
+  "Identity": "Reliability",
+  "Name": "活动关卡信赖度",
+  "Segments": [
+    {
+      "Group": "default",
+      "Priority": 100,
+      "Conditions": [
+        {
+          "MatchKey": "download_without_voice"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 70,
+      "Conditions": [
+        {
+          "MatchKey": "reliability_entry_text"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 90,
+      "Conditions": [
+        {
+          "MatchKey": "reliability_title"
+        },
+        {
+          "MatchKey": "reliability_new_tag"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.00,0.38",
+            "MOVE_TO_BX",
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "if DO match reliability_title AND DO match reliability_new_tag"
+    },
+    {
+      "Group": "default",
+      "Priority": 90,
+      "Conditions": [
+        {
+          "MatchKey": "reliability_title"
+        },
+        {
+          "MatchKey": "reliability_new_tag",
+          "OpCodes": [
+            "NOT"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.77,0.70",
+            "MOVE_TO_AX",
+            "PARSE_PVEC2F",
+            "0.77,0.23",
+            "MOVE_TO_BX",
+            "PARSE_INT",
+            "1200",
+            "MOVE_TO_CX",
+            "DO_DRAG"
+          ]
+        }
+      ],
+      "Comment": "if DO match reliability_title AND NOT match reliability_new_tag"
+    },
+    {
+      "Group": "default",
+      "Priority": 80,
+      "Conditions": [
+        {
+          "MatchKey": "reliability_present_preview"
+        },
+        {
+          "MatchKey": "reliability_item_new_tag"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.10,0.10",
+            "MOVE_TO_BX",
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "if DO match reliability_present_preview AND DO match reliability_item_new_tag"
+    },
+    {
+      "Group": "default",
+      "Priority": 80,
+      "Conditions": [
+        {
+          "MatchKey": "reliability_present_preview"
+        },
+        {
+          "MatchKey": "reliability_item_new_tag",
+          "OpCodes": [
+            "NOT"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.03,0.05",
+            "MOVE_TO_AX",
+            "DO_CLICK"
+          ]
+        }
+      ],
+      "Comment": "if DO match reliability_present_preview AND NOT match reliability_item_new_tag, click back button"
+    },
+    {
+      "Group": "default",
+      "Priority": 0,
+      "Conditions": [
+        {
+          "OpCodes": [
+            "PARSE_BOOL",
+            "true"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.49,0.41",
+            "MOVE_TO_AX",
+            "DO_CLICK"
+          ]
+        }
+      ],
+      "Comment": "default, click choice 2"
+    }
+  ],
+  "MaxExecuteCount": 2147483647,
+  "StopWhenException": false,
+  "Interval": 2000
+}

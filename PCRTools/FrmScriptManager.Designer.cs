@@ -30,12 +30,18 @@
         {
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnIdentity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnFilePath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.menuMoveUp = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuMoveDown = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSwitchEnabled = new System.Windows.Forms.ToolStripMenuItem();
+            this.columnPriority = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.menuReloadScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuOpenScriptInExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,6 +51,7 @@
             this.columnIdentity,
             this.columnName,
             this.columnEnabled,
+            this.columnPriority,
             this.columnFilePath});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
@@ -61,6 +68,11 @@
             this.columnIdentity.Text = "标识符";
             this.columnIdentity.Width = 150;
             // 
+            // columnName
+            // 
+            this.columnName.Text = "名称";
+            this.columnName.Width = 120;
+            // 
             // columnEnabled
             // 
             this.columnEnabled.Text = "是否可用";
@@ -69,13 +81,18 @@
             // columnFilePath
             // 
             this.columnFilePath.Text = "文件路径";
-            this.columnFilePath.Width = 425;
+            this.columnFilePath.Width = 600;
             // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuAdd});
+            this.menuAdd,
+            this.menuMoveUp,
+            this.menuMoveDown,
+            this.menuSwitchEnabled,
+            this.menuReloadScript,
+            this.menuOpenScriptInExplorer});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(715, 28);
@@ -91,13 +108,46 @@
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Filter = "脚本文件|*.script.json";
             // 
-            // columnName
+            // menuMoveUp
             // 
-            this.columnName.Text = "名称";
-            this.columnName.Width = 120;
+            this.menuMoveUp.Name = "menuMoveUp";
+            this.menuMoveUp.Size = new System.Drawing.Size(51, 24);
+            this.menuMoveUp.Text = "上移";
+            this.menuMoveUp.Click += new System.EventHandler(this.menuMoveUp_Click);
+            // 
+            // menuMoveDown
+            // 
+            this.menuMoveDown.Name = "menuMoveDown";
+            this.menuMoveDown.Size = new System.Drawing.Size(51, 24);
+            this.menuMoveDown.Text = "下移";
+            this.menuMoveDown.Click += new System.EventHandler(this.menuMoveDown_Click);
+            // 
+            // menuSwitchEnabled
+            // 
+            this.menuSwitchEnabled.Name = "menuSwitchEnabled";
+            this.menuSwitchEnabled.Size = new System.Drawing.Size(111, 24);
+            this.menuSwitchEnabled.Text = "切换可用状态";
+            this.menuSwitchEnabled.Click += new System.EventHandler(this.menuSwitchEnabled_Click);
+            // 
+            // columnPriority
+            // 
+            this.columnPriority.Text = "优先级";
+            // 
+            // menuReloadScript
+            // 
+            this.menuReloadScript.Name = "menuReloadScript";
+            this.menuReloadScript.Size = new System.Drawing.Size(81, 24);
+            this.menuReloadScript.Text = "重载脚本";
+            this.menuReloadScript.Click += new System.EventHandler(this.menuReloadScript_Click);
+            // 
+            // menuOpenScriptInExplorer
+            // 
+            this.menuOpenScriptInExplorer.Name = "menuOpenScriptInExplorer";
+            this.menuOpenScriptInExplorer.Size = new System.Drawing.Size(156, 24);
+            this.menuOpenScriptInExplorer.Text = "在文件管理器中打开";
+            this.menuOpenScriptInExplorer.Click += new System.EventHandler(this.menuOpenScriptInExplorer_Click);
             // 
             // FrmScriptManager
             // 
@@ -109,6 +159,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FrmScriptManager";
             this.Text = "FrmScriptManager";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmScriptManager_FormClosed);
             this.Load += new System.EventHandler(this.FrmScriptManager_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -127,5 +178,11 @@
         private System.Windows.Forms.ToolStripMenuItem menuAdd;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ColumnHeader columnName;
+        private System.Windows.Forms.ToolStripMenuItem menuMoveUp;
+        private System.Windows.Forms.ToolStripMenuItem menuMoveDown;
+        private System.Windows.Forms.ToolStripMenuItem menuSwitchEnabled;
+        private System.Windows.Forms.ColumnHeader columnPriority;
+        private System.Windows.Forms.ToolStripMenuItem menuReloadScript;
+        private System.Windows.Forms.ToolStripMenuItem menuOpenScriptInExplorer;
     }
 }

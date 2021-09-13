@@ -206,7 +206,7 @@ namespace Core.Script
                 case "CX": return CX;
                 case "DX": return DX;
             }
-            throw new Exception($"unknown X key:${key}");
+            throw new Exception($"unknown X key:{key}");
         }
 
         public void DoOpCodes(IList<string> opCodes)
@@ -670,6 +670,6 @@ namespace Core.Script
 
         public bool Enabled { get; set; } = true;
 
-        //public int Priority { get; set; }
+        public int Priority { get; set; }
     }
 }

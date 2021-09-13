@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Core.Common;
+using EventSystem;
 
 namespace Core.Script
 {
@@ -23,6 +24,31 @@ namespace Core.Script
             return instance;
         }
 
+        private ScriptMgr()
+        {
+            if (ScriptMetaInfos.Count == 0)
+            {
+                LoadDefaultScripts();
+            }
+            SortScriptMetaInfos();
+        }
+
+        public void LoadDefaultScripts()
+        {
+            var dirPath = ResourceManager.Default.GetFullPath("${G}/Script");
+            AddScriptsFromDirectory(dirPath);
+        }
+
+        public void SortScriptMetaInfos()
+        {
+            ScriptMetaInfos.Sort((a, b) =>
+            {
+                //if (a.Enabled != b.Enabled)
+                //    return -a.Enabled.CompareTo(b.Enabled);
+                return -a.Priority.CompareTo(b.Priority);
+            });
+        }
+
         public List<ScriptMetaInfo> ScriptMetaInfos
         {
             get { return ConfigMgr.GetConfig().ScriptMetaInfos; }
@@ -30,7 +56,6 @@ namespace Core.Script
         }
 
         private IDictionary<string, Script> _scripts = new Dictionary<string, Script>();
-
 
         private ScriptMetaInfo GetScriptMetaInfoByIdentity(string identity)
         {
@@ -66,19 +91,25 @@ namespace Core.Script
             return null;
         }
 
+        public Script ReloadScript(string identity)
+        {
+            _scripts.Remove(identity);
+            return GetScript(identity);
+        }
+
         private void AddScriptFunc(string filePath)
         {
             var sameFilePath = GetScriptMetaInfoByFilePath(filePath);
             if (sameFilePath != null)
             {
-                Logger.GetInstance().Warn("AddScript", $"script of filePath:${filePath} already loaded");
+                Logger.GetInstance().Warn("AddScript", $"script of filePath:{filePath} already loaded");
                 return;
             }
             var script = Script.FromFile(filePath);
             var sameIdentity = GetScriptMetaInfoByIdentity(script.Identity);
             if (sameIdentity != null)
             {
-                Logger.GetInstance().Warn("AddScript", $"script of identity:${script.Identity} already loaded");
+                Logger.GetInstance().Warn("AddScript", $"script of identity:{script.Identity} already loaded");
                 return;
             }
             var newMetaInfo = new ScriptMetaInfo()
@@ -93,6 +124,8 @@ namespace Core.Script
         public void AddScript(string filePath)
         {
             AddScriptFunc(filePath);
+            SortScriptMetaInfos();
+            EventMgr.FireEvent(EventKeys.ScriptMetaInfosChanged);
         }
 
         public void AddScripts(IList<string> filePaths)
@@ -101,15 +134,24 @@ namespace Core.Script
             {
                 AddScriptFunc(filePath);
             }
+            SortScriptMetaInfos();
+            EventMgr.FireEvent(EventKeys.ScriptMetaInfosChanged);
         }
 
         public void AddScriptsFromDirectory(string dirPath)
         {
-            var filePaths = Directory.GetFiles(dirPath, Script.FileExt);
+            if (!Directory.Exists(dirPath))
+            {
+                Logger.GetInstance().Warn("AddScriptsFromDirectory", $"dirPath:{dirPath} not exist");
+                return;
+            }
+            var filePaths = Directory.GetFiles(dirPath, "*" + Script.FileExt);
             foreach (var filePath in filePaths)
             {
                 AddScriptFunc(filePath);
             }
+            SortScriptMetaInfos();
+            EventMgr.FireEvent(EventKeys.ScriptMetaInfosChanged);
         }
 
         private ScriptController defaultScriptController;

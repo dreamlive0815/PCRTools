@@ -29,7 +29,7 @@ namespace Core.Common
         public static void HandleError(Exception e)
         {
             e = GetInnermostException(e);
-            if (e is HandledException) return;
+            if (e is IHandled) return;
             MessageBox.Show(GetErrorDescription(e), "Error");
         }
 
@@ -37,7 +37,7 @@ namespace Core.Common
         {
             e = GetInnermostException(e);
             var desc = e.Message;
-            if (ConfigMgr.GetConfig().Debug)
+            if (!(e is INotPrintStacktrace) && ConfigMgr.GetConfig().Debug)
             {
                 desc += "\n" + e.StackTrace;
             }

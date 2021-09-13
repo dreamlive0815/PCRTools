@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using SysAction = System.Action;
 
 using Core.Common;
 using Core.Emulators;
@@ -29,10 +30,12 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            RefreshScriptMenuItems();
+            RegisterEvents();
+
+            ScriptMgr.GetInstance();
 
             RefreshText();
-            RegisterEvents();
+            RefreshScriptMenuItems();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -79,6 +82,7 @@ namespace PCRTools
         {
             EventMgr.RegisterListener(EventKeys.ConfigEmulatorTypeChanged, (args) => { RefreshText(); });
             EventMgr.RegisterListener(EventKeys.ConfigRegionChanged, (args) => { RefreshText(); });
+            EventMgr.RegisterListener(EventKeys.ScriptMetaInfosChanged, (args) => { Invoke(new SysAction(RefreshScriptMenuItems)); });
 
             Logger.GetInstance().OnDebug += OnLoggerDebug;
             Logger.GetInstance().OnInfo += OnLoggerInfo;
@@ -193,6 +197,7 @@ namespace PCRTools
 
             var items = menuScripts.DropDownItems;
             var stopScriptMenu = new ToolStripMenuItem("停止脚本");
+            stopScriptMenu.Click += menuStopScript_Click;
             items.Add(stopScriptMenu);
             items.Add(new ToolStripSeparator());
 
@@ -205,6 +210,7 @@ namespace PCRTools
                 var script = ScriptMgr.GetInstance().GetScript(info.Identity);
                 var scriptItem = new ScriptMenuItem(script.Name);
                 scriptItem.ScriptMetaInfo = info;
+                scriptItem.Click += menuScriptItem_Click;
                 items.Add(scriptItem);
                 count++;
                 if (count >= MAX_SCRIPT_MENU_COUNT)
@@ -213,27 +219,25 @@ namespace PCRTools
 
             items.Add(new ToolStripSeparator());
             var scriptMgrMenu = new ToolStripMenuItem("脚本管理器");
+            scriptMgrMenu.Click += menuScriptMgr_Click;
             items.Add(scriptMgrMenu);
+        }
+
+        private void menuScriptItem_Click(object sender, EventArgs e)
+        {
+            Emulator.AssertDefaultAliveAndInit();
+            var menuItem = (ScriptMenuItem)sender;
+            var identity = menuItem.ScriptMetaInfo.Identity;
+            var script = ScriptMgr.GetInstance().GetScript(identity);
+            script.SetEmulator(Emulator.Default);
+            ScriptMgr.GetInstance().RunDefaultScript(script);
+            menuItem.Text = script.Name + "[Running]";
         }
 
         private void menuStopScript_Click(object sender, EventArgs e)
         {
             ScriptMgr.GetInstance().StopDefaultScript();
-        }
-
-        private void menuTestScript_Click(object sender, EventArgs e)
-        {
-
-            ScriptGenerator.GenReliabilityScript().Save();
-            ScriptGenerator.GenStagelineAutoBattle().Save();
-
-            var script = ScriptGenerator.GenTestScript();
-            //var script = Script.LoadFromFile("script.json");
-
-            //Emulator.AssertDefaultAliveAndInit();
-            //script.SetEmulator(Emulator.Default);
-            //ScriptMgr.GetInstance().RunDefaultScript(script);
-
+            RefreshScriptMenuItems();
         }
 
         private void menuScriptMgr_Click(object sender, EventArgs e)

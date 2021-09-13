@@ -1,0 +1,115 @@
+{
+  "Identity": "Stageline",
+  "Name": "关卡自动推图",
+  "Segments": [
+    {
+      "Group": "default",
+      "Priority": 100,
+      "Conditions": [
+        {
+          "MatchKey": "button_close"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 90,
+      "Conditions": [
+        {
+          "MatchKey": "stage_next_tag"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.00,0.14",
+            "MOVE_TO_BX",
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 80,
+      "Conditions": [
+        {
+          "MatchKey": "enter_battle"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 70,
+      "Conditions": [
+        {
+          "MatchKey": "enter_battle_prepare"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 60,
+      "Conditions": [
+        {
+          "MatchKey": "battle_next_step"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 0,
+      "Conditions": [
+        {
+          "OpCodes": [
+            "PARSE_BOOL",
+            "true"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.5,0.5",
+            "MOVE_TO_AX",
+            "DO_CLICK"
+          ]
+        }
+      ],
+      "Comment": "default, click screen center"
+    }
+  ],
+  "MaxExecuteCount": 2147483647,
+  "StopWhenException": false,
+  "Interval": 2000
+}

@@ -77,5 +77,7 @@ namespace EventSystem
         public static string ConfigEmulatorTypeChanged { get; } = "ConfigEmulatorTypeChanged";
 
         public static string ConfigRegionChanged { get; } = "ConfigRegionChanged";
+
+        public static string ScriptMetaInfosChanged { get; } = "ScriptMetaInfosChanged";
     }
 }

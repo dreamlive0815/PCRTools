@@ -86,6 +86,7 @@
     <Compile Include="Emulators\NOXEmulator.cs" />
     <Compile Include="EventSystem.cs" />
     <Compile Include="Exceptions\HandledException.cs" />
+    <Compile Include="Exceptions\INotPrintStacktrace.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\DictionaryExtension.cs" />
     <Compile Include="Extensions\OpenCvExtension.cs" />
