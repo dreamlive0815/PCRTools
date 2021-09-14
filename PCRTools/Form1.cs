@@ -221,6 +221,22 @@ namespace PCRTools
             var scriptMgrMenu = new ToolStripMenuItem("脚本管理器");
             scriptMgrMenu.Click += menuScriptMgr_Click;
             items.Add(scriptMgrMenu);
+
+
+#if DEBUG
+            items.Add(new ToolStripSeparator());
+            var testScriptMenu = new ToolStripMenuItem("脚本测试");
+            testScriptMenu.Click += TestScriptMenu_Click;
+            items.Add(testScriptMenu);
+#endif
+        }
+
+        private void TestScriptMenu_Click(object sender, EventArgs e)
+        {
+            Emulator.AssertDefaultAliveAndInit();
+            var script = ScriptGenerator.GenStagelineAutoBattle();
+            script.SetEmulator(Emulator.Default);
+            ScriptMgr.GetInstance().RunDefaultScript(script);
         }
 
         private void menuScriptItem_Click(object sender, EventArgs e)

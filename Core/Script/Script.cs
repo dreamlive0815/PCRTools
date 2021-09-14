@@ -73,11 +73,15 @@ namespace Core.Script
             return op1 == op2;
         }
 
-        public static readonly string GREATOR = "GREATOR";
+        public static readonly string GREATER = "GREATER";
+
+        public static readonly string GREATER_OR_EQUAL = "GREATER_OR_EQUAL";
 
         public static readonly string EQUAL = "EQUAL";
 
         public static readonly string SMALLER = "SMALLER";
+
+        public static readonly string SMALLER_OR_EQUAL = "SMALLER_OR_EQUAL";
     }
 
     public class Script
@@ -411,9 +415,13 @@ namespace Core.Script
         private bool CompareCounter(string key, string cmpOp, int compared)
         {
             var counterVal = _counters.ContainsKey(key) ? _counters[key] : 0;
-            if (CompareOps.OpEquals(cmpOp, CompareOps.GREATOR))
+            if (CompareOps.OpEquals(cmpOp, CompareOps.GREATER))
             {
                 return counterVal > compared;
+            }
+            else if (CompareOps.OpEquals(cmpOp, CompareOps.GREATER_OR_EQUAL))
+            {
+                return counterVal >= compared;
             }
             else if (CompareOps.OpEquals(cmpOp, CompareOps.EQUAL))
             {
@@ -422,6 +430,10 @@ namespace Core.Script
             else if (CompareOps.OpEquals(cmpOp, CompareOps.SMALLER))
             {
                 return counterVal < compared;
+            }
+            else if (CompareOps.OpEquals(cmpOp, CompareOps.SMALLER_OR_EQUAL))
+            {
+                return counterVal <= compared;
             }
             else
             {
@@ -487,9 +499,9 @@ namespace Core.Script
                 }
                 if (_breakSegment)
                     continue;
-                Logger.GetInstance().Debug("ScriptTickSegments", $"do actions which comments:{seg.Comment}");
                 if (b)
                 {
+                    Logger.GetInstance().Debug("ScriptTickSegments", $"do actions which comments:{seg.Comment}");
                     foreach (var action in seg.Actions)
                     {
                         DoOpCodes(action.OpCodes);
@@ -506,8 +518,6 @@ namespace Core.Script
 
         private ImgMatchResult TemplateMatchByKey(string matchKey)
         {
-            Logger.GetInstance().Debug("TemplateMatch", $"matchKey={matchKey}");
-
             if (_templateMatchResults.ContainsKey(matchKey))
             {
                 return _templateMatchResults[matchKey];
@@ -526,6 +536,7 @@ namespace Core.Script
             var template = data.GetResizedImg(templateKey, screenShot.Size);
             var threshold = data.GetThreshold(templateKey);
 
+            Logger.GetInstance().Debug("TemplateMatch", $"matchKey={matchKey}");
             var result = TemplateMatch(sourceRect, template, threshold);
             result.MatchKey = matchKey;
             _templateMatchResults[matchKey] = result;
@@ -558,7 +569,8 @@ namespace Core.Script
 
         public void Save()
         {
-            Save($"{Identity}{FileExt}");
+            var path = ResourceManager.Default.GetFullPath("${G}/Script/" + $"{Identity}{FileExt}");
+            Save(path);
         }
 
         public void Save(string filePath)

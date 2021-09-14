@@ -57,7 +57,7 @@ namespace Core.Script
                             new Action()
                             {
                                 OpCodes = {
-                                    ScriptOps.PARSE_PVEC2F, "0.00,0.38", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.PARSE_PVEC2F, "0.00,0.10", ScriptOps.MOVE_TO_BX,
                                     ScriptOps.CLICK_TEMPLATE,
                                 },
                             },
@@ -141,7 +141,7 @@ namespace Core.Script
                             new Action()
                             {
                                 OpCodes = {
-                                    ScriptOps.PARSE_PVEC2F, "0.49,0.41", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_PVEC2F, "0.30,0.41", ScriptOps.MOVE_TO_AX,
                                     ScriptOps.DO_CLICK,
                                 },
                             },
@@ -169,6 +169,7 @@ namespace Core.Script
                     new Segment()
                     {
                         Priority = 100,
+                        Comment = "click button_close",
                         Conditions =
                         {
                             new Condition() { MatchKey = "button_close", },
@@ -182,8 +183,11 @@ namespace Core.Script
                     new Segment()
                     {
                         Priority = 90,
+                        Comment = "click stage_next_tag",
                         Conditions =
                         {
+                            new Condition() { MatchKey = "stage_normal_on", },
+                            new Condition() { MatchKey = "stage_normal_off", OpCodes = new List<string>() { ScriptOps.STACK_OR } },
                             new Condition() { MatchKey = "stage_next_tag", },
                         },
                         Actions =
@@ -197,10 +201,80 @@ namespace Core.Script
                             },
                         }
                     },
+                    new Segment()
+                    {
+                        Priority = 90,
+                        Comment = "in stageline scene, but no stage_next_tag and counter < 5, add counter",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "stage_normal_on", },
+                            new Condition() { MatchKey = "stage_normal_off", OpCodes = new List<string>() { ScriptOps.STACK_OR } },
+                            new Condition() { MatchKey = "stage_next_tag", OpCodes = new List<string>() { ScriptOps.NOT } },
+                            new Condition() {
+                                OpCodes = new List<string>() {
+                                    ScriptOps.PUSH_STRING, "counter_no_stage_new_tag", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.PUSH_STRING, CompareOps.SMALLER, ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.PARSE_INT, "5", ScriptOps.MOVE_TO_DX,
+                                    ScriptOps.CMP_COUNTER,
+                                }
+                            },
+                        },
+                        Actions =
+                        {
+                            new Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.PUSH_STRING, "counter_no_stage_new_tag", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_INT, "1", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.ADD_COUNTER,
+                                },
+                            },
+                        }
+                    },
+                    new Segment()
+                    {
+                        Priority = 90,
+                        Comment = "in stageline scene, but no stage_next_tag and counter >= 5, do drag and reset counter",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "stage_normal_on", },
+                            new Condition() { MatchKey = "stage_normal_off", OpCodes = new List<string>() { ScriptOps.STACK_OR } },
+                            new Condition() { MatchKey = "stage_next_tag", OpCodes = new List<string>() { ScriptOps.NOT } },
+                            new Condition() {
+                                OpCodes = new List<string>() {
+                                    ScriptOps.PUSH_STRING, "counter_no_stage_new_tag", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.PUSH_STRING, CompareOps.GREATER_OR_EQUAL, ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.PARSE_INT, "5", ScriptOps.MOVE_TO_DX,
+                                    ScriptOps.CMP_COUNTER,
+                                }
+                            },
+                        },
+                        Actions =
+                        {
+                            new Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.PARSE_PVEC2F, "0.6,0.5", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_PVEC2F, "0.5,0.5", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.PARSE_INT, "1200", ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.DO_DRAG,
+                                },
+                            },
+                            new Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.PUSH_STRING, "counter_no_stage_new_tag", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_INT, "0", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.SET_COUNTER,
+                                },
+                            },
+                        }
+                    },
 
                     new Segment()
                     {
                         Priority = 80,
+                        Comment = "click enter_battle",
                         Conditions =
                         {
                             new Condition() { MatchKey = "enter_battle", },
@@ -214,6 +288,7 @@ namespace Core.Script
                     new Segment()
                     {
                         Priority = 70,
+                        Comment = "click enter_battle_prepare",
                         Conditions =
                         {
                             new Condition() { MatchKey = "enter_battle_prepare", },
@@ -227,6 +302,7 @@ namespace Core.Script
                     new Segment()
                     {
                         Priority = 60,
+                        Comment = "click battle_next_step",
                         Conditions =
                         {
                             new Condition() { MatchKey = "battle_next_step", },
@@ -283,7 +359,7 @@ namespace Core.Script
                             new Condition() {
                                 OpCodes = new List<string>() {
                                     ScriptOps.PUSH_STRING, "counter_key", ScriptOps.MOVE_TO_BX,
-                                    ScriptOps.PUSH_STRING, CompareOps.GREATOR, ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.PUSH_STRING, CompareOps.GREATER, ScriptOps.MOVE_TO_CX,
                                     ScriptOps.PARSE_INT, "4", ScriptOps.MOVE_TO_DX,
                                     ScriptOps.CMP_COUNTER,
 

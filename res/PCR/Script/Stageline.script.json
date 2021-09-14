@@ -16,12 +16,22 @@
             "CLICK_TEMPLATE"
           ]
         }
-      ]
+      ],
+      "Comment": "click button_close"
     },
     {
       "Group": "default",
       "Priority": 90,
       "Conditions": [
+        {
+          "MatchKey": "stage_normal_on"
+        },
+        {
+          "MatchKey": "stage_normal_off",
+          "OpCodes": [
+            "STACK_OR"
+          ]
+        },
         {
           "MatchKey": "stage_next_tag"
         }
@@ -35,7 +45,120 @@
             "CLICK_TEMPLATE"
           ]
         }
-      ]
+      ],
+      "Comment": "click stage_next_tag"
+    },
+    {
+      "Group": "default",
+      "Priority": 90,
+      "Conditions": [
+        {
+          "MatchKey": "stage_normal_on"
+        },
+        {
+          "MatchKey": "stage_normal_off",
+          "OpCodes": [
+            "STACK_OR"
+          ]
+        },
+        {
+          "MatchKey": "stage_next_tag",
+          "OpCodes": [
+            "NOT"
+          ]
+        },
+        {
+          "OpCodes": [
+            "PUSH_STRING",
+            "counter_no_stage_new_tag",
+            "MOVE_TO_BX",
+            "PUSH_STRING",
+            "SMALLER",
+            "MOVE_TO_CX",
+            "PARSE_INT",
+            "5",
+            "MOVE_TO_DX",
+            "CMP_COUNTER"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PUSH_STRING",
+            "counter_no_stage_new_tag",
+            "MOVE_TO_AX",
+            "PARSE_INT",
+            "1",
+            "MOVE_TO_BX",
+            "ADD_COUNTER"
+          ]
+        }
+      ],
+      "Comment": "in stageline scene, but no stage_next_tag and counter < 5, add counter"
+    },
+    {
+      "Group": "default",
+      "Priority": 90,
+      "Conditions": [
+        {
+          "MatchKey": "stage_normal_on"
+        },
+        {
+          "MatchKey": "stage_normal_off",
+          "OpCodes": [
+            "STACK_OR"
+          ]
+        },
+        {
+          "MatchKey": "stage_next_tag",
+          "OpCodes": [
+            "NOT"
+          ]
+        },
+        {
+          "OpCodes": [
+            "PUSH_STRING",
+            "counter_no_stage_new_tag",
+            "MOVE_TO_BX",
+            "PUSH_STRING",
+            "GREATER_OR_EQUAL",
+            "MOVE_TO_CX",
+            "PARSE_INT",
+            "5",
+            "MOVE_TO_DX",
+            "CMP_COUNTER"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.6,0.5",
+            "MOVE_TO_AX",
+            "PARSE_PVEC2F",
+            "0.5,0.5",
+            "MOVE_TO_BX",
+            "PARSE_INT",
+            "1200",
+            "MOVE_TO_CX",
+            "DO_DRAG"
+          ]
+        },
+        {
+          "OpCodes": [
+            "PUSH_STRING",
+            "counter_no_stage_new_tag",
+            "MOVE_TO_AX",
+            "PARSE_INT",
+            "0",
+            "MOVE_TO_BX",
+            "SET_COUNTER"
+          ]
+        }
+      ],
+      "Comment": "in stageline scene, but no stage_next_tag and counter >= 5, do drag and reset counter"
     },
     {
       "Group": "default",
@@ -51,7 +174,8 @@
             "CLICK_TEMPLATE"
           ]
         }
-      ]
+      ],
+      "Comment": "click enter_battle"
     },
     {
       "Group": "default",
@@ -67,7 +191,8 @@
             "CLICK_TEMPLATE"
           ]
         }
-      ]
+      ],
+      "Comment": "click enter_battle_prepare"
     },
     {
       "Group": "default",
@@ -83,7 +208,8 @@
             "CLICK_TEMPLATE"
           ]
         }
-      ]
+      ],
+      "Comment": "click battle_next_step"
     },
     {
       "Group": "default",
