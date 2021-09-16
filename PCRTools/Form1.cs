@@ -30,6 +30,7 @@ namespace PCRTools
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //ScriptGenerator.GenStagelineAutoBattle().Save();
             RegisterEvents();
 
             ScriptMgr.GetInstance();

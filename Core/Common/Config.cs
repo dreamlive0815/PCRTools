@@ -180,7 +180,6 @@ namespace Core.Common
             }
             refreshRegionCheckStatus();
 
-#if DEBUG
             var openDirItem = new ToolStripMenuItem();
             openDirItem.Text = "打开工作目录";
             menuStrip.Items.Add(openDirItem);
@@ -188,7 +187,6 @@ namespace Core.Common
             {
                 Utils.OpenDirectoryInExplorer(Environment.CurrentDirectory);
             };
-#endif
 
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();

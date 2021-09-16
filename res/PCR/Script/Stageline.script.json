@@ -21,6 +21,23 @@
     },
     {
       "Group": "default",
+      "Priority": 95,
+      "Conditions": [
+        {
+          "MatchKey": "button_ok"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "click button_ok"
+    },
+    {
+      "Group": "default",
       "Priority": 90,
       "Conditions": [
         {
@@ -135,7 +152,7 @@
         {
           "OpCodes": [
             "PARSE_PVEC2F",
-            "0.6,0.5",
+            "0.55,0.5",
             "MOVE_TO_AX",
             "PARSE_PVEC2F",
             "0.5,0.5",

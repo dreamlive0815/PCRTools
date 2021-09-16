@@ -182,6 +182,20 @@ namespace Core.Script
 
                     new Segment()
                     {
+                        Priority = 95,
+                        Comment = "click button_ok",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_ok", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
                         Priority = 90,
                         Comment = "click stage_next_tag",
                         Conditions =
@@ -254,9 +268,9 @@ namespace Core.Script
                             new Action()
                             {
                                 OpCodes = {
-                                    ScriptOps.PARSE_PVEC2F, "0.6,0.5", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_PVEC2F, "0.55,0.5", ScriptOps.MOVE_TO_AX,
                                     ScriptOps.PARSE_PVEC2F, "0.5,0.5", ScriptOps.MOVE_TO_BX,
-                                    ScriptOps.PARSE_INT, "1200", ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.PARSE_INT, "1000", ScriptOps.MOVE_TO_CX,
                                     ScriptOps.DO_DRAG,
                                 },
                             },
