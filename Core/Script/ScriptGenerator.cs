@@ -341,7 +341,7 @@ namespace Core.Script
                             new Action()
                             {
                                 OpCodes = {
-                                    ScriptOps.PARSE_PVEC2F, "0.5,0.5", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_PVEC2F, "0.30,0.05", ScriptOps.MOVE_TO_AX,
                                     ScriptOps.DO_CLICK,
                                 },
                             },
