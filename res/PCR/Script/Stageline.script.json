@@ -4,7 +4,7 @@
   "Segments": [
     {
       "Group": "default",
-      "Priority": 100,
+      "Priority": 120,
       "Conditions": [
         {
           "MatchKey": "button_close"
@@ -21,7 +21,7 @@
     },
     {
       "Group": "default",
-      "Priority": 95,
+      "Priority": 110,
       "Conditions": [
         {
           "MatchKey": "button_ok"
@@ -35,6 +35,40 @@
         }
       ],
       "Comment": "click button_ok"
+    },
+    {
+      "Group": "default",
+      "Priority": 100,
+      "Conditions": [
+        {
+          "MatchKey": "button_shop_cancel"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "click button_shop_cancel"
+    },
+    {
+      "Group": "default",
+      "Priority": 95,
+      "Conditions": [
+        {
+          "MatchKey": "reliability_win_cancel"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "click reliability_win_cancel"
     },
     {
       "Group": "default",
@@ -108,11 +142,15 @@
             "PARSE_INT",
             "1",
             "MOVE_TO_BX",
-            "ADD_COUNTER"
+            "ADD_COUNTER",
+            "PARSE_PVEC2F",
+            "0.30,0.05",
+            "MOVE_TO_AX",
+            "DO_CLICK"
           ]
         }
       ],
-      "Comment": "in stageline scene, but no stage_next_tag and counter < 5, add counter"
+      "Comment": "in stageline scene, but no stage_next_tag and counter < 5, add counter and click left top"
     },
     {
       "Group": "default",
@@ -249,7 +287,7 @@
           ]
         }
       ],
-      "Comment": "default, click screen center"
+      "Comment": "default, click left top"
     }
   ],
   "MaxExecuteCount": 2147483647,

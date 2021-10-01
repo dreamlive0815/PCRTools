@@ -168,7 +168,7 @@ namespace Core.Script
 
                     new Segment()
                     {
-                        Priority = 100,
+                        Priority = 120,
                         Comment = "click button_close",
                         Conditions =
                         {
@@ -182,11 +182,39 @@ namespace Core.Script
 
                     new Segment()
                     {
-                        Priority = 95,
+                        Priority = 110,
                         Comment = "click button_ok",
                         Conditions =
                         {
                             new Condition() { MatchKey = "button_ok", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 100,
+                        Comment = "click button_shop_cancel",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_shop_cancel", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 95,
+                        Comment = "click reliability_win_cancel",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "reliability_win_cancel", },
                         },
                         Actions =
                         {
@@ -218,7 +246,7 @@ namespace Core.Script
                     new Segment()
                     {
                         Priority = 90,
-                        Comment = "in stageline scene, but no stage_next_tag and counter < 5, add counter",
+                        Comment = "in stageline scene, but no stage_next_tag and counter < 5, add counter and click left top",
                         Conditions =
                         {
                             new Condition() { MatchKey = "stage_normal_on", },
@@ -241,6 +269,8 @@ namespace Core.Script
                                     ScriptOps.PUSH_STRING, "counter_no_stage_new_tag", ScriptOps.MOVE_TO_AX,
                                     ScriptOps.PARSE_INT, "1", ScriptOps.MOVE_TO_BX,
                                     ScriptOps.ADD_COUNTER,
+                                    ScriptOps.PARSE_PVEC2F, "0.30,0.05", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.DO_CLICK,
                                 },
                             },
                         }
@@ -331,7 +361,7 @@ namespace Core.Script
                     new Segment()
                     {
                         Priority = 0,
-                        Comment = "default, click screen center",
+                        Comment = "default, click left top",
                         Conditions =
                         {
                             new Condition() { OpCodes = new List<string>() { ScriptOps.PARSE_BOOL, "true" } },
