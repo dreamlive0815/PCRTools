@@ -382,13 +382,12 @@ namespace Core.Script
             return script;
         }
 
-
-        public static Script GenTestScript()
+        public static Script GenReadMainStoryScript()
         {
             var script = new Script()
             {
-                Identity = "Test",
-                Name = "测试脚本",
+                Identity = "MainStory",
+                Name = "主线剧情",
 
                 StopWhenException = false,
 
@@ -397,16 +396,97 @@ namespace Core.Script
 
                     new Segment()
                     {
+                        Priority = 150,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "download_without_voice", },
+                        },
+                        Actions =
+                        {
+                            new Action() { OpCodes = { ScriptOps.CLICK_TEMPLATE }, },
+                        }
+                    },
+                    new Segment()
+                    {
+                        Priority = 130,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_close", },
+                        },
+                        Actions =
+                        {
+                            new Action() { OpCodes = { ScriptOps.CLICK_TEMPLATE }, },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 80,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "story_new_tag", },
+                        },
+                        Actions =
+                        {
+                            new Action() {
+                                OpCodes = {
+                                    ScriptOps.PARSE_PVEC2F, "0.00,0.10", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.CLICK_TEMPLATE
+                                },
+                            },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 110,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_skip", },
+                        },
+                        Actions =
+                        {
+                            new Action() { OpCodes = { ScriptOps.CLICK_TEMPLATE }, },
+                        }
+                    },
+                    new Segment()
+                    {
+                        Priority = 100,
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "skip_tag", },
+                        },
+                        Actions =
+                        {
+                            new Action() { OpCodes = { ScriptOps.CLICK_TEMPLATE }, },
+                        }
+                    },
+                    new Segment()
+                    {
                         Priority = 90,
                         Conditions =
                         {
+                            new Condition() { MatchKey = "menu_tag", },
+                        },
+                        Actions =
+                        {
+                            new Action() { OpCodes = { ScriptOps.CLICK_TEMPLATE }, },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 50,
+                        Comment = "in storylist scene, counter < 3, add counter",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_back", },
                             new Condition() {
                                 OpCodes = new List<string>() {
-                                    ScriptOps.PUSH_STRING, "counter_key", ScriptOps.MOVE_TO_BX,
-                                    ScriptOps.PUSH_STRING, CompareOps.GREATER, ScriptOps.MOVE_TO_CX,
-                                    ScriptOps.PARSE_INT, "4", ScriptOps.MOVE_TO_DX,
+                                    ScriptOps.PUSH_STRING, "counter_main_story_new_tag", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.PUSH_STRING, CompareOps.SMALLER, ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.PARSE_INT, "3", ScriptOps.MOVE_TO_DX,
                                     ScriptOps.CMP_COUNTER,
-
                                 }
                             },
                         },
@@ -415,9 +495,36 @@ namespace Core.Script
                             new Action()
                             {
                                 OpCodes = {
-                                    //ScriptOps.CLICK_TEMPLATE
-                                    ScriptOps.PRINT, "OK",
-                                    ScriptOps.PUSH_STRING, "counter_key", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PUSH_STRING, "counter_main_story_new_tag", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.PARSE_INT, "1", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.ADD_COUNTER,
+                                },
+                            },
+                        }
+                    },
+                    new Segment()
+                    {
+                        Priority = 50,
+                        Comment = "in storylist scene, counter >= 3, click back and reset counter",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_back", },
+                            new Condition() {
+                                OpCodes = new List<string>() {
+                                    ScriptOps.PUSH_STRING, "counter_main_story_new_tag", ScriptOps.MOVE_TO_BX,
+                                    ScriptOps.PUSH_STRING, CompareOps.GREATER_OR_EQUAL, ScriptOps.MOVE_TO_CX,
+                                    ScriptOps.PARSE_INT, "3", ScriptOps.MOVE_TO_DX,
+                                    ScriptOps.CMP_COUNTER,
+                                }
+                            },
+                        },
+                        Actions =
+                        {
+                            new Action() { OpCodes = { ScriptOps.CLICK_TEMPLATE }, },
+                            new Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.PUSH_STRING, "counter_main_story_new_tag", ScriptOps.MOVE_TO_AX,
                                     ScriptOps.PARSE_INT, "0", ScriptOps.MOVE_TO_BX,
                                     ScriptOps.SET_COUNTER,
                                 },
@@ -427,29 +534,32 @@ namespace Core.Script
 
                     new Segment()
                     {
-                        Priority = 80,
+                        Priority = 0,
+                        Comment = "default, click center",
                         Conditions =
                         {
-                            new Condition() { MatchKey = "stage_normal_on", },
-                            new Condition() { MatchKey = "stage_normal_off", OpCodes = new List<string>() { ScriptOps.STACK_OR, ScriptOps.PRINT_X, "AX" } },
+                            new Condition() { OpCodes = new List<string>() { ScriptOps.PARSE_BOOL, "true" } },
                         },
                         Actions =
                         {
                             new Action()
                             {
                                 OpCodes = {
-                                    ScriptOps.CLICK_TEMPLATE,
-                                    ScriptOps.PUSH_STRING, "counter_key", ScriptOps.MOVE_TO_AX,
-                                    ScriptOps.PARSE_INT, "1", ScriptOps.MOVE_TO_BX,
-                                    ScriptOps.ADD_COUNTER,
+                                    ScriptOps.PARSE_PVEC2F, "0.50,0.50", ScriptOps.MOVE_TO_AX,
+                                    ScriptOps.DO_CLICK,
                                 },
                             },
                         }
                     },
                 }
             };
-
             return script;
+        }
+
+
+        public static Script GenTestScript()
+        {
+            return GenReadMainStoryScript();
         }
     }
 }

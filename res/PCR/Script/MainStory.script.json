@@ -1,0 +1,210 @@
+{
+  "Identity": "MainStory",
+  "Name": "主线剧情",
+  "Segments": [
+    {
+      "Group": "default",
+      "Priority": 150,
+      "Conditions": [
+        {
+          "MatchKey": "download_without_voice"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 130,
+      "Conditions": [
+        {
+          "MatchKey": "button_close"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 80,
+      "Conditions": [
+        {
+          "MatchKey": "story_new_tag"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.00,0.10",
+            "MOVE_TO_BX",
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 110,
+      "Conditions": [
+        {
+          "MatchKey": "button_skip"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 100,
+      "Conditions": [
+        {
+          "MatchKey": "skip_tag"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 90,
+      "Conditions": [
+        {
+          "MatchKey": "menu_tag"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ]
+    },
+    {
+      "Group": "default",
+      "Priority": 50,
+      "Conditions": [
+        {
+          "MatchKey": "button_back"
+        },
+        {
+          "OpCodes": [
+            "PUSH_STRING",
+            "counter_main_story_new_tag",
+            "MOVE_TO_BX",
+            "PUSH_STRING",
+            "SMALLER",
+            "MOVE_TO_CX",
+            "PARSE_INT",
+            "3",
+            "MOVE_TO_DX",
+            "CMP_COUNTER"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PUSH_STRING",
+            "counter_main_story_new_tag",
+            "MOVE_TO_AX",
+            "PARSE_INT",
+            "1",
+            "MOVE_TO_BX",
+            "ADD_COUNTER"
+          ]
+        }
+      ],
+      "Comment": "in storylist scene, counter < 3, add counter"
+    },
+    {
+      "Group": "default",
+      "Priority": 50,
+      "Conditions": [
+        {
+          "MatchKey": "button_back"
+        },
+        {
+          "OpCodes": [
+            "PUSH_STRING",
+            "counter_main_story_new_tag",
+            "MOVE_TO_BX",
+            "PUSH_STRING",
+            "GREATER_OR_EQUAL",
+            "MOVE_TO_CX",
+            "PARSE_INT",
+            "3",
+            "MOVE_TO_DX",
+            "CMP_COUNTER"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        },
+        {
+          "OpCodes": [
+            "PUSH_STRING",
+            "counter_main_story_new_tag",
+            "MOVE_TO_AX",
+            "PARSE_INT",
+            "0",
+            "MOVE_TO_BX",
+            "SET_COUNTER"
+          ]
+        }
+      ],
+      "Comment": "in storylist scene, counter >= 3, click back and reset counter"
+    },
+    {
+      "Group": "default",
+      "Priority": 0,
+      "Conditions": [
+        {
+          "OpCodes": [
+            "PARSE_BOOL",
+            "true"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.50,0.50",
+            "MOVE_TO_AX",
+            "DO_CLICK"
+          ]
+        }
+      ],
+      "Comment": "default, click center"
+    }
+  ],
+  "MaxExecuteCount": 2147483647,
+  "StopWhenException": false,
+  "Interval": 2000
+}

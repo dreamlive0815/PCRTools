@@ -186,7 +186,7 @@ namespace Core.Script
         {
             var value = stack[offset];
             if (!(value is T))
-                throw new Exception($"stack value of offset:{offset} is not type of" + typeof(T).Name);
+                throw new Exception($"stack value of offset: {offset} is not type of " + typeof(T).Name);
         }
 
         private void Assert(bool b, string prompt)
@@ -197,7 +197,7 @@ namespace Core.Script
 
         private void AssertType<T>(object value)
         {
-            Assert(value is T, $"value:{value} is not type of" + typeof(T).Name);
+            Assert(value is T, $"value: {value} is not type of " + typeof(T).Name);
         }
 
         private object GetXValue(string key)
@@ -210,7 +210,7 @@ namespace Core.Script
                 case "CX": return CX;
                 case "DX": return DX;
             }
-            throw new Exception($"unknown X key:{key}");
+            throw new Exception($"unknown X key: {key}");
         }
 
         public void DoOpCodes(IList<string> opCodes)
@@ -343,13 +343,13 @@ namespace Core.Script
                 {
                     var offset = int.Parse(opCodes[++i]);
                     var val = stack[offset];
-                    Logger.GetInstance().Info("DoOpCodes", $"the stack value of offset:{offset} is {val}");
+                    Logger.GetInstance().Info("DoOpCodes", $"the stack value of offset: {offset} is {val}");
                 }
                 else if (ScriptOps.OpEquals(opCode, ScriptOps.PRINT_X))
                 {
                     var key = opCodes[++i];
                     var val = GetXValue(key);
-                    Logger.GetInstance().Info("DoOpCodes", $"the X value of key:{key} is {val}");
+                    Logger.GetInstance().Info("DoOpCodes", $"the X value of key: {key} is {val}");
                 }
                 else if (ScriptOps.OpEquals(opCode, ScriptOps.TEMPLATE_MATCH))
                 {
@@ -501,7 +501,7 @@ namespace Core.Script
                     continue;
                 if (b)
                 {
-                    Logger.GetInstance().Debug("ScriptTickSegments", $"do actions which comments:{seg.Comment}");
+                    Logger.GetInstance().Debug("ScriptTickSegments", $"do actions which comments: {seg.Comment}");
                     foreach (var action in seg.Actions)
                     {
                         DoOpCodes(action.OpCodes);
@@ -529,7 +529,7 @@ namespace Core.Script
 
             var sourceRectKey = matchKey + "_source";
             if (!data.RVec4fs.ContainsKey(sourceRectKey))
-                Logger.GetInstance().Warn("TemplateMatchByKey", $"SourceRect RVec4f of key:${sourceRectKey} is missing");
+                Logger.GetInstance().Warn("TemplateMatchByKey", $"SourceRect RVec4f of key: {sourceRectKey} is missing");
             var rectVec4f = data.RVec4fs.ContainsKey(sourceRectKey) ? data.RVec4fs[sourceRectKey] : new RVec4f(0, 0, 1, 1);
             var sourceRect = screenShot.GetPartial(rectVec4f);
             var templateKey = matchKey + ".png";

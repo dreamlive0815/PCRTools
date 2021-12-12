@@ -235,7 +235,7 @@ namespace PCRTools
         private void TestScriptMenu_Click(object sender, EventArgs e)
         {
             Emulator.AssertDefaultAliveAndInit();
-            var script = ScriptGenerator.GenStagelineAutoBattle();
+            var script = ScriptGenerator.GenTestScript();
             script.Save();
             script.SetEmulator(Emulator.Default);
             ScriptMgr.GetInstance().RunDefaultScript(script);
