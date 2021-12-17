@@ -556,10 +556,121 @@ namespace Core.Script
             return script;
         }
 
+        public static Script GenSpecialBattleScript()
+        {
+            var script = new Script()
+            {
+                Identity = "BattleOfLegions",
+                Name = "军团之战",
+
+                StopWhenException = false,
+
+                Segments =
+                {
+
+
+                    new Segment()
+                    {
+                        Priority = 120,
+                        Comment = "click button_close",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_close", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 110,
+                        Comment = "click button_ok",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "button_ok", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 80,
+                        Comment = "click enter_battle",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "enter_battle", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 70,
+                        Comment = "click enter_battle_prepare",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "enter_battle_prepare", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+                    new Segment()
+                    {
+                        Priority = 60,
+                        Comment = "click battle_next_step",
+                        Conditions =
+                        {
+                            new Condition() { MatchKey = "battle_next_step", },
+                        },
+                        Actions =
+                        {
+                            new Action() {  OpCodes = { ScriptOps.CLICK_TEMPLATE, } },
+                        }
+                    },
+
+
+                    new Segment()
+                    {
+                        Priority = 0,
+                        Comment = "default, click boss",
+                        Conditions =
+                        {
+                            new Condition() { OpCodes = new List<string>() { ScriptOps.PARSE_BOOL, "true" } },
+                        },
+                        Actions =
+                        {
+                            new Action()
+                            {
+                                OpCodes = {
+                                    ScriptOps.PARSE_PVEC2F, "0.8036,0.3323", ScriptOps.MOVE_TO_AX,//卡里莎
+                                    //ScriptOps.PARSE_PVEC2F, "0.5755,0.5381", ScriptOps.MOVE_TO_AX,//猪哥
+                                    //ScriptOps.PARSE_PVEC2F, "0.3585,0.5899", ScriptOps.MOVE_TO_AX,//美空
+                                    //ScriptOps.PARSE_PVEC2F, "0.1518,0.3857", ScriptOps.MOVE_TO_AX,//兰法
+                                    ScriptOps.DO_CLICK,
+                                },
+                            },
+                        }
+                    },
+                }
+            };
+            return script;
+        }
+
 
         public static Script GenTestScript()
         {
-            return GenReadMainStoryScript();
+            return GenSpecialBattleScript();
         }
     }
 }

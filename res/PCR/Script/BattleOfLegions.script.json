@@ -1,0 +1,117 @@
+{
+  "Identity": "BattleOfLegions",
+  "Name": "军团之战",
+  "Segments": [
+    {
+      "Group": "default",
+      "Priority": 120,
+      "Conditions": [
+        {
+          "MatchKey": "button_close"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "click button_close"
+    },
+    {
+      "Group": "default",
+      "Priority": 110,
+      "Conditions": [
+        {
+          "MatchKey": "button_ok"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "click button_ok"
+    },
+    {
+      "Group": "default",
+      "Priority": 80,
+      "Conditions": [
+        {
+          "MatchKey": "enter_battle"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "click enter_battle"
+    },
+    {
+      "Group": "default",
+      "Priority": 70,
+      "Conditions": [
+        {
+          "MatchKey": "enter_battle_prepare"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "click enter_battle_prepare"
+    },
+    {
+      "Group": "default",
+      "Priority": 60,
+      "Conditions": [
+        {
+          "MatchKey": "battle_next_step"
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "CLICK_TEMPLATE"
+          ]
+        }
+      ],
+      "Comment": "click battle_next_step"
+    },
+    {
+      "Group": "default",
+      "Priority": 0,
+      "Conditions": [
+        {
+          "OpCodes": [
+            "PARSE_BOOL",
+            "true"
+          ]
+        }
+      ],
+      "Actions": [
+        {
+          "OpCodes": [
+            "PARSE_PVEC2F",
+            "0.8036,0.3323",
+            "MOVE_TO_AX",
+            "DO_CLICK"
+          ]
+        }
+      ],
+      "Comment": "default, click boss"
+    }
+  ],
+  "MaxExecuteCount": 2147483647,
+  "StopWhenException": false,
+  "Interval": 2000
+}
