@@ -102,7 +102,7 @@
         {
           "OpCodes": [
             "PARSE_PVEC2F",
-            "0.3585,0.5899",
+            "0.5755,0.5381",
             "MOVE_TO_AX",
             "DO_CLICK"
           ]

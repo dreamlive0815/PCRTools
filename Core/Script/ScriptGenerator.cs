@@ -654,9 +654,9 @@ namespace Core.Script
                             {
                                 OpCodes = {
                                     //ScriptOps.PARSE_PVEC2F, "0.8036,0.3323", ScriptOps.MOVE_TO_AX,//卡里莎
-                                    //ScriptOps.PARSE_PVEC2F, "0.5755,0.5381", ScriptOps.MOVE_TO_AX,//猪哥
+                                    ScriptOps.PARSE_PVEC2F, "0.5755,0.5381", ScriptOps.MOVE_TO_AX,//猪哥
                                     //ScriptOps.PARSE_PVEC2F, "0.3585,0.5899", ScriptOps.MOVE_TO_AX,//美空
-                                    ScriptOps.PARSE_PVEC2F, "0.1518,0.3857", ScriptOps.MOVE_TO_AX,//兰法
+                                    //ScriptOps.PARSE_PVEC2F, "0.1518,0.3857", ScriptOps.MOVE_TO_AX,//兰法
                                     ScriptOps.DO_CLICK,
                                 },
                             },
