@@ -37,6 +37,8 @@ namespace PCRTools
 
             RefreshText();
             RefreshScriptMenuItems();
+
+            //Utils.PrintProcessesInfoToFile("1.txt");
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

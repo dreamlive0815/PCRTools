@@ -83,6 +83,7 @@
     <Compile Include="Emulators\Emulator.cs" />
     <Compile Include="Emulators\LeidianEmulator.cs" />
     <Compile Include="Emulators\MumuEmulator.cs" />
+    <Compile Include="Emulators\MumuEmulatorEx.cs" />
     <Compile Include="Emulators\NOXEmulator.cs" />
     <Compile Include="EventSystem.cs" />
     <Compile Include="Exceptions\HandledException.cs" />
